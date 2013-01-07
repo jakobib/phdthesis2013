@@ -1,0 +1,34 @@
+\documentclass[
+  a4paper, fontsize=10pt, % Smaller font at A4. Use larger for A5
+  headings=openright,     % chapters start at right page
+  headsepline,
+  chapterprefix,
+  appendixprefix=false,
+  draft=false,
+  BCOR=5mm, % Bindekorrektur 
+  listof=totoc,
+  listof=leveldown%,
+%  bibliography=totoc
+]{scrbook}
+
+%%% additional macros and packages
+\input{macros}
+
+\input{metadata}
+
+\begin{document}
+\shorthandoff{"} % disable special meaning of "
+
+\input{titlepage}
+\input{frontmatter}
+
+\input{chapter01}
+\input{chapter02}
+\input{chapter03}
+\input{chapter04}
+\input{chapter05}
+\input{chapter06}
+
+\input{backmatter}
+
+\end{document}

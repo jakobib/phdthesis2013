@@ -1,0 +1,1164 @@
+\section{Schema languages}
+\label{sec:schemas}
+
+\begin{quotation}% 
+Und er kommt zu dem Ergebnis: / Nur ein Traum war das Erlebnis.\\
+Weil, so schließt er messerscharf, / 
+Nicht sein \emph{kann}, was nicht sein \emph{darf}. \\
+\quotationsource\Person[Christian]{Morgenstern}:
+ \textit{Die unmögliche Tatsache} (1910) 
+\end{quotation}
+
+\noindent \Term[Schema language]{Schema languages}, \Tacro{data definition
+languages}{DDL}, or \Term{data description languages} are primarily used to
+further restrict existing data structuring systems, such as \term{database
+model}s, \term{data structuring language}s, or \term{markup language}s. The
+process of declaring a  schema is often called \Term{data definition} and the
+result is a \term{data format} or \term[logical schema]{(logical) data schema}.
+In \term{data modeling}, these schemas are located at the data realm
+(figure~\ref{fig:datamodeling} at page \pageref{fig:datamodeling}), although
+some schemas (e.g. \acro{RDF} schemas) also span to conceptual realm if used as
+conceptual modeling languages (see section~\ref{sec:modelangs}). 
+
+The purpose of a schema can be both prescriptive specification of documents to
+be created and validation of existing documents. The expression of schemas in
+dedicated schema language better allows for sharing and analysis of schemas,
+independent of particular applications. Different schemas expressed in the same
+schema language can be used by a \Term{validator} or \term{parser}
+(figure~\ref{fig:schemavalidator}). Validators ensure common data structures
+based on shared schemas.  Without such schema, data from one application may be
+rejected or lead to unexpected results in the other. The validator acts as
+interpreter that processes a schema in its schema language as program to
+transform documents as input to document analysis as output.
+
+Each schema language has an inherent model of the data that schemas further
+restrict.  In the case of regular expressions and Backus-Naur Form
+(part~\ref{sec:bnf}) this model is a simple sequence of characters. \acro{XML}
+schema languages restrict \acro{XML} documents (part~\ref{sec:xmlschema}),
+\acro{RDF} schema languages restrict \acro{RDF} graphs
+(part~\ref{sec:rdfschemas}), and \acro{SQL} schemas restrict databases.  Other
+methods used as schema languages (programming languages, forms, and the data
+format description language) are summarized briefly at the end of this section
+(part~\ref{sec:otherschemas}).
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\node[draw] (v) {Validator};
+\node[left=20mm of v] (d) {Document};
+\node[right=16mm of v] (a) {Document analysis};
+\node[draw,below=10mm of v] (s) {Schema};
+\draw[->] (s) to node[anchor=east] {control} (v);
+\draw[->] (d) to (v);
+\draw[->] (v) to (a);
+\draw[out=180, in=-90,->] (s) to node[anchor=north,yshift=-1mm] {boilerplate} (d);
+\draw [->] ($(s.east)-(0.25,0.25)$) arc(-145:155:.5);
+\node[right=7mm of s] {extension/restriction};
+\end{tikzpicture}
+\caption{Schema languages allow to express schemas for multiple applications}
+\label{fig:schemavalidator}
+\end{figure}
+
+\subsection{Regular Expressions and Backus-Naur Form}
+\label{sec:bnf}
+
+\tacro{Regular expressions}{RE} and \tacro{Backus-Naur Form}{BNF} are popular
+schema languages for sequences of symbols. Various similar notations for
+\acro{RE} and \acro{BNF} exist \cite{Goyvaerts2011} and elements of both are
+used within other schema languages. \acro{RE} and \acro{BNF} both originate
+from the mathematical definition of \term{regular language}s (\acro{REG}) and
+\term{context-free language}s (\term{CFL}), which can be expressed as
+\term{formal grammar}s by \acro{RE} and \acro{BNF}, respectively (see
+section~\ref{sec:formallanguages}).  Other formal languages, such as visibly
+pushdown languages or boolean grammars, rarely have their own schema languages.
+Instead, they can be used as restricted or extended variants of \acro{REG} and
+\acro{BNF}.
+
+\Term{Regular expressions} are commonly used to define search patterns that
+match a set of character strings. In the mid-1960s \Person[Ken]{Thompson}
+introduced \acro{RE} by inventing a clever implementation for the text editor
+\term{QED} for the \acro{CTSS} operating system. \acro{RE} were then
+popularized by the command line tool `\term{grep}' that became a standard
+feature of \term{Unix}. Descriptions and references of regular expressions for
+practical applications are given by \textcite{Friedl2006}, the underlying
+theory and implementations are described by \textcite{Cox2007}.  In short, a
+regular expression is a sequence of character symbols that expresses a
+\term[regular language]{regular (Chomsky Type 3) language}. When applied as
+search pattern, simple character sequences match themselves, except special
+\term{metacharacters} (\texttt{|}, \texttt{*}, \texttt{?}, \texttt{+},
+\texttt{(}, \texttt{)},\ldots). Metacharacters hierarchically group expressions
+into optional, repeatable, and alternative parts.  The vertical bar denotes
+alternatives, a question mark denotes an option, star and plus denote zero or
+more respectively one or more repetitions, and parentheses group expressions.
+To match a metacharacter, it must be escaped with a  backslash, which also acts
+as metacharacter. Several extensions of the traditional \acro{RE} notation have
+added more metacharacters as abbreviation, for instance the dot to match any
+character or `\verb|\d|' to match any digit.  Another common extension, that
+goes beyond \term{regular language}s, are \term{back-references}: for instance
+`\verb|(a+)(b+)\1\2|' matches the language of words with $i>0$ occurrences of
+\verb|a|, followed by $j>0$ occurrences of \verb|b|, followed by the same
+sequence of \verb|a|s and \verb|b|s again \cite{Carle2009}. The most popular
+notation for regular expressions is \tacro{Perl Compatible Regular
+Expressions}{PCRE}. Some extensions of \acro{PCRE} allow to express
+context-free grammars and more complex types of \term{formal language}s.
+
+\Tacro{Backus-Naur Form}{BNF} was introduced by \Person[John]{Backus} and
+extended by \Person[Pete]{Naur} to define the syntax of the \term{Algol 60}
+programming language. The name was proposed by \Person[Donald]{Knuth} in a
+letter to the Communications of the ACM \cite{Knuth1964}. \acro{BNF} since has
+widely been adopted to specify context-free languages. A schema (called
+\term[formal grammar]{grammar}) consists of a set of named \Term[rule (BNF
+syntax)]{rules} that map \Term{non-terminal symbols} to one or more alternative
+sequences of symbols, that can be non-terminal symbols or \Term{terminal
+symbol}s.  A language in \acro{BNF} is defined over all sequences of
+terminal symbols (usually all character strings) as the set of all sequences
+that can be constructed by the grammar's \term{rewriting system} (see 
+page~\pageref{p:rewritingsystem}). There are
+many notations how to write down \acro{BNF} grammars, for instance
+\person[Niklaus]{Wirth} syntax \cite{Wirth1977}, \Term{Extended Backus-Naur
+Form} \cite{ISO14977}, \Tacro{Augmented Backus-Naur Form}{ABNF}
+\cite{Crocker2008}, and \acrostyle{W3C-BNF} \cite[sec. 6]{Bray1998}. Some
+variants introduce new grammar elements like grouping, options, repetitions,
+numeric factors, exceptions, etc. However, all variants can express the same
+set of \term{formal grammar}s (Type-2 in the \term{Chomsky hierarchy}) and
+grammars in one variant can be converted to any other notation.  Additional
+extensions to specific formal languages are often added by textual comments
+that explain language constraints, such as the uniqueness requirement of
+attribute names in \acro{XML}.  A summary of the syntax variant that is used
+throughout this thesis is given in table~\ref{tab:bnfsummary}, some other syntax
+variants are shown in figure~\ref{fig:bnfsyntax}. Its
+non-\acro{BNF} extensions difference and conjunction
+also allow for boolean grammars.\footnote{General context free languages are 
+not closed under difference, but the difference between a language in 
+\acro{CFL} and a language in \acro{REG} is also in \acro{CFL}, so one can
+use regular expressions as subtrahend in \acro{BNF}.} 
+There are also graphical notations for
+\acro{BNF}, known as \Term{syntax diagram} or \Termstyle{railroad diagram}. A
+typical variant is depicted in figure~\ref{fig:bnfsyntax}.\footnote{Repeating
+groups and boolean extensions are more difficult to picture.}
+% See \textcite{Voss2011a} for a short discussion about railroad diagrams for boolean grammars.}
+A popular example of the use of syntax diagrams is the specification
+of \acro{JSON} \cite{Crockford2002}.  The visual form of its publication, that
+can easily be followed by readers, was one reason for the quick success of
+\acro{JSON}.
+
+\begin{table}
+\begin{tabular}{|c|l|c|l|}
+\hline
+\multicolumn{2}{|c|}{non-terminal symbols} &
+\multicolumn{2}{c|}{terminal symbols} \\
+\hline
+
+\bnf{s}\texttt{ =} & defines a rule for symbol \bnf{s} &
+\bnfstring{"\ldots"}  & sequence of characters \\
+
+\bnf{a b} & sequence of symbols &
+\bnfstring{\#xX} & character with Unicode codepoint \bnfstring{X} \\
+
+\bnf{a | b} & alternative symbols & 
+\bnfstring{[\ldots]}  & regular expression character class \\
+
+%\bnfstring{/\ldots/} & regular expression \\
+
+\cline{3-4}
+\bnf{a?} & optional symbol  \\
+\bnf{a+} & repeatable symbol \\ 
+\bnf{a*} & optional repeatable symbol \\
+
+\cline{3-4}
+\bnf{a:}\sffamily{n}      & repeat {\sffamily n} times
+  & \multicolumn{2}{c|}{extended non-terminal symbols} \\
+\cline{3-4}
+\bnf{a:}\sffamily{n-m}    & repeat {\sffamily n} to {\sffamily m} times 
+  & \bnf{a - b} & difference \\
+\bnf{a:}\sffamily{n-}     & repeat at least {\sffamily n} times 
+  & \bnf{a \& b} & conjunction \\
+
+\hline
+\end{tabular}
+\caption{Summary of \acrostyle{BNF} syntax with extensions}
+\label{tab:bnfsummary}
+\end{table}
+
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[
+  line/.style={>=stealth',thick,draw},
+  branch/.style={line,rounded corners,to path={|- (\tikztotarget)}},
+  other branch/.style={line,rounded corners,to path={-| (\tikztotarget)}},
+  nonterminal/.style={draw,rectangle,minimum size=6mm,
+    thick,text height=1.5ex,text depth=.25ex},
+  terminal/.style={nonterminal,rounded corners=3mm},
+  code/.style={font=\ttfamily},
+  lab/.style={right,text width=2cm,align=right}
+]
+\matrix(m)[matrix of nodes,nodes in empty cells,row sep=3mm]{
+  & \node{\textbf{BNF}}; & \node{\textbf{diagram}};
+\\
+  \node[lab]{rule}; & \node[code]{name = }; &
+  \draw[line,->] ++(-10mm,0) to 
+    node[pos=0.3,yshift=2mm] {name} ++(20mm,0);
+\\
+  \node[lab]{terminal symbol}; & 
+  \node[code]{"abc"}; & 
+  \node[terminal](t){abc};
+  \draw[<-,line] (t.west) to ++(-6mm,0);
+  \draw[line] (t.east) to ++(5mm,0);
+\\
+  \node[lab]{non-terminal symbol}; & 
+  \node[code](name){name}; 
+  \node[code,below=0 of name]{<name>}; 
+& 
+  \node[nonterminal](n){name};
+  \draw[<-,line] (n.west) to ++(-5mm,0);
+  \draw[line] (n.east) to ++(4mm,0);
+\\
+  \node[lab]{sequence}; & 
+\node[code](seq){a, b}; 
+\node[code,below=0 of seq]{a b}; 
+&  
+  \coordinate (c);
+  % some BNF variants use whitespace instead of comma
+  \node[nonterminal,left=2mm of c](a){a};
+  \draw[<-,line] (a.west) to ++(-3mm,0);
+  \node[nonterminal,right=2mm of c](b){b};  
+  \draw[line,->] (a) to (b);
+  \draw[line] (b.east) to ++(2mm,0);
+\\
+  \node[lab]{alternatives}; & \node[code]{a | b}; & 
+  \node[nonterminal](a){a};
+  \node[nonterminal,below=2mm of a](b){b};
+  \draw[<-,line] (a.west) to ++(-5mm,0) coordinate (c);
+  \draw[line] (a.west) to ++(-7mm,0);
+  \draw[line] (a.east) to ++(4mm,0) coordinate (d);
+  \draw[line] (a.east) to ++(6mm,0);
+  \draw (c) edge[branch,->] (b.west);
+  \draw (b.east) edge[other branch,->] (d);
+\\};
+
+%\draw (m-2-1.north west) to (m-2-3.north east);
+%\draw (m-1-1.south west) to (m-1-3.south east);
+%\draw (m-1-2.north west) to (m-6-2.south west);
+%\draw (m-1-2.north east) to (m-6-2.south east);
+
+\draw[dotted,xshift=2mm] (m.north east) to (m.south east);
+
+\matrix[row sep=3mm,right=0 of m.north east,matrix anchor=north west,
+        matrix of nodes,nodes in empty cells]{
+  & \node{\textbf{BNF}}; & \node{\textbf{diagram}};
+\\
+  \node[left]{optional}; &
+  \node[code](a){(\ldots)?}; 
+  \node[code,below=0 of a]{[\ldots]~}; 
+&
+  \draw[line] ++(-11mm,0) to ++(3mm,0) coordinate (x)
+           to ++(7mm,0) coordinate (y) to ++(7mm,0) coordinate (z)
+           to ++(3mm,0);
+  \node[nonterminal,below=2mm of y](a){\ldots};
+  \draw (x) edge[branch,->] (a.west);
+  \draw (a.east) edge[other branch,->] (z);
+\\
+  \node[left]{repetition}; & 
+    \node[code](a){\verb|{|\ldots\verb|}|~};
+    \node[code,below=0 of a](a){(\ldots)*};
+    \node[code,below=0 of a]{*(\ldots)}; 
+  &
+  \draw[line] ++(-11mm,0) to ++(3mm,0) coordinate(x) 
+           to ++(7mm,0) coordinate (y) to ++(7mm,0) coordinate (z)
+           to ++(3mm,0);
+  \node[nonterminal,below=2mm of y](a){\ldots};
+  \draw (x) edge[branch,<-] (a.west);
+  \draw (a.east) edge[other branch,<-] (z);
+\\
+  \node[left]{}; & \node[code]{(\ldots)+}; & 
+  \draw[line] ++(-11mm,0) to ++(3mm,0) coordinate (x)
+           to ++(7mm,0) coordinate (y) to ++(7mm,0) coordinate (z)
+           to ++(3mm,0);
+  \node[nonterminal,fill=white,anchor=center] at (y) {\ldots};
+  \coordinate[below=5mm of y](a);
+  \draw (x) edge[branch,<-] (a);
+  \draw (a) edge[other branch,-] (z);
+\\
+  \node[left]{}; & \node[code]{\ldots:n}; & 
+  \draw[line] ++(-11mm,0) to ++(3mm,0) coordinate(x) 
+           to ++(7mm,0) coordinate (y) to ++(7mm,0) coordinate (z)
+           to ++(3mm,0);
+  \node[nonterminal,below=2mm of y](a){\ldots};
+  \draw (x) edge[branch,<-] (a.west);
+  \draw (a.east) edge[other branch,<-] (z);
+  \node at (8mm,-4mm) {n};
+\\
+};
+\end{tikzpicture}
+\caption{Backus-Naur Form and syntax diagram elements}
+\label{fig:bnfsyntax}
+\end{figure}
+
+A general problem of Regular Expressions and Backus-Naur Form in practice is
+the conflict between ease of understanding and performance of implementation. In
+many cases, one formal language can be defined by multiple \term{formal
+grammar}s of different structure. If the primary purpose of a schema is a
+specification that can automatically be used to implement an efficient parser,
+the grammar may be less readable for humans. To give a tiny example, a comment
+in \acro{XML} must not contain the sequence `\texttt{--}`.  The specification
+\cite{Bray1998,Bray2008} defines the syntax of a comment without explicitly
+using this sequence as:
+
+\begin{lstlisting}[language=BNF]
+  comment   = "<!--" ((char - "-") | "-" (char - "-")))* "-->"
+\end{lstlisting}
+
+\noindent This makes an efficient parser, but is more difficult to grasp than
+the following rule in natural language: a {\sf comment} starts with
+`\verb|<!--|', ends with `\verb|-->|', and may contain any (possibly empty)
+sequence of {\sf char}, that does not contain `\verb|--|' and does not end with
+`\verb|-|'. One can translate this to \acro{BNF}, equivalent to the specification, 
+for instance as:
+
+\begin{lstlisting}[language=BNF]
+  chars     = char+
+  comment   = "<!--" (chars? - (chars? "--" chars? | chars? "-") "-->"
+\end{lstlisting}
+
+
+\subsection{XML schema languages}
+\label{sec:xmlschemas}
+
+Since its first publication, \acro{XML} (section~\ref{sec:xml}) contains
+\tacro{Document Type Definition}{DTD} as native schema languag \cite{Bray1998}.
+\acro{DTD} origins in \acro{SGML} and uses a specific syntax, similar to
+\term{Backus-Naur Form}, so all \acro{XML} parsers must implement one parser
+for \acro{DTD} and one parser for \acro{XML} element structure.  \acro{DTD} is
+criticized for its syntax and because of limited expressibility.  For instance
+it does not support specification of \acro{XML} namespaces without hard-coding
+the namespace prefix \cite{Bray2009}. For this reason several additional schema
+languages for \acro{XML} were created with \term{XML Schema} and \term{RELAX
+NG} as most popular instances. Formal comparison of these languages, which are
+all based on \term{formal grammar}s, are provided by \textcite{Murata2005} and
+by \textcite{Stuehrenberg2010}. \term{Schematron} is another schema language
+that more differs from \acro{DTD}, \acro{XSD}, and \term{RELAX NG}.  To some
+degree, query languages such as \term{XPath} and \term{XML Query} can also be
+used as (part of) \acro{XML} schemas. As described by
+\textcite{Necasky2006,Necasky2008}, by \textcite{Sengupta2006}, and by
+\textcite{Chen2010}, \acro{XML} schema languages only cover the logical level
+of data modeling, but conceptual modeling languages for \acro{XML} are needed
+to better describe semantics of \acro{XML} documents. In practice, however,
+conceptual modeling for \acro{XML} is rarely applied \cite{Mohan2009} or no
+explicit schema is used at all \cite{Wilde2008}. The following section covers
+\acro{DTD}, \term{RELAX NG}, \term{Schematron}, and \term{XML Schema}, in this
+order.
+
+\subsubsection{Document Type Definitions}
+\label{sec:dtd}
+
+Element content in \acro{DTD} is specified in a special \acro{BNF} variant with
+\acro{XML} element names as non-terminal symbols. Element declarations can
+directly be mapped to \acro{BNF} grammar rules as shown in
+example~\ref{ex:dtdbnf}.
+
+\begin{example}[h]
+\begin{lstlisting}[language=DTD]
+<!ELEMENT bib ((author+|editor+), year?, title, keyword*)>
+<!ATTLIST author given   CDATA #IMPLIED 
+                 surname CDATA #REQUIRED>
+<!ATTLIST editor given   CDATA #IMPLIED 
+                 surname CDATA #REQUIRED>
+\end{lstlisting}
+
+A \xml{bib} element contains at least one \xml{author} or at least one
+\xml{editor} element, followed by an optional \xml{year}, a \xml{title}
+element, and an an optional list of one or more \xml{keyword} elements.  Both
+\xml{author} and \xml{editor} must have a \xml{surname} attribute and may have
+a \xml{given} attribute (the distinction between elements and attributes is not
+expressible in pure \acro{BNF}).
+
+\begin{lstlisting}[language=BNF]
+  bib    = ( editor+ | author+ ) year? title keyword*
+  author = ( given? surname )
+  editor = ( given? surname )
+\end{lstlisting}
+
+\caption{\acrostyle{DTD} element declaration mapped to \acrostyle{BNF} rules}
+\label{ex:dtdbnf}
+\end{example}
+
+In addition, the special symbol \dtd{EMPTY} is used for elements without child
+elements (\lstinline[language=BNF]{emptytag} in the \acro{XML} grammar,
+figure~\ref{fig:xmlbnf}), the symbol \dtd{ANY} can be replaced by any element
+name, and the symbol \dtd{\#PCDATA} is used for arbitrary character content.
+If \acro{XML} elements should be allowed next to character content, one must
+define both in form of so called \Term{mixed content}, that is a rule of the
+form \texttt{(\#PCDATA | $e_1$ | $\ldots$ | $e_n$)*} with $1 \le i \le n, n \ge
+1$ where $e_i$ is an element name.  Processing instructions and comments are
+not treated as part of the document. \acro{DTD} is the only \acro{XML} schema
+language that supports declaration of \acro{XML} entities (with the keyword
+\dtd{ENTITY}). The other languages treat a document as parsed model of a
+document where entity references and CDATA sections have been replaced by
+equivalent content (see figure~\ref{fig:xmlparsing} and page~\ref{p:xmlmodel}).
+\acro{DTD} syntax for attribute declaration is different to element
+declaration, as attributes have no order and cannot be repeated at one element.
+Attributes can be marked as optional (keyword \dtd{\#IMPLIED}) or mandatory
+(keyword \dtd{\#REQUIRED}) and there are some limited capabilities to restrict
+possible attribute values, for instance to one value from a predefined list.
+Character content of \acro{XML} element can not be restricted. One can specify
+default values for attributes and disallow changing attribute values (keyword
+\dtd{#FIXED}. Simple integrity condition are possible, by declaring some
+attribute values as unique identifiers (keyword \dtd{ID}) and some attribute
+values as pointers to these identifiers (keywords \dtd{IDREF} and
+\dtd{IDREFS}). A proposed \acro{ISO} standard to further extend \acro{DTD} has
+received little attention \cite{ISO19757-9}.
+
+\subsubsection{RELAX NG}
+\label{sec:relaxng}
+
+The REgular LAnguage for XML Next Generation (\term{RELAX NG}) was developed as
+merger of \tacro{Tree Regular Expressions}{TREX} and \tacro{Regular Language
+description for XML}{RELAX}, both experimental \acro{XML} schema languages,
+created in 2000/2001 \cite{VanDerVlist2003}. RELAX~NG was standardized at
+\acro{OASIS} and published at \acro{ISO} in 2003 and 2008
+\cite{ISO19757-2:2008}.  A RELAX~NG schema can be written in an \acro{XML}
+syntax and in a more readable compact syntax, which is similar to
+\term{Backus-Naur Form}. Both forms can be translated to its counterparts
+without loss of information. The grammar from example~\ref{ex:dtdbnf} could be
+written in RELAX NG Compact as shown in example~\ref{ex:rnc} (the
+datatype \xml{xs:gYear} is added to the \bnf{year} element):
+
+\begin{example}
+\begin{lstlisting}[language=rnc]
+element bib {
+  ( element editor { person }+ | element author { person }+ ), 
+  element year { xs:gYear }?,
+  title, 
+  keyword*
+}
+person = { 
+  attribute given { text }?
+  attribute surname { text }
+}
+\end{lstlisting}
+\caption{Grammar rules in RELAX NG Compact syntax}
+\label{ex:rnc}
+\end{example}
+
+\term{RELAX NG} unifies syntax for element and attribute declaration and it
+provides functionality that goes beyond \acro{DTD}. In particular, it better
+supports grouping, combining, and annotating grammar rules. It further adds
+context-sensitive content models, namespaces, unordered content, and datatypes
+for character content.  Datatypes are not defined in \term{RELAX NG} but only
+referenced fro  other specifications. The most common datatypes are those from
+\term{XML Schema}, for instance \xml{xs:integer} for character sequences that
+represent integer values.  Identifier attributes (\dtd{ID}, \dtd{IDREF},
+\dtd{IDREFS}) and default attribute values are not supported but an official
+extension exists to add these features \cite{Clark2001}. Additional rules can
+be embedded in \term{RELAX NG} schema by using other schema languages,
+especially \term{Schematron}.
+
+% -no support for XSDL's numeric occurrence constraints (minOccurs/maxOccurs)
+
+\subsubsection{Schematron}
+
+\term{Schematron} is a rule-based \acro{XML} schema language, expressed in
+\acro{XML} \cite{VanDerVlist2007}. It was first proposed in 1999 by
+\Person[Rick]{Jelliffe} and later standardized as Schematron~1.3 (2000),
+Schematron~1.5 (2001) and Schematron~1.6 (2002). Schematron was published as
+ISO~19757-3 (\citeyear{ISO19757-3}) and an extended version is being published
+in 2011. The publication at \acro{ISO}  may be one reason why Schematron is
+less known and less used than other schema languages described in this section.
+In contrast to grammar-based languages, a Schematron schema does not specify
+the whole tree structure of an \acro{XML} document, but it defines a set of
+additional constraints.  Schematron constraints are expressed by two
+\term{XPath} expressions: the \xml{context} defines which part of a document to
+check and the \xml{test} specifies a condition that must be true for each
+context element. A condition can trigger a message if it is met (with
+\xml{report}) or if it is not met (with \xml{assert}). One or more conditions
+with same \xml{context} are grouped in a \xml{rule} and one or more rules are
+grouped in a \xml{pattern}, which may further be associated to phases.
+Schematron also supports variables and abstract patterns as pattern templates,
+as shown in example~\ref{ex:schematron}: this \term{Schematron}  schema can be
+used to restrict author and editor names from the previous schemas (example
+\ref{ex:dtdbnf} and \ref{ex:rnc}) by checking that given names are not empty
+strings and surnames do not end with a dot, unless there is a given name.
+Such interdependencies are difficult or not possible to express in
+other schema languages.
+
+\begin{example}
+\begin{lstlisting}[language=XML]
+<schema xmlns="http://www.ascc.net/xml/schematron">
+  <title>Person name checks</title>
+  <pattern abstract="true" id="person">
+    <rule context="$p[@given]">
+      <report test="0 < string-length(normalize-space(@given))"
+      >person with valid given name</report>
+    </rule>
+    <rule context="$p[@surname and not(@given)]">
+      <let name="s" value="normalize-space(@surname)"/>
+      <let name="l" value="string-length($s)"/>
+      <assert test="0 < $l and substring($s,$l) != '.'"
+      >Surname without given name must not be abbreviated</assert>
+    </rule>
+  </pattern>
+  <pattern is-a="person">
+    <param name="p" value="author"/>
+  </pattern>
+  <pattern is-a="person">
+    <param name="p" value="editor"/>
+  </pattern>
+</schema> 
+\end{lstlisting}
+\caption{Simple Schematron schema, restricting person names}
+\label{ex:schematron}
+\end{example}
+
+Schematron conditions can also be documented with icons, diagnostic messages,
+and other hints.  In contrast to other XML schema languages, Schematron is
+primarily targeted to human users, as its core output of validation are
+messages. This makes schematron together with its structured output format
+\tacro{Schematron Validation Report Language}{SVRL} more a reporting language
+for \term{business rule}s.  Schematron can report (violations of) several rules
+as independent properties of an \acro{XML} document.  By this, it can be
+applied more flexible and less strict than a global schema, which eventually
+has a boolean output as either valid or not valid.
+
+\subsubsection{XML Schema}
+\label{sec:xmlschema}
+
+\tacro{XML Schema}{XSD} is the most comprehensive and most used schema language
+for \acro{XML} documents. It started as an extension of \acro{DTD} in
+\acro{XML} syntax, influenced by several other schema languages that were
+discussed as candidates for an official \acro{W3C} recommendation during 1998
+and 2000.\footnote{In detail, \acro{XSD} was influenced at least by the
+\tacro{Document Definition Markup Language}{DDML} and \tacro{Schema for
+Object-Oriented XML}{SOX}, both proposed as \acro{W3C} note in 1999;
+\tacro{Document Content Description}{DCD} a \acro{W3C} submission from 1998;
+and \tacro{XML Data Reduced}{XDR}, proposed by Microsoft in 1998-2001.}
+\acro{XSD}~1.0 became \acro{W3C} recommendation in 2001 with a second edition
+in 2004. \acro{XSD}~1.1 is being published as extended successor in 2011. The
+recommendation consists of one part on structure \cite{Thompson2004} and one
+part on datatypes \cite{Biron2004}, the second of which also referred to in
+other schema languages such as \acro{OWL} (page~\pageref{sec:rdfschemas}).
+
+% first description, then evlautaion/comparision
+
+An \term{XML Schema} mainly consists of element declarations, attribute
+declarations, and type definitions. Declarations define which \acro{XML}
+elements and attributes may or must exist in an \acro{XML} document, while type
+definitions are referenced by element and attribute declarations. There are
+also methods for grouping and reusing parts of a schema, annotations as human-
+and machine-targeted documentation, and uniqueness and reference constraints
+that go beyond the identifier attributes (\dtd{ID}, \dtd{IDREF}, \dtd{IDREFS})
+in \acro{DTD}.  \acro{XSD}~1.1 adds assertions and boolean conditions (as
+\term{XPath} expressions) that can be used for conditional constraints and type
+assignment, similar to rules in \term{Schematron}.  Element and attribute
+declarations are similar to declarations in \acro{DTD}, but element and
+attribute content is always defined with a type.  There are simple types that
+define constraints on strings for attribute values and text-only content, and
+there are complex types that define constraints on attributes and child
+elements. \acro{XSD} offers various syntax variants to express the same format,
+but all are very verbose and hard to read and write compared to \acro{DTD} and
+\term{RELAX NG} Compact.\footnote{You could use a compact syntax for
+\acro{XML}, but proposals such as \textcite{Wilde2003} have not received much
+adoption.} For this reason \acro{XSD} is mostly created with specialized
+\acro{XSD} editors and similar software tools that provide graphical user
+interfaces or automatic generation of schemas.  Example~\ref{ex:xsd} shows a
+schema in \acro{XSD} that combines the rules from example~\ref{ex:dtdbnf} to
+\ref{ex:schematron}.  Repeatability and optionality can be specified with a
+minimal (\xml{minOccurs}) and maximal number (\xml{maxOccurs}) for elements or
+with \xml{use="required"} for attributes.  Element content is defined with
+\xml{xs:complexType} as ordered sequence (\xml{xs:sequence}), or as choice
+(\xml{xs:choice}) of other components. One can group elements with
+\xml{xs:any}, if the elements of a set can occur in any order, but with at most
+one occurrence of each element --- this allows specification of unordered
+content to a more limited degree than \term{RELAX NG}. Wildcards, similar but
+more customizable then the \dtd{ANY} keyword in \acro{DTD}, are also supported.
+
+\begin{example}
+\begin{lstlisting}[language=XML]
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="bib">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element name="author" type="person" 
+                       maxOccurs="unbounded"/>
+          <xs:element name="editor" type="person" 
+                       maxOccurs="unbounded"/>
+        </xs:choice>
+        <xs:element name="year" type="xs:gYear" minOccurs="0"/>
+        <xs:element name="title" type="xs:string"/>
+        <xs:element name="keyword" type="xs:string" 
+                     minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="person">
+    <xs:attribute name="given" type="myString"/>
+    <xs:attribute name="surname" type="myString" use="required">
+      <xs:alternative test="not(../@given)">
+        <xs:simpleType name="noAbbrev">
+          <xs:restriction base="myString">
+            <xs:pattern value=".*[^\.]"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:alternative>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="myString">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:whiteSpace value="collapse"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+\end{lstlisting}
+\caption{XML Schema, including features of \acrostyle{XSD}~1.1}
+\label{ex:xsd}
+\end{example}
+
+Derived types can be defined based on existing types by constraints
+(\xml{xs:restriction}) or by allowing additional content (\xml{xs:extension}).
+Simple types can also be combined to union types (\xml{xs:union}) and list
+types (\xml{xs:list}).  A predefined set of (mainly simple) types is provided
+in the second part of \acro{XSD} specification \cite{Biron2004}.  The practical
+relevance of these \acro{XSD} datatypes, also beyond pure applications of
+\acro{XML}, demands a more detailed description.  As noted in the
+recommendation, \acro{XSD} datatypes were influenced by data types in
+programming and database languages and by ISO~11404 (\textcite{ISO11404}).
+A datatype consists of a \Term{value space}, which is a set of abstract values;
+a \Term{lexical space}, which is set of Unicode strings used to denote the
+values; a surjective \Term{lexical mapping} function that maps from the lexical
+space to the value space; and an \term{equality relation} for the value space
+(figure~\ref{fig:xsdtypes}).  Furthermore datatypes may have an \term{order
+relation} for the value space, a \Term{canonical mapping} that maps each value
+from the value space to its preferred representation in the lexical space. In
+addition, there is an identity relation that in most cases is the same as the
+equality relation.\footnote{The distinction between equality and identity was
+introduced in \acro{XSD}~1.1. For instance the lexical values \texttt{-0} and
+\texttt{0} were both mapped to value zero for the datatype \xml{xs:float}, but
+now they are mapped to non-identical but equal values, to better mirror
+floating point number encoding (see page~\pageref{sec:numberencodings}).
+Another example from \xml{xs:float} is the value of \texttt{NaN} (not a
+number), which is identical but not equal to itself.} There are 50 build-in
+datatypes, each referencable by an \acro{URI}.  Grouped by purpose one can
+identify:
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[every line/.style=thick]
+\node (l) {lexical space};
+\node[right=4cm of l] (v) {value space};
+\draw [->,out=20,in=160] (l) to node[yshift=3mm]{lexical mapping} (v);
+\draw [dotted,<-,out=-15,in=-165] (l) to node[yshift=-3mm]{canonical mapping} (v);
+\draw [dotted,<->] ($(v.east)-(0.05,0.18)$) arc(-140:140:.3);
+\draw [<->] ($(v.east)-(0.25,0.25)$) arc(-145:145:.5);
+\draw [<->] ($(v.east)-(0.4,0.30)$) arc(-150:150:.7);
+\node[right=10mm of v,yshift=5mm] {identity};
+\node[right=10mm of v] {equality};
+\node[right=10mm of v,yshift=-5mm] {order};
+
+\node[below=15mm of l.east,minimum width=12mm] (o) {\texttt{1}};
+\node[below=19mm of l.east,minimum width=12mm] (t) {\texttt{true}};
+\node[below=23mm of l.east,minimum width=12mm] (z) {\texttt{0}};
+\node[below=27mm of l.east,minimum width=12mm] (f) {\texttt{false}};
+
+\node[right=35mm of o,yshift=-2mm] (true) {true};
+\node[right=35mm of z,yshift=-2mm] (false) {false};
+
+\draw[->] (t) to (true);
+\draw[->] (o) to (true);
+\draw[->] (f) to (false);
+\draw[->] (z) to (false);
+\draw[<-,dotted,in=-170,out=-10] (t) to (true);
+\draw[<-,dotted,in=-170,out=-10] (f) to (false);
+
+\draw[<->,out=0,in=0] (true.east) to node(x){} (false.east);
+
+\node[anchor=west,yshift=4.5mm] at(x) {not identical};
+\node[anchor=west] at(x) {not equal};
+\node[anchor=west,yshift=-4mm] at(x) {not ordered};
+
+\draw[decoration={brace},decorate] (f.south west) to node[anchor=east,xshift=-1mm]
+  {\xml{xs:boolean}} (o.north west);
+
+\end{tikzpicture}
+\caption{Lexical space and value space of \acrostyle{XSD} datatypes with boolean as example}
+\label{fig:xsdtypes}
+\end{figure}
+
+\begin{itemize}
+ \item a type for \term{Unicode} strings, limited to the characters allowed
+       in \acro{XML} (\xml{xs:string}), and two types for strings with normalized
+	   whitespace (\xml{xs:normalizedString} and \xml{xs:token}),
+ \item various numeric types (see table~\ref{tab:xsdnumeric}),
+ \item a boolean type (\xml{xs:boolean}, as shown in figure~\ref{fig:xsdtypes}),
+ \item twelve different types for dates, times, and their parts or combinations,
+ \item two binary types for encoded sequences of bytes (\xml{xs:base64Binary} and \xml{xs:hexBinary}),
+ \item a type for \acro{URI}s (\xml{xs:anyURI}) and for tuples of namespace
+       \acro{URI} and local name to represent \acro{XML} element names with 
+	   namespaces (see example~\ref{ex:xmlns}),
+ \item a type defined equivalent to \xml{xs:QName} but for \acro{XML} Notations
+       (\xml{xs:NOTATION}),
+ \item six special types derived from \xml{xs:token} to represent differnt kinds of
+       identifiers (\xml{xs:language}, \xml{xs:Name}, \xml{xs:NCName}, \xml{xs:ID}, 
+	   \xml{xs:IDREF}, \xml{xs:NMToken}),
+ \item derived list types for three token types (\xml{xs:ENTITIES},
+  \xml{xs:IDREFS}, \xml{xs:NMTOKENS}),
+ \item the special types \xml{xs:anyType}, \xml{xs:anySimpleType}, and 
+  \xml{xs:anyAtomicType} as base types of all other predefined types.
+\end{itemize}
+
+
+\begin{table}
+  \centering
+  \begin{tabular}{ll}
+	\textbf{datatype}           & \textbf{value space} \\ 
+	\hline
+\xml{xs:anyType} & all types (simple and complex)\\
+--\xml{xs:anySimpleType} & all simple types \\
+-- --\xml{xs:anyAtomicType} & all simple types that are not lists or unions\\
+-- -- --\xml{xs:decimal}     & $\set[x/10^y]{x \in \mathbb{Z}, y \in \mathbb{Z}_{\geq0}} \subset \mathbb{R}$ \\ 
+-- -- -- --\xml{xs:integer}  & $\mathbb{Z} =$ \format{Int} \\
+-- -- -- -- --\xml{xs:long}     & \formati{Int}{64} \\
+-- -- -- -- -- --\xml{xs:int}                & \formati{Int}{32} \\
+-- -- -- -- -- -- --\xml{xs:short}              & \formati{Int}{16} \\
+-- -- -- -- -- -- -- --\xml{xs:byte}               & \formati{Int}{8} \\
+-- -- -- -- --\xml{xs:nonNegativeInteger} & $\mathbb{Z}_{\geq0} =$ \format{UInt} \\
+-- -- -- -- -- --\xml{xs:positiveInteger}    & $\mathbb{Z}_{>0}$ \\
+-- -- -- -- -- --\xml{xs:unsignedLong}       & \formati{UInt}{64} \\
+-- -- -- -- -- -- --\xml{xs:unsignedInt}        & \formati{UInt}{32} \\
+-- -- -- -- -- -- -- --\xml{xs:unsignedShort}      & \formati{UInt}{16} \\
+-- -- -- -- -- -- -- -- --\xml{xs:unsignedByte}       & \formati{UInt}{8} \\
+-- -- -- -- --\xml{xs:nonPositiveInteger} & $\mathbb{Z}_{\leq0}$ \\
+-- -- -- -- -- --\xml{xs:negativeInteger}    & $\mathbb{Z}_{<0}$ \\
+-- -- --\xml{xs:float}              & 32 bit IEEE~754 floating point (except sNaN) \\
+-- -- --\xml{xs:double}             & 64 bit IEEE~754 floating point (except sNaN) \\
+  \end{tabular}
+  \caption{Predefined numeric datatypes in \acrostyle{XML} Schema}
+  \label{tab:xsdnumeric}
+\end{table}
+
+The recommendation groups its datatypes into primitive types and derived types.
+Each derived type must have exactly one base type with \xml{xs:anyType} as
+base type of all other simple types. A subset of the derivation tree is shown
+in table~\ref{tab:xsdnumeric}. A derived type can specify restrictions in 
+predefined \term{constraining facet}s that serve to normalize or
+constrain its lexical space and/or its value space.  Possible facets include
+length of the lexical representation, a regular expression pattern that all
+lexical values must match, and lower/upper bounds on its value space for
+ordered values.  Beside derivation one can define new types as lists or as
+unions of existing types. It should be noted, that the lexical mapping of an union type may be 
+no function, because the same lexical value can represent multiple values for
+different types (for instance the string \texttt{"2"} and the number 2). 
+
+The \acro{XSD} type system includes some more caveats: for instance primitive
+datatypes are disjoint (the number 2 as \xml{xs:float} is incomparable to the
+number 2 as \xml{xs:double} and as \xml{xs:decimal}). \xml{xs:float} and
+\xml{xs:double} have no common base type although they both decode subsets of
+$\mathbb{R}$ and there are unrelated types with the same value space
+(\xml{xs:base64Binary} and \xml{xs:hexBinary}, which both map to the set of
+finite-length sequences of binary bytes). Another problem may arise from the
+fact that validation with a \acro{XSD} instances may modify a document by
+adding default values and type information.  The set of \acro{XSD} datatypes
+has also been criticized for being an arbitrary selection \cite{Ogbuji2002}.
+For instance there are various types for dates and times but no types for other
+dimensions such as length and geographic location.  Facets like length of the
+lexical value neither consider Unicode normalization forms which can be
+relevant to textual content.  Alternatives and extensions to \acro{XSD} data
+types such as ``Extensible Datatypes'' and the \tacro{Character Repertoire
+Description Language}{CREPDL}, both published as part of ISO~19757
+(\citeyear{ISO19757:2008}), are mostly ignored in the \acro{XSD} community,
+possibly because of the ``Not Invented Here syndrome'': unlike \term{RELAX NG}
+and \term{Schematron}, \acro{XSD} is not designed by a small team, but by a
+large working group that incorporates interests of database vendors and other
+companies. As a result, the specification is large, complex, and difficult to
+implement with all features. \acro{XSD} is also criticized for being difficult
+to read and write without additional tools, it does not allow \Term[ambiguous
+grammar]{ambiguous rules} that result in multiple \term{term parse} for the
+same \acro{XML} document,\footnote{The concept of ambiguous and deterministic
+rules in \acro{XML} is an extension of ambiguous and deterministic grammars for
+formal languages (section~\ref{sec:formallanguages}) to tree languages. A
+detailed analysis of computability classes for \acro{XML} schema languages is
+given by \textcite{Stuehrenberg2010}, based on \textcite{Murata2005}.} and for
+other reasons \cite{Clark2002}. As pointed out by \textcite{Ogbuji2002}, there
+is a cultural gap between use of \acro{XML} technology with a background in
+\term{markup language}s (see section~\ref{sec:markuplanguages}) and user with a
+background in relational databases and object-oriented development.  \acro{XSD}
+clearly origins from the second culture. 
+
+\subsection{RDF schema languages}
+\label{sec:rdfschemas}
+
+Schema languages for \acro{RDF} (see section~\ref{sec:rdf}) are also known as
+\term{ontology} languages, with the \tacro{Web Ontology Language}{OWL} as their
+most popular instance.  \acro{RDF} schema languages are usually based on
+\term{formal logic} systems such as \term{first-order predicate logic} or
+\term{description logic}, and they originate in \term{knowledge representation}
+languages from \term{artificial intelligence} research.  In its most general
+form, an \acro{RDF} ontology can be described as any collection of \acro{RDF}
+resources, at least if the resources are used (or proposed to be used) in
+\acro{RDF} triples either as predicate, or as datatype, or as object if the
+predicate is \rdf{rdf:type}.\footnote{This automatically makes \rdf{rdf:type}
+part of an ontology, because it is used as predicate.} \acro{RDF} resources
+from one ontology are usually summarized as \acro{RDF} vocabulary under one
+common namespace. In addition, ontologies can include rules that restrict the
+use of their resources in \acro{RDF} data, and that allow logical inference for
+\term{entailment} in a specific \term{entailment regime} (see
+page~\pageref{page:entailment}).  Given this definition of an ontology, an
+\acro{RDF} schema language is a defined method to specify and describe
+ontologies.  Most current \acro{RDF} schema languages are also \acro{RDF}
+ontologies, that means these languages are expressed by \acro{RDF} triples. An
+exception is the definition of \acro{RDF} datatypes, that make use of
+\acro{XML} Schema (see section~\ref{sec:xmlschemas}). Example~\ref{ex:rdfodata}
+shows some \acro{RDF} data together with parts of the \tacro{Friend of a
+Friend}{FOAF} ontology and the \term{DBPedia} ontology.  The example already
+shows that in practice one rarely deals with a schema language as a whole but
+with specific features of schema languages.
+
+Although a general schema language for \acro{RDF} graphs could be created as a
+\term{rewriting system} on \term{graph} patterns (see
+page~\pageref{p:rewritingsystem}), existing schema languages do not allow
+arbitrary graph patterns, but adhere to a object-oriented system with classes,
+properties, and individuals. In short, \acro{RDF} schema languages provide
+resources to document parts of an ontology (\rdf{rdfs:isDefinedBy},
+\rdf{rdfs:label}, \rdf{rdfs:comment}, \rdf{vs:term_status}\ldots), to define
+(specific kinds of) classes and properties (\rdf{rdf:type}, \rdf{rdfs:Class},
+\rdf{rdf:Property}, \rdf{owl:AnnotationProperty},
+\rdf{owl:FunctionalProperty}\ldots), and to define rules and relations between
+these entities (\rdf{rdfs:subClassOf}, \rdf{owl:disjointWith},
+\rdf{rdfs:domain}, \rdf{rdfs:range}\ldots).  
+
+\begin{example}[htp]
+\centering
+\begin{lstlisting}[language=turtle]
+# RDF vocabularies
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dbp:   <http://dbpedia.org/property/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix vs:     <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+
+# RDF data that uses the RDF resources foaf:Person, foaf:name,
+# foaf:birthday, dbp:dateOfBirth, and xs:date from ontologies.
+<http://viaf.org/viaf/616522> rdf:type foaf:Person ;
+  foaf:name "Dennis M. Ritchie" ;
+  foaf:birthday "09-09" ;
+  dbp:dateOfBirth "1941-09-09"^^xs:date .
+
+# Parts of RDF ontologies, described by RDF schema languages:
+
+## FOAF ontology
+<http://xmlns.com/foaf/0.1/> rdf:type owl:Ontology ;
+   dc:title "Friend of a Friend (FOAF) vocabulary" .
+
+foaf:Person rdf:type rdfs:Class ;
+   rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+   rdfs:label "Person" ;
+   rdfs:subClassOf foaf:Person ;
+   owl:disjointWith foaf:Document, foaf:Organization, foaf:Project ;
+   vs:term_status "stable" .
+
+foaf:birthday rdf:type owl:AnnotationProperty, owl:FunctionalProperty ;
+   rdfs:comment """The birthday of this Agent, represented in
+                    mm-dd string form, eg. '12-31'.""" ;
+   rdfs:domain foaf:Agent ;
+   rdfs:range rdfs:Literal ;
+
+## DBPedia ontology
+dbp:dateOfBirth rdf:type rdf:Property ;
+   rdfs:label "DATE OF BIRTH"@en .
+\end{lstlisting}
+\caption{RDF data and its ontology, described by \acrostyle{RDF} schema languages}
+\label{ex:rdfodata}
+\end{example}
+
+The most basic schema language is the basic \acro{RDF} vocabulary with the
+property \rdf{rdf:type}, the resource \rdf{rdf:Property}, the datatype
+\rdf{rdf:XMLLiteral}, and the rules of \term{rdf-entailment} \cite[section
+3]{Hayes2004}. This minimal ontology language is extended by
+\textcite{Brickley2004} to the \acro{RDF} Vocabulary Description Language,
+which is called \Tacro{RDF Schema}{RDFS}. \acro{RDFS} is further extended by
+the \acro{OWL} family of ontology languages. \acro{OWL} was first published as
+working draft by \textcite{Dean2002} and extended to \acro{OWL}2
+\cite{Schneider2009}. \acro{OWL} has since superseded other general ontology
+languages such as \acro{DAML+OIL}.  In addition, there are rule languages, such
+as the \Tacro{Rule Interchange Format}{RIF} \cite{Kifer2010} and \Tacro{SPARQL
+Inferencing Notation}{SPIN} \cite{Knublauch2011}.  The usability of ontology
+languages can partly be improved by specific syntaxes, such as the Manchester
+Syntax for \acro{OWL} \cite{Horridge2009} and by using specialized ontology
+editors. One can also use other logic languages and even natural language. In
+fact many ontologies contain additional rules and descriptions that are only
+provided in natural language, because using a formal rule language would be too
+complex or too strict.  For instance the restriction of \rdf{foaf:birthday} to
+strings of the form ``\texttt{mm-dd}'' in example~\ref{ex:rdfodata} is only
+given as deontic comment, although it could also be expressed as formal
+constraint. Some rules can also be expressed in \term{Notation3}: its syntax
+supports statements in \term{first-order predicate logic} by using formulae
+with quantification and logical implication. The processing of this rules,
+however, is much less supported by applications then standard \acro{RDFS} and
+\acro{OWL}. To reduce complexity and to facilitate implementation and
+computation, \acro{OWL} is split up in three different sublanguages
+\cite{Dean2002} or three different profiles (\acro{OWL2}). With limited
+expressibility there are the following dialects:
+% \cite{OWL2:2009}
+
+\begin{itemize}
+\item \acrostyle{OWL}-Full contains all features of the original \term{Web Ontology Language}.
+  It is now replaced by \acrostyle{OWL2}.
+\item \acrostyle{OWL}-Lite was intended as subset of \acro{OWL} for easy 
+  implementation. As it turned out to be more complex then intended, 
+  \acrostyle{OWL}-Lite is now deprecated.
+\item \acrostyle{OWL DL} and \acrostyle{OWL2 DL} are similar subsets of \acro{OWL} and
+  \acrostyle{OWL2} that can be mapped to an extension of \term{description logic} with
+  useful computational properties. The underlying logic model of \acrostyle{OWL2 DL} is 
+  called $\mathcal{SQOIQ}$ \cite{Horrocks2006}.
+\item 
+  \acrostyle{OWL2 EL}, \acrostyle{OWL2 QL}, and
+  \acrostyle{OWL2 RL} are subsets of \acrostyle{OWL2}, each
+  designed for efficient computability in different application
+  scenarios: \acrostyle{EL} has polynomial time reasoning complexity,
+  \acrostyle{QL} supports fast query answering, and \acrostyle{RL} can
+  be implemented using rule-based reasoning systems.
+\end{itemize}
+
+\acro{OWL} also adds two new numeric data types (\xml{owl:real} and
+\xml{owl:rational}).  Although \acro{RDFS} and \acro{OWL} allow undecidable
+statement (\acro{RDFS} is not on \acrostyle{OWL DL}) most schemas only use a
+limited set of features. Furthermore, most existing ontologies can easily be
+patched to belong to a less complex dialect \cite{Wang2006,MartinezGil2010}. A
+general property of \acro{RDF} schema languages is their use of the \term{Open World Assumption} as default:
+An \acro{RDF} ontology
+assumes that any unspecified statements may exist (unless declared otherwise,
+for instance with statements like \rdf{owl:oneOf}, \rdf{owl:disjointWith}, and 
+\rdf{owl:complementOf}), while non-\acro{RDF} schemas assume that unspecified
+data elements are not allowed (unless declared otherwise, for instance with
+wildcards, such as \xml{ANY} in \acro{XML}).
+
+\subsection{SQL schemas}
+\label{sec:sqlschemas}
+
+The first data definition language that was used under this name, was used to
+define schemas of \term{relational database}s and later specified as subset of
+\acro{SQL}.  In addition to this \term{SQL schema} definition language, SQL-92
+introduced a schema manipulation language and schema information tables, which
+provide views to database schemas in form of SQL tables \cite{Date1997}.
+Alternatives to the SQL schema language, such as \term{Tutorial D} by
+\textcite{Date2006} have little practical relevance, so most \acro{SQL} schemas
+should be written in one common schema language. The exact specification of
+this language, however, much depends on the particular \acro{RDBMS}, because
+each database system implements its own subset of some version of the
+\acro{SQL} standard with its own additions and modifications. In general, a
+schema consists of a set of \sql{CREATE} statements.  The most important
+statement is \sql{CREATE TABLE} to define database tables.  In addition one can
+define derived datatypes with \sql{CREATE DOMAIN} or a similar command, and
+group table and datatype names in namespaces with \sql{CREATE SCHEMA}. Derived
+datatypes can have their own default values and an optional \sql{CHECK} clause,
+for instance to limit the possible values to a custom range, but this features
+are not fully supported by all \acro{RDBMS}.  A table definition consists of a
+non-empty sequence of column definitions, where the order of fields is
+irrelevant for most applications. Each column is identified by a name, unique
+per table, it is associated with a datatype (see below) and it can have an
+optional default value. The default value which may also be generated
+automatically with the \sql{IDENTITY} statement (also known as auto-increment)
+and a selected numbering scheme).  In addition, each column and the table as a
+whole can be shaped by the following constraints:
+
+\begin{itemize}
+ \item \sql{UNIQUE} marks column values to be unique per table, so each 
+   row can be identified by its value, unless the value is \sql{NULL}.
+ \item \sql{NOT NULL} enforces a column to not contain \sql{NULL} value.
+ \item \sql{PRIMARY KEY} marks up to one column per table. 
+   It implies \sql{UNIQUE} and \sql{NOT NULL}.
+ \item \sql{FOREIGN KEY} values must reference an existing \sql{PRIMARY KEY} in a 
+   specific table. This constraint is important to connect multiple tables of one schema.
+ \item \sql{CHECK} can limit values based on boolean expressions over one or more
+   columns. For instance one can check that the date of death is not before the date of birth
+   for a table with two columns \sql{BIRTH} and \sql{DEATH}.
+\end{itemize}
+
+\acro{SQL}-92 also introduced a \sql{CREATE ASSERTION} statement for
+constraints that can span multiple tables, but this feature is not supported by
+most \acro{RDBMS}. Triggers and other settings may also shape the actual
+database content, similar to a schema, but this highly depends on the specific
+database application. In addition to tables, there can be views, defined with
+\sql{CREATE VIEW}. Views are virtual tables that map to normal tables via an
+\acro{SQL} query.  If there is a one-to-one relationship between rows in a view
+and rows in tables it refers to, among other limitations, the view may be
+counted as part of a schema.  The list of \acro{SQL} datatypes for column
+definitions has slightly changed with each version of the standard, and support
+of datatypes differs among \acro{RDBMS}. In summary there are:
+
+% see http://www.postgresql.org/docs/8.4/static/datatype.html
+
+\begin{itemize}
+\item numeric types, including integer types and decimal types with fixed or arbitrary precision, 
+  and floating-point types
+\item character string types with variable or fixed length, possibly padded by whitespaces
+\item temporal types for dates, times, and intervals
+\item binary data types for sequences of bits or sequences of bytes
+\item a boolean type (not exactly supported by most systems)
+\item an \sql{XML} type to store \acro{XML} documents and fragments
+\item an \sql{ARRAY} type for one- or multi-dimensional sequences of same type and a 
+  (rarely supported) \sql{MULTISET} type for unordered collections of same type value. Some 
+  systems also support non-standard nested tables and associative arrays.
+\item composite types to group one or more unconstrained columns to be used as datatype
+  in another column
+\item types for specialized domains, such as monetary types and spatial types
+\end{itemize}
+
+% TODO: refer to patterns!
+% graph data types are rare
+% for instance Microsoft SQL Server 2008 added a 
+% HIERARCHYID type to store the path in a tree structure to better
+% support hierarchical structures.
+
+Example~\ref{ex:ormsql} in section~\ref{sec:docobj} includes a simple
+\acro{SQL} schema for illustration.
+
+\subsection{Other schema languages}
+\label{sec:otherschemas}
+
+% The only alternative: orm? automatically generated SQL schemas?
+
+Given \acro{XML} schema languages for \acro{XML} data, \acro{RDF} schema
+languages for \acro{RDF} data and \acro{SQL} schema language for \acro{SQL}
+data one can think of many more schema languages for each particular data
+structuring method: there are several proposals for \acro{JSON} and \acro{YAML}
+(\term{Kwalify}, \term{JSON Schema}, \term{Rx}, \term{Simple Declarative
+Language} etc.) and several \term{data binding language}s come with their own
+\term{data definition language} (see part~\ref{sec:databinding} and
+table~\ref{tab:dslrpcformats}). Terminology among schema languages differs ---
+the same concept may be called `schema', 'format', or 'message' in different
+languages --- but in general schema languages share a set of common concepts,
+similar to \term{type system}s of programming languages: there is a set of
+predefined, possibly extensible data types and data elements can be named,
+grouped, and constraint as mandatory or optional. In addition one can often
+find methods to combine, extend and restrict schemas.  To give an example,
+example~\ref{ex:rxtypes} lists predefined data types and methods of
+constraining in the \term{Rx} schema language \cite{Signes2008}.
+Table~\ref{tab:protocolbuffersdatatypes}
+(page~\pageref{tab:protocolbuffersdatatypes}) includes another example with
+data types from \term{Protocol Buffers}.  Some schema languages make use of
+\term{regular expression}s and elements from \term{context free grammar} when
+defining hierarchical or sequential data.  Methods to specific
+context-sensitive rules which correlate multiple data elements are less
+frequent, and they are often restricted to a set of rule types, such as
+referential constraints with keys and \term{foreign keys}.  Less limited
+languages to defined and describe data structures will be covered as
+\term{modeling language}s in section~\ref{sec:modelangs}.  In the following,
+programming languages, forms, and the \tacro{Data Format Description
+Language}{DFDL} will be explained briefly.
+
+\begin{example}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Type} & \textbf{Content} \\
+\hline
+nil  & the lack of a value (undef, null, nil, etc) \\
+\hline
+def  & any defined value; anything that is not nil \\
+\hline
+bool & a value that is either true or false \\
+\hline
+num  & a number; may be parameterized by a range (fixed or inclusive or exclusive minimum and/or maximum value) \\
+\hline
+int  & an integer; may be parameterized by a range \\
+\hline
+str  & a string, even the empty string \\
+\hline
+one  & any of bool, num, int, and str \\
+\hline
+arr  & a list of values all of one type; may be parameterized by a range as length \\
+\hline
+seq  & a list of values of different, given types \\ % tuple
+\hline
+rec  & a record of named entries, each with its own schema and a required/optional flag \\
+\hline
+map  & a map of names to values, with all the values of one type \\
+\hline
+any  & either anything at all, or any of a given list of types (union) \\
+\hline
+all  & a combination of types (intersection) \\
+\hline
+\end{tabularx}
+\caption{Predefined data types and elements of the Rx schema language}
+\label{ex:rxtypes}
+\end{example}
+
+
+\subsubsection{Programming languages}
+
+Many schemas are expressed in some
+programming language, either explicitly by the language's type system or
+implicitly by the behavioral logic of a specific program.
+
+A schema, expressed in a particular schema language, can also be viewed as
+source code that is run by a validator (see image~\ref{fig:schemavalidator}).
+One can create a program for validation of documents in any Turing-complete
+\term{programming language}. This implies programming languages can be used as
+schema languages for decidable data format. Such program makes the data format
+implicit because the program will contain many parts which are not directly
+related to the data format. With implicit schemas, hard-coded in programming
+languages, it is more difficult to share and compare schemas. These also
+applies partly for schemas that are automatically created by other tools, so
+the created schema is only a compiled artifact from an original schema in
+another program or language. In exchange validation may be more performant and
+provide better document analysis, for instance more helpful error messages.  In
+practice many data formats have no explicit schema, so the programs that read
+and write data are the only reliable source to infer common data structures.
+Even programs that make use of explicit schemas may modify its rules, for
+instance by adding practical limits on length of values or other constraints
+which cannot be expressed in the particular schema language. Therefore one
+should always distinguish the explicit part of a schema, as expressed in a
+schema language, and the implicit part of a schema, as only implemented in
+applications.  Especially the meaning of a data element can often better be
+determined by looking at its use in applications instead of relying on labels
+and descriptions in official schemas.
+
+% Programming language contain type systems which are covered
+% well in literature. See \ref{sec:dsl} for the relation
+% between type systems and data structuring languages.
+
+\subsubsection{Forms and questionnaires}
+\label{sec:forms}
+
+Standardized \term[form]{forms} and questionnaires are ubiquitous methods to
+collect and edit data, predating all digital data management. The
+\textit{Marcufli Formulae} from the late 7th century can be considered as first
+collection of forms \cite{Zeumer2001}: it contained boilerplates for deeds,
+that were used in the Frankish Empire. Modern printed forms have been used from
+the 19th century on, also with legal pleadings and contracts as first
+applications. Their primary purpose is attestation: documentation of
+statements. In contrast to other documents, a form highlights the relevant
+statements to be documented by forcing them into predefined structures. By
+this, a form can be seen as kind of schema and as visible interface to a data format.
+The form gives a frame to actual data and it can influence what and how
+data is entered, for instance in form of good or bad usability. A deeper
+analysis of dedicated forms could explain some artifacts in the data that was
+edited through them, but this would go beyond the scope of this thesis. Most
+aspects of the history of forms still have to be written. For a starting point
+see \textcite{Becker2007} and \textcite{Grosse1980}.
+
+\subsubsection{Data Format Description Language}
+\label{sec:dfdl}
+
+The \tacro{Data Format Description Language}{DFDL} is an extension to a subset
+of \term{XML Schema} to describe binary and text formats for mapping them to
+\acro{XML} \cite{Beardsmore2007,Powell2011}. Version~1.0 of \acro{DFDL} has
+been published as proposed recommendation in 2011. A \acro{DFDL} schema
+consists of an \acro{XSD} schema that defines \acro{XML} elements (\acro{XML}
+attributes are not supported) and mappings from these elements to data elements
+in the non-\acro{XML} format to be described. \acro{DFDL} supports sequences,
+choices, grouping, optional, and repeatable elements, so one can use it like
+\term{Backus-Naur Form} to parse word in formal languages to \term{syntax
+tree}s in \acro{XML}. \acro{DFDL} also supports unordered sequences,
+delimiters, length indicators and padded fields of fixed length, tags,
+terminators, default values, escape characters, regular expressions etc. that
+facilitate the description of binary and textual formats. A subset of XPath~2.0
+can be used to express dependencies and calculations that even span local
+boundaries, similar to \xml{context} and \xml{test} expressions in
+\term{Schematron}.
+
+%\TODO{Should I include an example of a DFDL schema?}
+

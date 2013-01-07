@@ -1,0 +1,402 @@
+\chapter{Patterns in data structuring}
+\label{ch:patterns}
+
+\begin{quotation}%
+For they say the real is differentiated only by `rhythm' and `inter-contact'
+and `turning'; and of this rhythm is shape, inter-contact is order, and
+turning is position; for A differs from N in shape, AN from NA in order,
+M from W in position.\\
+\quotationsource \person{Aristotle}: \textit{Metaphysics}, Book I, part 4
+(around 350 B.C.)% translated by W. D. Ross, written 350 B.C.E.
+\end{quotation}
+
+\noindent This chapter contains a language of fundamental patterns in data
+structuring (for pattern languages in general see
+section~\ref{sec:patterntheory}). Twenty fundamental patterns were identified
+based on analysis from chapter~\ref{ch:methods} and findings from
+chapter~\ref{ch:findings}. The pattern language is introduced with its
+organization in section~\ref{sec:organization} before the actual patterns are
+listed in four groups section~\ref{sec:basic-patterns} to
+\ref{sec:continuing-patterns}.  Finally the language is evaluated by
+comparison with related collections in section~\ref{sec:evaluation}.
+
+\section{Organization}
+\label{sec:organization}
+
+In short, a \term{pattern} is a named description of ``a problem which occurs
+over and over again in our environment'' \cite{Alexander1977}.  The pattern
+guides to ways of solving the problem, independent from particular solutions.
+Each pattern from this pattern language of data structuring highlights a
+specific problem that occurs when data is actually organized. As mentioned
+before, problems of data structuring should not be confused with particular
+\term[data structure]{data structures} as technical solutions. A pattern refers
+to particular methods of data structuring (see chapter~\ref{ch:methods}), but
+it does not adhere to concrete implementations. Instead, each pattern shows
+general strategies of solutions with its benefits, consequences, and pitfalls.
+
+Each of the patterns is structured similarly to the design patterns presented by
+\textcite{Gamma1994}, \textcite{Cunnigham1995}, and other pattern
+languages.\footnote{An informal collection of pattern templates can be found in
+WikiWikiWeb at \url{http://c2.com/cgi/wiki?PatternForms}. See also
+\textcite{Meszaros1997} for patterns in pattern languages.} Each pattern
+consists of four essential elements that imply a set of uniform sections:
+
+\begin{itemize}
+
+  \item The \emph{name} is a short label for referencing and describing
+    the pattern. A good name should be easy to recognize and communicate
+    the pattern. Additional well-known or helpful names of the pattern may
+    be listed as \textbf{alias}. Note that a pattern name may have different 
+    meanings and connotations in other context, so it should be taken as 
+    technical term with its pattern language as controlled vocabulary. 
+
+  \item The \emph{problem} describes when to apply the pattern. This
+    description consists of the core \textbf{idea} with the 
+    pattern's rationale and intent, the    \textbf{context} in which the 
+    pattern can be applied and which imposes constraints on solutions,
+    and a \textbf{motivation} to illustrate the problem.
+
+  \item The \emph{solution} lists possible \textbf{implementations}
+    as strategies to solve the problem. The solution can be illustrated
+    by \textbf{examples} and \textbf{counter examples}. Note that there
+    is rarely a single or best solution but each implementation has 
+    its strengths and weaknesses.
+
+ \item The \emph{consequences} are the results and trade-offs of
+   applying the pattern. This includes possible \textbf{difficulties}
+   and forces that must be taken into account when choosing a solution.
+   Additional cross-references to \textbf{related patterns} include other 
+   patterns that describe similar problems or patterns that may coexist
+   unnoticed. Among related patterns there can be \textbf{implied patterns} 
+   that appear together with a pattern, and 
+   \textbf{specialized patterns} that solve a more specific problem.
+\end{itemize}
+
+\noindent
+The pattern language is structured in four groups of patterns:
+
+\begin{description}
+\item[Basic patterns] include the most fundamental strategies of
+	describing and structuring data elements (section~\ref{sec:basic-patterns}).
+	These patterns are named \pattern{label}, \pattern{atomicity}, 
+	\pattern{size}, \pattern{optionality}, and \pattern{prohibition}.
+
+\item[Combining patterns] connect multiple data elements to larger structures
+	(section~\ref{sec:combining-patterns}). These patterns are named 
+	\pattern{sequence}, \pattern{graph}, \pattern{container}, 
+	\pattern{dependence}, and \pattern{embedding}.
+
+\item[Relationing patterns] relate data elements to each other to solve
+	typical types of problems
+	(section~\ref{sec:relationing-patterns}). These patterns are named
+	\pattern{flag}, \pattern{derivation}, \pattern{encoding}, \pattern{identifier},
+	\pattern{normalization}, and \pattern{schema}.
+
+\item[Continuing patterns] indicate that more data exists
+	(section~\ref{sec:continuing-patterns}). These patterns are named
+	\pattern{separator}, \pattern{etcetera}, \pattern{garbage}, and \pattern{void}.
+\end{description}
+
+\noindent A classification of all patterns is summarized in the last chapter in
+table~\ref{tab:patternclassification} and appendix~\ref{appendixC} includes a
+graph to depict connections between patterns.
+
+
+\input{sec-patterns}
+
+
+\section{Evaluation}
+\label{sec:evaluation}
+
+Despite their popularity, there is little research on evaluation of pattern
+languages and the pattern language paradigm itself
+\cite{Petter2010,Dearden2006}.  A pattern language is meant to be a tool of
+communication to describe typical solutions to common problems.  Evaluation can
+therefore concentrate on: first whether and how well the language describes
+typical solutions to common problems, and second whether and how well the
+language communicates these problems and solutions. The second question can
+best be answered with user studies which would go beyond the scope of this
+thesis. The first question can be answered by direct examination of the
+patterns and their problems and solutions.
+
+To check whether the pattern language developed in this thesis reflects
+experience in data description, the pattern language is compared to similar
+collections and models. If similar approaches have led to similar solutions,
+this is a strong indicator that the pattern language actually describes common
+problems and solutions in data structuring and description.  Most existing
+pattern languages such as \textcite{Gamma1994} are not comparable because they
+do not refer to static digital documents but to dynamic behavior of information
+systems. Literature review led to three models of data that are similar enough
+to allow for comparison. These models will briefly be compared with the pattern
+language in the following. Evaluation in greater depth will require more
+feedback.  Evaluation of patterns, as suggested by \textcite{Petter2010}, is a
+conscious continuous improvement activity, which should be applied to the
+entire life-cycle of a pattern language. The current language should therefore
+be taken as valid starting point for further improvement.
+
+\subsection{Honig's analysis model of data structures}
+\label{sec:honig}
+
+Based on a review of 21 programming languages and data base management systems,
+\textcite{Honig1975} in his thesis developed a general analysis model of data
+structures. The model distilled the major differences out of existing data
+types as possible axis of variation. Similar to my thesis, Honig's model
+describes only ``the static, unchanging nature of data structures'' and it
+refers to the \term{logical level}, independent from particular implementations
+and naming. In contrast to the broad collection of data structuring methods in
+chapter~\ref{ch:methods}, elements of the conceptual realm and data structures
+from other domains, such as markup languages, conceptual modeling languages,
+and conceptual diagrams are not explicitly included in Honig's model. The final
+analysis model is a faceted classification with three major classes aggregate,
+association, and file data structures. Each class has a number of facets,
+represented as questions in appendix \ref{appendixA}. Table
+\ref{tab:honigpatterns} compares Honig's classification with the patterns in
+data structuring. As the pattern language is no classification, there is no
+1-to-1 relationship but a loose mapping between both systems.  Their different
+aims can best be summarized following. While Honig classified data structures
+to tell out what they actually are, the pattern language of data structuring
+tells what typical kinds of data structures actually mean.
+
+Both aggregates and files from Honig's model are examples of the
+\pattern{container} pattern as their basic idea is to combine a number of
+elements to a larger structure. The first facet asks whether an aggregate
+contains data elements of exactly one kind or type (homogeneous elements). The
+kind or type can be given by a \pattern{flag}, a \pattern{schema} or a
+\pattern{label}. The second facet tells whether elements are atomic and
+indivisible, which is expressed by the \pattern{atomicity} pattern. The idea of
+ordering elements corresponds to the \pattern{sequence} pattern (third facet)
+and constraints on the number of elements are examples of the \pattern{size}
+and the \pattern{schema} patterns (fourth pattern). Finally member elements can
+be identified by different means: if the number or position is used, the
+\pattern{sequence} pattern can be observed and identification by name is an
+example of the \pattern{identifier} pattern. Element identification by pointer
+is only mentioned briefly by \textcite[p. 146]{Honig1975} without giving more
+examples. On a closer look it can be subsumed to identification by name.
+
+The classification of file data types in Honig's model includes three facets,
+the first of which having a subclass: file selection asks about what method is
+used to pick one or more entry instances. This facet corresponds to element
+identification and the \pattern{identifier} pattern. If unique entries are
+specified by file selection, this is eventually based on
+\pattern{normalization}. The second facet (sequential files) corresponds to the
+\pattern{sequence} pattern and the third facet (kinds of entries) best matches
+to the \pattern{flag} pattern.
+
+Associations as third class of data structures basically express instances of
+the \pattern{graph} pattern with some data elements as nodes and connecting
+data elements as vertices. Cardinalities of connections (first facet) are
+expressed by a \pattern{schema} that puts constraints on a \pattern{size}.
+Kinds of end in an association (second facet) refer to the types of node
+elements: For instance a kinship association may only exist between people
+elements. Like the kinds of entries in file data types this question
+can best be answered with the \pattern{flag} pattern but the
+\pattern{derivation} may also be given if one element can have multiple types.
+Associations with loops allowed correspond to general \pattern{graph}
+structures which may be constrained by a \pattern{schema}. Finally complete
+associations (fourth facet) and exclusive associations (sixth facet) impose
+mandatory and/or uniqueness constraints on their member elements which 
+maps to the \pattern{optionality} and to the \pattern{flag} pattern respectively.
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lll}
+& \textbf{dimension/axis} & \textbf{patterns} \\
+\hline
+\multicolumn{2}{l}{\textbf{aggregates}} & \pattern{container} \\
+\hline
+& homogeneous elements          & \pattern{flag}, \pattern{schema}, \pattern{label} \\
+& basic item elements           & \pattern{atomicity} \\
+& ordered elements              & \pattern{sequence} \\
+& number of elements (fixed, limited, unbounded) & \pattern{size}, \pattern{schema} \\
+& element identified by number  & \pattern{sequence} \\
+& element identified by name    & \pattern{identifier} \\
+& element identified by pointer & \pattern{identifier} \\
+\hline
+\multicolumn{2}{l}{\textbf{files}} & \pattern{container} \\
+\hline
+& file selection & \pattern{identifier} \\
+& unique entries  & \pattern{normalization} \\
+& sequential file & \pattern{sequence} \\
+& kinds of entries & \pattern{flag} \\
+\hline
+\multicolumn{2}{l}{\textbf{associations}} & \pattern{graph} \\
+\hline
+& cardinality (1-1, 1-n, n-m) & \pattern{schema}, \pattern{size} \\
+& kinds of ends & \pattern{flag}, \pattern{derivation} \\
+& loops allowed & \pattern{graph}, \pattern{schema} \\
+& complete associations  & \pattern{optionality} \\
+& exclusive associations & \pattern{flag} \\
+\hline  
+\end{tabular}
+\caption{Comparison of patterns with Honig's model (\citeyear{Honig1975})}
+\label{tab:honigpatterns}
+\end{table}
+
+
+\subsection{Quarks of Object-Orientation}
+
+By literature analysis in the field of \term{Object Orientation}
+\textcite{Armstrong2006} identified fundamental concepts that define the
+\term{Object Oriented} development approach. She found eight concepts that are
+mentioned in more then half of the sources, and put them in a simplified Object
+Orientation taxonomy. The most mentioned concepts are: abstraction, classes,
+encapsulation, inheritance, objects, message passing, methods, and
+polymorphism. Table~\ref{tab:ooquarkpatterns} shows the structural part of the
+taxonomy and maps the \acro{OO} concepts to similar patterns:
+
+Abstraction is used on object orientation to simplify something by
+concentrating on relevant distinctions only. This methods is found in the
+\pattern{normalization} pattern. A class in object orientation combines a
+\pattern{label} to be referenced and interpreted by humans and a
+\pattern{schema} with possibilities and constraints. Encapsulation hides
+details of implementation and provides a simplified form of access.  This
+concept maps to both the \pattern{atomicity} pattern and the
+\pattern{encoding} pattern. Inheritance connects classes by extension or
+restriction, which imply an application of the \pattern{derivation} pattern.
+The object concept finally conveys the idea of identifying a single instance,
+which is expressed by the \pattern{identifier} pattern.  The OO concepts of
+message passing, methods, and polymorphism refer to behavior instead of
+structure so they are left out in the comparison. It should only be noted that
+data patterns are inherently polymorph: a single patterns rarely describes the
+nature of one data object but often there are multiple patterns as possible
+viewpoints to the same artifact.
+
+%\clearpage
+\begin{table}[p]
+\begin{tabularx}{\textwidth}{lXX}
+\hline
+\textbf{concept} & \textbf{definition} & \textbf{patterns} \\
+\hline
+Abstraction & Creating classes to simplify aspects of reality using 
+distinctions inherent to the problem.
+& \pattern{normalization}
+\\
+Class & A description of the organization and actions shared by one 
+or more similar objects. 
+& \pattern{label}, \pattern{schema}
+\\
+Encapsulation & Designing classes and objects to restricts access to 
+the data and behavior by defining a limited set of messages that an 
+object of that class can receive.
+& \pattern{atomicity}, \pattern{encoding}
+\\
+Inheritance & 
+The data and behavior of one class is included in or used as the basis 
+for another class.
+& \pattern{derivation}
+\\
+Object & 
+an individual, identifiable item,
+either real or abstract, which contains data about itself 
+and descriptions of its manipulations of the data.
+& \pattern{identifier}
+\\
+Message Passing & the process by which an object sends data
+to another object or asks the other object to invoke a
+method. & --- \\
+Method & A way to access, set, or manipulate an object's information & --- \\
+Polymorphism & Different classes may respond to the same message and 
+each implement it appropriately. & --- \\
+\hline
+\end{tabularx}
+\caption{Quarks of Object-Orientation compared to patterns}
+\label{tab:ooquarkpatterns}
+\end{table}
+\clearpage
+
+\subsection{ISO 11404}
+
+ISO~11404 (\citeyear{ISO11404}) is one of the rare standards that deal with
+\term{data type}s independent from particular (programming) languages. Lessons
+learned during its specification have been summarized by
+\textcite{Meek1995,Meek1996}.  An overview of ISO~11404 is given in
+section~\ref{sec:datatypes}:  the standard defines three notions of data types,
+a set of general datatype properties, a collection of common primitive data
+types, and some derivation methods to create new types based on existing ones.
+By this means ISO~11404 defines a set of abstract data type classes of which
+the actual datatypes used in programming languages are derived. A comparison
+of these abstract classes and data description patterns is given in
+table~\ref{tab:iso11404patterns}. The comparison is explained in the
+following.
+
+First, ISO~11404 distinguishes the fundamental notions \term{value space},
+\term{value representation}, and \term{computational model} of a data type. The
+latter is not relevant to this thesis because it refers to dynamic properties.
+The relation between value space and value representation is found with the
+\pattern{encoding} pattern as basic semiotic relation between signifier and
+signified. The equality property is an instance of the \pattern{normalization}
+pattern while order is an applications of the \pattern{sequence} pattern.
+Upper and lower bounds restrict an ordered set with constraints
+(\pattern{schema} pattern).  Cardinality in ISO~11404 refers to the property of
+having either a finite value space, to a denumerable infinite value space
+($\aleph_0$) or to an approximate finite or innumerably infinite value space (such
+as floating point numbers to represent $\mathbb{R}$). Finite and innumerably
+infinite data types must have some known or derivable \pattern{size} while
+approximate types require a \pattern{normalization}. Numeric types combine
+cardinality with an ordered set, so at least a \pattern{sequence} can be found.
+
+Primitive data types from the standard have been summarized in
+table~\ref{iso11404primitives}. A comparison with data patterns shows that
+these primitive data types share a set of basic ideas, expressible by a small
+number of patterns: some basic data types are direct examples of one data
+patterns, such as Boolean for \pattern{flag}, Character for \pattern{encoding},
+Integer for \pattern{size} pattern and Void (also known as unit type) for
+\pattern{void}. Other types share the same fundamental pattern like Enumerated
+and Ordinal with the \pattern{sequence} pattern. The remaining primitive data
+types combine multiple patterns, the combination established by
+\pattern{embedding} or \pattern{encoding}.
+
+Finally, the general derivation methods, identified in ISO~11404 and further
+described in section~\ref{sec:datatypes} can be mapped to patterns or to
+combinations of patterns: pointer types are kind of identifiers as secondary
+elements (\pattern{identifier} and \pattern{dependence}). Choice types give a
+direct example of the \pattern{flag} pattern. Aggregation types combine
+multiple elements to one (\pattern{container}), possibly with additional
+structure (\pattern{embedding}). Subtypes, like inheritance from the quarks of
+Object-Orientation, implement a form of \pattern{derivation} (properties of a
+subtype can be derived from properties of supertypes).
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{ll}
+\hline
+\textbf{notions} & \textbf{patterns} \\
+\hline
+value space/representation & \pattern{encoding} \\
+\hline
+\textbf{properties} & \textbf{patterns} \\
+\hline
+equality          & \pattern{normalization} \\
+order             & \pattern{sequence} \\
+upper/lower bound & \pattern{schema} \\
+cardinality       & \pattern{size}, \pattern{normalization} \\
+numeric types     & \pattern{sequence} \\
+\hline
+\textbf{primitive data types} & \textbf{patterns} \\
+\hline
+Boolean    & \pattern{flag} \\
+State      & \pattern{flag}, \pattern{encoding} \\
+Enumerated & \pattern{sequence} \\
+Character  & \pattern{encoding} \\
+Ordinal    & \pattern{sequence} \\
+Date-and-Time & \pattern{sequence}, \pattern{embedding} \\
+Integer    & \pattern{sequence} \\
+Scaled (fixed point) & \pattern{size}, \pattern{embedding} \\
+Real       & \pattern{size}, \pattern{embedding} \\
+Complex    & \pattern{size}, \pattern{embedding} \\
+Void       & \pattern{void} \\
+\hline
+\textbf{derivation methods} & \textbf{patterns} \\
+\hline
+    pointer types & \pattern{identifier}, \pattern{dependence} \\
+     choice types & \pattern{flag} \\
+aggregation types & \pattern{container}, \pattern{embedding} \\
+         subtypes & \pattern{derivation} \\
+\hline
+\end{tabular}
+\caption{ISO~11404 concepts and data patterns}
+\label{tab:iso11404patterns}
+\end{table}
+
+

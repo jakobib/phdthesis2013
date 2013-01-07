@@ -1,0 +1,336 @@
+\chapter{Conclusions}
+\label{ch:conclusion}
+
+\section{Summary and results}
+\label{sec:summary}
+
+Many methods, technologies, standards, and languages exist to structure and
+describe data. The aim of this thesis is to find common features in these
+methods to determine how data is actually structured and described. The study
+is motivated by a growing number of purely digital documents and metadata,
+which both eventually exist as sequence of bits. In contrast to existing
+approaches, that commit to notions of data as recorded observations and facts,
+this thesis analyzes data as signs, communicated in form of digital documents.
+The document approach is rooted in library and information science as
+documentation science. In this discipline digital documents and metadata are
+primarily given as stable artifacts instead of processable information like in
+computer science. The notion of data as documents, as applied in this thesis,
+excludes statistical methods of data analysis in favour of intellectual data
+analysis. The study assumes that all data is implicitly and explicitly shaped
+by a process of data modeling, which is always grounded in the mind of a human
+being (see figure~\ref{fig:simplifieddatamodeling} and its unpackaged version
+in section~\ref{sec:datamodeling}, figure~\ref{fig:datamodeling}). The study
+also denies a clear distinction between data and metadata because metadata is
+both a digital document and used to structure and describe digital documents:
+one's data is the other's metadata and one's metadata is the other's document.
+Such relations in data, however, are not purely arbitrary but based on
+conventions that have been analyzed in this thesis.
+
+\begin{figure}[b]
+\centering
+\begin{tikzpicture}[orm]
+\matrix[column sep=6mm] {
+  \node[draw,cloud,cloud puffs=10,cloud ignores aspect,cloud puff arc=90,
+        minimum width=8mm,minimum height=4mm,label=mind] (mind) {};
+&
+ \node[ellipse,minimum width=6mm,label=model,minimum height=4mm] (model) {};
+ \draw (30:2mm) -- (-90:2mm) -- (150:2mm) -- cycle;
+ \draw [draw,fill=white]  (-90:2mm) circle (.6mm);
+ \draw [draw,fill=white] (30:2mm) circle (.6mm);
+ \draw [draw,fill=white] (150:2mm) circle (.6mm);
+&
+ \node[rectangle,minimum width=6mm,minimum height=4mm,label=schema] (schema) {};
+ \draw (schema.north west) rectangle (schema.center);
+ \draw (schema.north) rectangle (schema.east);
+ \draw (schema.west) rectangle (schema.south);
+&
+ \node[rectangle,minimum height=4mm] (data) {\texttt{01101}\ldots}; \\
+};
+\node[above=0.5mm of data] {implementation};
+\draw[<->,shorten >=1mm,shorten <=2mm] (mind) to (model);
+\draw[<->,shorten >=2mm,shorten <=1mm] (model) to (schema);
+\draw[<->,shorten >=0mm,shorten <=2mm] (schema) to (data);
+\end{tikzpicture}
+\caption{Simplified data modeling process}
+\label{fig:simplifieddatamodeling}
+\end{figure}
+
+The plethora of existing ways to structure and describe data was analyzed by a
+\term{phenomenological research method}, which is based on three steps: first,
+conceptual properties of data structuring and description were collected and
+experienced critically by phenomenological intuiting. As realized in
+chapter~\ref{ch:foundations} and chapter~\ref{ch:methods}, data is structured
+and described in different disciplines (mathematics, computer science, library
+and information science, philosophy, and semiotics) and by different practices.
+Examples of these practices include encodings, identifiers, markup, formats,
+schemas, and models. The most common methods to structure and describe data
+include data structuring languages (section~\ref{sec:dsl}) and schema languages
+(section~\ref{sec:schemas}).  After this empirical part, the methods found were
+grouped using phenomenological analysis without adhering to known concepts and
+categories. The result of this second step was presented in
+chapter~\ref{ch:findings}: the analysis resulted in six prototypes that
+categorize data methods by their primary purpose
+(section~\ref{sec:categorization}).  These prototypes can be used to better
+grasp the actual nature of a method, independent of its originally intended
+purpose:
+
+\begin{enumerate}
+ \item encodings (most of section~\ref{sec:characters})
+ \item storage systems
+	 (most of sections \ref{sec:filesystems} and \ref{sec:databases})
+ \item identifier and query languages
+	 (most of sections \ref{sec:identifiers} and \ref{sec:queries})
+ \item structuring and markup languages
+	 (most of sections \ref{sec:dsl} and \ref{sec:markuplanguages})
+ \item schema languages: 
+	 (most of section \ref{sec:schemas})
+ \item conceptual models
+	 (most of sections \ref{sec:modelangs} and \ref{sec:diagrams})
+\end{enumerate}
+
+The study further revealed five basic paradigms, described in
+section~\ref{sec:paradigms}, each with its benefits and drawbacks. The
+paradigms provide general kinds of viewing and dealing with data and they
+deeply shape the way that people deal with data structuring and description:
+
+\begin{enumerate}
+\item documents and objects
+\item standards and rules
+\item collections, types, and sameness
+\item entities and connections
+\item levels of abstractions
+\end{enumerate}
+
+The third step, that is phenomenological describing, resulted in a language of
+twenty fundamental patterns in data structuring and description
+(chapter~\ref{ch:patterns}). The patterns show problems and solutions which
+occur over and over again in data, independent from particular technologies.
+This application of the pattern language approach is novel. Existing design
+patterns in software engineering refer to dynamic systems instead of static
+digital documents and the patterns mostly refer to one particular method of
+data description. The pattern language given in this work consists of twenty
+patterns, each described with its names, problems, solutions, and consequences.
+Each pattern shows general strategies in data structuring and description with
+its benefits, consequences, and pitfalls, and relates this strategy to other
+patterns. An overview of the pattern language is given below with a
+classification of the patterns (table~\ref{tab:patternclassification}) and with
+a graph of pattern connections (appendix~\ref{appendixC}).  In
+section~\ref{sec:evaluation} the pattern language is compared with related
+works for evaluation.
+
+% This comparison is limited because most existing analysis of
+% data description, with the notion of data as sequences of bits, aim at
+% particular domains and technologies
+% \cite{Armstrong2006,Vitali2005,Hay1995,Silverston2001}. The most general
+% publications on data structuring, ISO~11404 (\citeyear{ISO11404}) and the
+% analysis model of \textcite{Honig1978}, focus on data types in programming
+% languages and in database management systems. 
+
+This thesis collected and analyzed a wide range of traditions
+(chapter~\ref{ch:foundations}), methods (chapter~\ref{ch:methods}), prototypes
+and paradigms (chapter~\ref{ch:findings}), and patterns
+(chapter~\ref{ch:patterns}) of data structuring and description. The results
+can help data modelers and programmers to find a trade-off when selecting
+methods of data structuring and description for their particular application.
+Patterns can also help to identify solutions that have implicitly been
+implemented in data. Last but no least the result of this thesis facilitates a
+better understanding of data. Applications of the results and options for
+further research will be summarized in the following sections
+(\ref{sec:applications} and \ref{sec:further}) before concluding with a final
+reflection (section~\ref{sec:reflection}).
+
+% TODO: short examples are given in appendix D and E
+
+\begin{table}
+\begin{enumerate}
+  \item basic patterns (page~\pageref{sec:basic-patterns}ff.)
+    \begin{enumerate}
+      \item pure data elements
+      \begin{enumerate}
+        \item \pattern{label}
+        \item \pattern{atomicity}
+      \end{enumerate}
+      \item data elements with content
+      \begin{enumerate}
+        \item \pattern{size}
+        \item \pattern{optionality}
+        \item \pattern{prohibition}
+      \end{enumerate}
+    \end{enumerate}
+  \item combining patterns (page~\pageref{sec:combining-patterns}ff.)
+    \begin{enumerate}
+      \item combine multiple elements on the same level
+      \begin{enumerate}
+        \item \pattern{sequence}
+        \item \pattern{graph}
+      \end{enumerate}
+      \item combine elements by subsumption
+      \begin{enumerate}
+        \item \pattern{container}
+        \item \pattern{dependence}
+        \item \pattern{embedding}
+      \end{enumerate}
+    \end{enumerate}
+  \item relationing patterns (page~\pageref{sec:relationing-patterns}ff.)
+    \begin{enumerate}
+      \item primary
+      \begin{enumerate}
+		\item \pattern{identifier}
+		\item \pattern{derivation}
+      \end{enumerate}
+      \item secondary
+      \begin{enumerate}
+        \item \pattern{encoding}
+		\item \pattern{flag}
+      \end{enumerate}
+      \item tertiary
+      \begin{enumerate}
+	    \item \pattern{normalization}
+		\item \pattern{schema}
+      \end{enumerate}
+    \end{enumerate}
+  \item continuing patterns (page~\pageref{sec:continuing-patterns}ff.)
+	  \begin{enumerate}[label=\roman*.]
+      \item \pattern{separator}
+      \item \pattern{etcetera}
+      \item \pattern{garbage}
+      \item \pattern{void}
+    \end{enumerate}
+\end{enumerate}
+\caption{Full classification of patterns in data structuring}
+\label{tab:patternclassification}
+\end{table}
+
+\include{sec-applications}
+
+\section{Further research}
+\label{sec:further}
+
+The results of this thesis should not be taken as a final product, but as a
+starting point. It is natural that in a phenomenological investigation one
+cannot fully experience a phenomenon in all of its aspects without getting lost
+in it. The analysis of methods and systems for structuring and describing data
+(chapter~\ref{ch:methods}) could be extended to additional data structuring
+languages, more encodings, schema languages etc. Nevertheless it is unlikely
+that new methods will change the results apart from minor corrections and
+additions. In particular it may be worth to have a deeper look at the history
+and practice of \term[form]{forms}, as mentioned at page~\pageref{sec:forms},
+and at patterns in visual notations, such as electrical circuit diagrams (see
+section~\ref{sec:diagrams} and \textcite{Tversky2011}). Specific technologies
+not analyzed in more detail in this thesis include \term{zzStructure}
+\cite{Nelson2004,McGuffin2004,Dattolo2009a,Pourabdollah2009b,Gutteridge2010}
+and the \term{Data Format Description Language} (see page~\pageref{sec:dfdl}).
+Query languages and APIs (section~\ref{sec:apis}) have also received less
+attention than other methods of data structuring and description.
+
+Especially the pattern language in chapter~\ref{ch:patterns} can be improved
+continuously by further discussion and evaluation. A promising sample
+application would be to categorize and analyze the data standards collected by
+\textcite{Riley2010}. As noted in section~\ref{sec:evaluation}, evaluation of
+the pattern language requires user studies with practitioners and experts,
+which would go beyond the scope of this thesis. A possible methodology for
+evaluating the pattern language has been proposed by \textcite{Petter2010}.  To
+facilitate improvements and applications, the pattern language will be made
+available under the CC-BY-SA license. Surely understandability and usability
+can be improved by adding examples and illustrations to better convey the core
+idea of each pattern.\footnote{An idea not followed in this thesis was to
+depict each pattern by an icon for better recognition.}
+
+In addition to the refinement of results of this thesis, the study can be
+broadened and used as starting point for further research. The following
+disciplines and activities, among others, might provide additional insights:
+
+\begin{itemize}
+  \item \Term{Information design} and \term{data visualization} aim at visual
+	methods to represent and display information and data. Popular examples
+	were given by \textcite{Tufte2001} and \textcite{Bertin2011}.
+  \item \term{Digital forensics} already has some history and relevant practice
+	in recovery of structures and descriptions from data.
+  \item Mathematics may guide to applications of non-classical logic to 
+	data description.
+  \item In \term{data analysis}, \term{linguistic summaries of data} can be 
+	created based on \term{fuzzy set theory}. These summaries provide natural 
+	language statements, that capture the main characteristics of data sets 
+	\cite{Yager1981,Lietard2008}.
+
+\end{itemize}
+
+Last but not least, the semiotic background of data could be elaborated in more
+detail. At best, this thesis provides a `semiology of data' similar to the
+semiology of graphics by \textcite{Bertin1967,Bertin2011}. Expanding the notion
+of data as sign to data as language, this thesis might also be placed in a new
+discipline called \Term{data linguistics}.  Several linguistic subfields exist,
+each concerned with particular aspects of human language. For instance
+anthropological linguistics and sociolinguistics study the relation between
+language and society, and historical linguistics studies the history and
+evolution of languages. Although digital documents are used for communication,
+there is no branch of linguistics dedicated to the study data as language.
+
+% comparative linguistics,
+%comparative data linguistics (eg compare data models in different modeling
+%languages or data format in different serialization languages or different
+%storage formats)\ldots
+
+% The notion of data as communications, applied in this thesis, allows to analyze
+% data as signs and systems of data as languages, which can be studied by
+% \Term{data semiotics} and \Term{data linguistics}. Despite the current lack of
+% these disciplines as organized fields of study, one can identify several fields
+% that that combine data and linguistics from different viewpoints.
+
+% research on data linguistics, as well as the history of library catalogs.
+% See http://www.buymyfonts.com/data/lectures.html and Peter Beckers
+% Forschungsvorhaben Benedikt Burkard: Eine kleine Geschichte des Formulars In:
+% Das Archiv 1/2010 (S. 6-13); 
+
+% Data modeling is an intellectual activity, mostly applied as top-down design
+% process. In my thesis I `put data modeling back on its feet' by analysing the
+% actual forms of data.
+
+\section{Final reflection}
+\label{sec:reflection}
+
+``We do not, it seems, have a very clear and commonly agreed upon set of
+notions about data'' --- since \Person[George]{Mealy} wrote this in
+\citeyear{Mealy1967} the world of data processing has changed a lot. Many
+technologies and models have been proposed and applied, but the basic problem
+of data modeling remains. As demonstrated by \Person[William]{Kent} in his
+classic ``Data and Reality'' (\citeyear{Kent1978}), the problem is independent
+from technology and it cannot be solved finally. Given the growing importance
+of data and digital documents, the lack of current research about foundations
+of data is surprising. It looks that since the 1980s, when computers became
+mainstream, the concept of data has been accepted as given. Attention of
+research is either on efficient implementations with practical value in limited
+domains, or on sophisticated abstract models, little connected to data practice
+with its plurality of formats and interpretations. A naive belief in progress
+is visible in hype cycles around technologies and models such as \acro{ERM},
+\term{Object Orientation}, \acro{XML} and \acro{RDF}. Despite the usefulness of
+these methods, they do not reflect a simple progression of improvements.  As
+\Person[Ted]{Nelson} (\citeyear{Nelson2012}) keeps on stressing, ``the computer
+world deals with, imaginary, arbitrary, made-up stuff, that was all made up by
+somebody''. Eventually, all data is created by human beings for human beings.
+For this reason data is no simple expression of information or even knowledge,
+but a social artifact, based on convention.  This social artifact is called a
+\term{document}. Nelson talks about documents where \Person[Tim]{Berners-Lee}
+and others talk about information.\footnote{Nelson explicitly coined the term
+	``docuverse''. See also \textcite[300]{Nelson2010} and
+	footnote~\ref{fn:nsl} at page~\pageref{fn:nsl} for a comparision. However
+	both, Nelson and Berners-Lee, do not talk about totally different things as
+one can show with the paradigm of documents and objects
+(section~\ref{sec:docobj}).} The concept of this document, which is independent
+from its physical form, can be traced back to founders of library and
+information science, such as \textcite{Bush1945}, \textcite{Otlet1934},
+\person[Wilhelm]{Ostwald} \cite{Hapke1999}, \person[Emanuel]{Goldberg}
+\cite{Buckland2006}, and \textcite{Briet1951}. Therefore the phenomenon
+investigated in this thesis, the way digital data is structured and described,
+turns out to be inseparable from the nature of digital documents and metadata
+in general. To understand the latter, it is necessary to understand data,
+independent from technologies.
+
+To conclude with two of the giants, whose shoulders this thesis is built on,
+``it's possible to argue that this book hasn't accomplished much''
+\cite[351]{Gamma1994}: this thesis does not present a new and better method to
+structure and describe data. The contribution, however, is more important than
+yet another data language. The prototypes, paradigms, and patterns, provide
+``another look at data'' \cite{Mealy1967} by revealing unspelled assumptions
+that deeply shape how data is and will be structured and described in practice.
+

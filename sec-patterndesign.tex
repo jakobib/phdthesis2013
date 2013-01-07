@@ -1,0 +1,132 @@
+\section{Patterns and pattern languages}
+\label{sec:patterntheory}
+
+\begin{quotation}%
+Design and programming are human activities; forget that and all is lost.
+\\\quotationsource \Person[Bjarne]{Stroustrup} (\citeyear{Stroustrup1997})
+%  The C++ Programming Language. pp. 693.
+\end{quotation}
+
+\noindent The novel approach of this thesis is to use \Term[pattern]{patterns}
+for data description, independent from particular structuring methods and
+technologies. This section will first introduce the notion of patterns, then
+summarize existing works that deal with patterns in data structuring and
+finally give an example.
+
+Patterns as systematic tools for describing good design practice were first
+introduced by \Person[Christopher]{Alexander}, \Person[Sarah]{Ishikawa}, and
+\Person[Murray]{Silverstein} \citeyear{Alexander1977}. They identified 253
+existing architectural patterns from entire regions and cities to buildings,
+rooms, and furniture. In Alexander's original definition \citeyear[p.
+x]{Alexander1977} ``each pattern describes a problem which occurs over and over
+again in our environment, and then describes the core of the solution to that
+problem, in such a way that you can use this solution a million times over,
+without ever doing it the same way twice.'' Patterns can be found by observing
+current practice and then looking for commonalities in solutions to a problem.
+In contrast to simple rules or best practice guidelines, a pattern, however,
+does not solve the problem by providing a particular solution, but by showing
+benefits and consequences. Each pattern provides a solution and each solution
+has some tradeoffs. The pattern description guides designers in their decisions
+of particular solutions for particular applications. Each pattern is given a
+name, which can be used to refer to one pattern from another. The full
+potential of patterns unfolds if a set of patterns is collected and combined in
+a \Term{pattern language}. In Alexander's words ``a pattern language is a
+network of patterns that call upon one another. Patterns help us remember
+insights and knowledge about design and can be used in combination to create
+solutions.`` A pattern language for writing patterns was presented by
+\textcite{Meszaros1997}.
+
+The pattern language approach with its application in architecture has been
+adopted in other fields of engineering, especially in \term{software
+engineering} \cite{Beck1987}.  \Person[Erich]{Gamma}, \Person[Richard]{Helm},
+\Person[Ralph]{Johnson}, and \Person[John]{Vlissides} (the so-called `gang of
+four') published an influental book on \Term{design patterns} in object
+oriented programming \cite{Gamma1994}.  In 1995 \Person[Ward]{Cunningham}
+created the Portland Pattern Repository \cite{Cunnigham1995}, accompanied by
+WikiWikiWeb, which was the world's first \term{wiki}.\footnote{The Portland
+Pattern Repository and WikiWikiWeb are still active at \url{http://c2.com/}.}
+
+Although these design patterns are used for the creation of computer programs,
+they do not reflect problems and solutions of data structuring as analyzed in
+this thesis. Design patterns refer to dynamic processes, while digital documents
+are static.  General patterns in description and structuring of data must also
+be separated from \Term{pattern recognition}, as practiced in \term{data
+mining} and other statistical methods of \term{machine learning}. These
+quantitative methods can only recognize structures within the boundaries of a
+fixed method of data description (for instance statistical patterns in lists of
+numbers without questioning the nature of numbers and lists). A general
+limitation of existing approaches is the focus to one specific formalization
+method. This practical limitation blocks the view to more general data
+patterns, independent from a particular encoding, and it conceals blind spots
+and weaknesses of a chosen formalism. Some works about patterns in particular
+data description languages have been mentioned in
+section~\ref{sec:relatedworks}.
+
+\subsectionexample{One data element, many patterns}
+
+The following example shall illustrate the application of patterns in data
+description. The patterns mentioned here anticipate members of the final
+pattern language summarized in chapter~\ref{ch:patterns}. A more complex
+example is given in appendix~\ref{appendixD}.
+
+Given the following sequence of twelve bytes: 
+
+\begin{center}
+\verb|44 75 62 6c 69 6e 2c 20 4f 68 69 6f|\\
+\end{center}
+
+\noindent How can this particular piece of data be structured and described? To
+start with, we need at least some context or indication. Let's assume each byte
+corresponds to one character. This kind of correspondence can be summarizes as
+\pattern{encoding} pattern. Given ASCII or Unicode encoding, the sequence is:
+
+\begin{center}
+\verb|Dublin, Ohio|
+\end{center}
+
+\noindent Several patterns provide obvious solutions to further description:
+
+\begin{itemize}
+
+	\item The data may be a list of two elements, \texttt{Dublin} 
+		  and \texttt{Ohio}	(\pattern{sequence} pattern).
+
+	\item It may consist of two elements as part of an unsorted collection
+		  (\pattern{container} pattern), so
+	      \texttt{Ohio, Dublin} should be equal to \texttt{Dublin, Ohio}.
+
+	\item It may just refer to the name ``Dublin, Ohio'' without any 
+		  relevant structure (\pattern{label} pattern).
+
+    \item It may consist of two words, one of which (\texttt{Ohio}) being 
+		  used as qualifier for the other (\texttt{Dublin}).
+
+\end{itemize}
+
+\noindent Given the last interpretation, a \emph{qualifier} may be a pattern in
+its own right or it may be an example of a more general \pattern{flag} pattern
+to indicate the interpretation of one element (\texttt{Dublin}) by another
+(\texttt{Ohio}).
+
+One can further deconstruct the structure of a data element to parts, a typical
+process of description (\pattern{schema} pattern):
+
+\begin{center}
+$\underbrace{\texttt{Dublin}}_{1}%
+\underbrace{\texttt{, }}_{2}%
+\underbrace{\texttt{Ohio}}_{3}$
+\end{center}
+
+\noindent The third part is attached as additional element to the first 
+(\pattern{dependence} pattern), and it may unambiguously refer into a registry of
+allowed qualification values (\pattern{identifier} pattern). The second part
+acts as connection or delimiter (\pattern{separator} pattern). Even its two
+bytes (\texttt{, }) can have structure: the whitespace character is often
+used as filling without significance (\pattern{garbage} pattern).
+
+In summary one can identify several typical structuring methods in the twelve
+bytes given above. The interpretation, however, does not need to be right ---
+depending on context the sequence could mean virtually anything --- but
+patterns help to reveal interpretations that were most likely intended when
+creating the data.
+

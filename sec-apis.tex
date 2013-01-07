@@ -1,0 +1,160 @@
+\section{Query languages and APIs}
+\label{sec:queries}
+\label{sec:apis}
+
+For the main part, query languages and \tacro{Application programming
+interfaces}{APIs} are not used to structure and describe data but for access
+and modification. Such dynamic applications are out of the scope of static
+digital documents, as collected in chapter~\ref{ch:methods}. Nevertheless query
+languages and APIs take a relevant part in structuring and description as
+briefly described below. 
+
+% After summarizing basic conceptual properties, an example is given with \term{XPath}.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[orm]
+\node[draw] (request) {request};
+\node[draw,right=20mm of request] (is) {information system};
+\node[draw,right=20mm of is] (res) {response};
+\draw[->] (request) to node[fill=white] {format} (is);
+\draw[dotted,->] (is) to node[fill=white] {format} (res);
+\end{tikzpicture}
+\caption{Interaction with an information system}
+\label{fig:queryis}
+\end{figure}
+
+To limit the analysis to parts relevant to this thesis, one first needs to look
+at the general interaction with an information system via APIs and query
+languages (figure~\ref{fig:queryis}): an information system is accessed by
+sending a request which may result in a response. For instance a digital
+library is an information system that can be accessed by requests to add,
+modify, delete, and select stored documents.  Both request and response are
+digital documents in a defined format, specific to the information system.  To
+exclude dynamic properties of information systems, we limit the analysis to
+requests that do not modify the visible behaviour of the system. In particular,
+all these requests must be stateless and cacheable in terms of the
+\tacro{Representational State Transfer}{REST} model \cite{Fielding2000}: ``each
+request [\ldots] must contain all of the information necessary to understand
+the request'' and ``requests that are equivalent [\ldots] result in a response
+identical to that in the cache''. Requests of this type are mostly known as
+information retrieval requests. Examples of query languages, formats,
+protocols, and APIs for document retrieval include \acro{Z39.50}, \acro{SRU},
+\acro{CQL}, and \acro{OpenSearch}. Beyond information retrieval queries there
+are further other kinds of queries.  A classification of queries types
+for information systems has been undertaken by \textcite[33]{Reiner1988} by
+distinguishing queries that ask for one of:
+
+\begin{itemize}
+	\item documents (which),
+	\item facts (where, when, who, what, \ldots),
+	\item decisions (yes or no),
+	\item explanations (how, why).
+\end{itemize}
+
+For all kinds of these queries, a universal query language called
+\tacro{Intermediary Query Language}{IQL} has been built up based on
+\term{predicate logic} \cite{Reiner1988,Reiner1991}. With a clearly defined
+syntax and well-founded semantics this language can be expressed in
+semantically equivalent formal
+languages.\footnote{\textcite{Reiner1988,Reiner1991} in her thesis implements
+	the \tacro{Untrained User Query Language}{UUQL} and the \tacro{Trained User
+Query Language}{TUQL}.} A query can be asked to an information system in any
+of these languages, given a defined request format of the query language. The 
+response of the information system is a set of documents, facts, or
+explanations, also expressed in a defined format.
+
+The concept of query language and request formats corresponds to the use of an
+identifier, as described in section~\ref{sec:identifiers}: given an information
+system, a request is a piece of data that refers to a response document, which
+is another piece of data.  The information system fulfills the role of an
+identifier system (section~\ref{sec:idsystems}) which defines how request and
+response must be structured and which request maps to which response. In
+contrast to identifiers, there is no general uniqueness requirement: multiple
+requests (queries formulated in different query languages or different forms to
+express the same query in one language) may result in the same response. The
+reverse does not hold, but a response may consist of a set or collection of
+documents.
+
+Query languages and APIs are also connected to other methods of data
+structuring: for instance file systems (section~\ref{sec:filesystems}) are
+implemented with a common API (basically \acro{POSIX}) and many data structuring
+languages, especially data binding languages (section~\ref{sec:databinding})
+were created to express requests and responses of APIs. The
+connection between query languages and conceptual models
+(section~\ref{sec:modelangs}) is less developed, although conceptual modeling
+for \acro{API} design had already been identified by \textcite{Chen1999} as an
+issue that needs attention.
+
+% TODO: There are some attempts to make use of ontologies to bridge APIs
+
+The conceptual model of most APIs needs to be revealed by reverse-engineering
+its request and response formats, which may at least be restricted by data
+types and schemas (for instance an XML Schema). If queries languages are bound
+to a database or data structuring languages, such as \acro{SQL} and
+\acro{SPARQL}, the conceptual model is equal or very similar to models of this
+language, for instance the model of RDF (see page~\pageref{sec:rdfmodels}). In fact
+it can depend on the viewpoint whether one speaks about an API or about and
+identifier system or about a data format because API and format are tightly
+coupled. This coupling also involves trends such as \acro{XML}, which was later
+followed by \acro{JSON}, and the dominance of \acro{SQL} against alternative
+methods of access, such as \tacro{Language Integrated Query}{LINQ} and
+\term{Tutorial D} (see section~\ref{sec:rdbms}).
+
+% Information and Content Exchange (ICE) is a protocol
+
+% ProgrammingL & apis: 
+% Property Lists, BenCode, type systems of programming languages
+% for special databases (PigLatin and Gremlin)!!,
+
+% Data structuring methods need testsuits and validators
+% e.g. XML etc. see story of \acro{NIST} \acro{SQL} test suite!
+
+% The dominance of \acro{SQL} (see \ref{sec:rdbms}) \ldots
+% Alternative
+% query languages like \tacro{Language Integrated Query}{LINQ}
+% and \term{Tutorial D} for different database models; or \term{XQuery},
+% \acro{SPARQL}, and \term{Gremlin} specific database models have their niches
+
+
+\ignore{There are two types of query APIs:
+
+\begin{itemize}
+\item Queries based on content
+\item Queries based on format (e.g. HTTP content negotiation and unAPI)
+% Aushandeln des layers / query on another layer
+% which part is content, which is format?
+\end{itemize}
+}
+
+\ignore{
+
+\subsectionexample{XPath 1.0}
+\label{ex:xpath}
+
+The \Tacro{XML Path Language}{XPath} 1.0 is a ``language for addressing parts
+of an XML document'' \cite{Clark1999p}.\footnote{One must not confuse XPath 1.0
+	with later versions of XPath, which are not supported by any major web
+	browser anyway: XPath 2.0 is based on a different model of \acro{XML}
+\cite{Berglund2010} and XPath 3.0 will be a Turing-complete programming
+language.} XPath was originally developed to express common parts of the
+\acro{XSLT} programming language \cite{Clark1999x} and XPointer
+\cite{Grosso2003}.\footnote{See also section~\ref{sec:xml} and
+footnote~\ref{fn:xsl} at page \pageref{fn:xsl} about \acro{XSL}.}
+Apart from its use for in XSLT scripts The language is us
+
+% Has been mentioned before (see...): is used also in schemas, can
+% be used as (part of) schema language etc. 
+% Schematron
+% JPath
+% XML document,
+% Unicode string
+% Document Retrospectivley Another model of \acro{XML} is shared by XPath 1.0 and 
+% Canonical \acro{XML} \cite{Boyer2008},
+
+\verb|/foo[3]/bar/@doz|
+
+See example \ref{ex:xmlmods} at \pageref{ex:xmlmods}.
+...
+
+}

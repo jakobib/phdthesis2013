@@ -1,0 +1,825 @@
+\section{Mathematics}
+\label{sec:mathematics}
+
+\begin{quotation}%
+As far as the laws of mathematics refer to reality, they are not certain;\\
+and as far as they are certain, they do not refer to reality.\\
+\quotationsource\Person[Albert]{Einstein}
+\end{quotation}
+
+\noindent Mathematics has proved to be an effective tool to exactly describe
+structures of any kind.  This section introduces mathematical foundations and
+notations that are referred to throughout the following chapters. It begins
+with mathematical logic (section~\ref{sec:logic}) and set theory (section
+\ref{sec:settheory}). Both have been used as foundation of mathematics and to
+describe data types in computer science (see section \ref{sec:datatypes}).
+Other methods to express data in mathematical terms are based on graph theory
+(section~\ref{sec:graphtheory}).  Mathematics provides powerful methods of
+formal description and to deductively draw conclusions from given axioms. Yet
+it cannot prove this basic assumptions but only detect
+inconsistencies.\footnote{As shown by \textcite{Goedel1931} mathematics can
+even prove that in a system of axioms that is complex enough there are
+consistent statements which cannot be proven or disproven without additional
+axioms.} Despite the exactness of mathematics, to make use of it we must
+carefully look out for which connections we draw between abstract structures
+and anything outside of the domain of pure mathematics.
+
+\subsection{Logic}
+\label{sec:logic}
+
+Mathematical \term{logic} has its origin in philosophy which also studied the
+principles of valid reasoning. In particular the logic of \person{Aristotle}
+was influential until the mid-nineteenth century, when a mathematical analysis
+of logic was introduced by \textcite{Boole1847,Boole1854}. Mathematical logic
+replaced natural language with formal symbols to express truth values and logical
+statements. Typical notations include:
+
+\begin{itemize}
+\item $\bot$ or $1$ for true and $\top$ or $0$ for false
+\item $\lnot$ for negation
+\item $\land$ and $\lor$ for logical conjunction and logical disjunction
+\item $\to$ and $\leftrightarrow$ for logical implication and logical equivalence 
+\item symbols such as $a, b, x, y$ for variables and individual
+  constants, independent of the ontological status of their referents
+\end{itemize}
+
+\noindent Alternative visual notations of logic systems, as introduced by
+\textcite{Euler1768} and \textcite{Venn1880}, are dealed with in
+section~\ref{sec:diagrams}.  The basic rules how to combine and interpret
+statements from these formal symbols can defined by \term{Boolean algebra}.
+Figure~\ref{fig:truthtables} contains laws of Boolean algebra and resulting
+truth tables for the basic operations, $\lnot$, $\land$, $\lor$, $\to$ and
+$\leftrightarrow$. Law 5 to 8 could also be derived from 1 to 4 and in total
+there are 16 binary boolean operations.  The laws of Boolean algebra can be
+used for \Term{inference}, that is to derive new logical statements from given
+logical statements by \term[decduction]{deductive reasoning}\footnote{See also
+figure~\ref{fig:reasong} for methods of reasoning.} For instance one can proof
+that $\lnot(x \land y) \Leftrightarrow \lnot x \lor \lnot y$ and $\lnot(x \lor
+y) \Leftrightarrow \lnot x \land \lnot y$ which is known as
+\person[Augustus]{De Morgan}'s law.  The logic of Boolean algebra is equivalent
+to \Term{propositional logic} and to the algebra of sets (see
+section~\ref{sec:settheory}) among other descriptions. In particular, digital
+switching circuits can be described by Boolean algebra \cite{Shannon1938},
+which is the base of all digital computer systems.
+
+\begin{figure}
+\centering
+\begin{tabular}{|ll|}
+\hline
+1. commutativity & $x \land y \Leftrightarrow y \land x$ \\ 
+  & $x \lor y = y \lor x$ \\
+2. distributivity & 
+   $x \land (y \lor z) \Leftrightarrow (x \land y) \lor (x \land z)$ \\
+ & $x \lor (y \land z) \Leftrightarrow (x \lor y) \land (x \lor z)$ \\
+3. annihilation & $x \land 0 \Leftrightarrow 0$ \\
+  & $x \lor 1 \Leftrightarrow x$ \\
+4. excluded middle & $x \land \lnot x \Leftrightarrow 0$ \\
+  & $x \lor \lnot x \Leftrightarrow 1$ \\
+5. idempotence   & $x \land x \Leftrightarrow x$ \\
+  & $x \lor x \Leftrightarrow x$ \\
+6. associativity & $x \lor (y \lor z) \Leftrightarrow (x \lor y) \lor z$ \\
+  &  $x \land (y \land z) \Leftrightarrow (x \land y) \land z$ \\
+7. absorption
+  & $x \land (x \lor y) \Leftrightarrow x \lor (x \land y) \Leftrightarrow x$ \\
+8. logical identity & $x \land 1 \Leftrightarrow x$ \\
+  & $x \lor 0 \Leftrightarrow x$ \\
+\hline
+\end{tabular}
+
+\begin{tabular}{|c|c|}
+\hline
+$x$ & $\lnot x$ \\
+\hline
+0 & 1 \\
+1 & 0 \\
+\hline
+\end{tabular}
+\begin{tabular}{|cc|cccc|}
+\hline
+$x$ & $y$ & $x \land y$ & $x \lor y$ &
+$x \to y$ & $x \leftrightarrow y$ \\
+\hline
+0 & 0 & 0 & 0 & 1 & 1 \\
+0 & 1 & 0 & 1 & 1 & 0 \\
+1 & 0 & 0 & 1 & 0 & 0 \\
+1 & 1 & 1 & 1 & 1 & 1 \\
+\hline
+\end{tabular}
+\caption{Laws of Boolean algebra and resulting truth tables}
+\label{fig:truthtables}
+\end{figure}
+
+Further formalization of logical statements is possible with \Term{predicate
+logic}, which extends \term{propositional logic} with predicates and
+quantification. A logical \Term{predicate} is an individual symbol that refers
+to a general statement with zero or more empty spaces. Predicates are typically
+written in functional syntax, for instance $f(\_,\_)$ denotes the binary
+predicate $f$ and $g(a)$ denotes the unary predicate $g$ where the space is $a$
+filled by variable $a$. The number of spaces is called the predicate's
+\Term{arity}. Predicates are logical statements insofar as they have a truth
+value for each combination of individual variables. For instance $g(a)$ with
+predicate $g$ and variable $a$ is either true or false. The ontological status
+of predicates, however, is irrelevant to predicate logic: for instance
+predicated could refer to properties (e.g. $g(a)$ $\Leftrightarrow$ `$a$ is
+blue'), concept types ($g(a)$ $\Leftrightarrow$ `$a$ is a book'), relations
+($f(a,b)$ $\Leftrightarrow$ `$a$ is friend of $b$'), or attributes ($f(a,b)$
+$\Leftrightarrow$ `$a$ has size $b$'). Normal predicate logic (also known as
+\Term{first-order predicate logic}) has two fundamental kinds of
+\term{quantification}: universal quantification ($\forall$) to state that a
+logical statement is true for all possible values of variable, and existential
+quantification ($\exists$) to state that there is at least one value of a
+variable that makes a logical statement true. If predicates and/or quantifiers
+can be replaced by variables, predicate logic is extended to \term{higher-order
+logic}. Higher-order logic allows more complex statements about statements, but
+it is hard to verify statements even in second-order logic.  A common and less
+complicated extension of predicate logic is the introduction of an identity
+predicate or identity relation, also referred to as equality. With the
+\Term{equality relation} `$=$' one can define a \Term{uniqueness quantifier} to
+denote that exactly one object exists. We write $\exists!x : \phi(x)$ to
+denote that there is only one $x$ for which $\phi(x)$ is true. The equality
+relation can also be used to state that a statement is true for a specific
+number of distinct values.  Further extensions and modification of
+\term{propositional logic} and \term{predicate logic} are possible by adding
+and by modification of the basic laws of Boolean algebra. For instance one can
+argue against the law of excluded middle (law 4 in
+figure~\ref{fig:truthtables}) and introduce a third truth value in addition to
+true and false to denote `unknown' or `irrelevant' (\term{ternary logic}).
+Other so-called non-classical logic extensions include:
+
+\begin{itemize}
+ \item an interval of possible truth values (\Term{fuzzy logic})
+ \item additional quantifiers to express modality of statements (\Term{modal logic})
+ \item elimination of the law of excluded middle and double negation so 
+   statements only have a truth value only if they can explicitly be inferred 
+   (\Term{intuitionistic logic})
+ \item introduction of default values and exceptions (\Term{default logic})
+ \item support of inconsistent statements (\Term{paraconsistent logic})
+\end{itemize}
+
+One example of modal logic relevant to data description is \Term{deontic
+logic}, because this logic is concerned with obligation, permission, and norms
+\cite{McNamara2010}. Deontic logic, however, includes several outstanding
+philosophical problems: the basic problem, known as Joergensen's dilemma is
+based on the relation of deontic values to logical truth values and
+\cite{Jorgensen1937}: On the one hand norms cannot be true or false but only
+fulfilled or violated, but on the other hand some norms seem to follow
+logically from others. If one tries to formalize this implications, one may get
+unexpected results such as the \term{Good Samaritan Paradox}: given that a
+person is robbed and given that one should guard a person that is robbed, it
+follows that a person should be robbed, because without robbery one cannot
+guard anyone. 
+
+The choice of a specific logic system and how it suits the domain to be
+described is a philosophical question (see section~\ref{sec:philosophy}).  We
+mostly assume classical logic, but on a closer look methods to structure and
+describe data include non-classical elements, such as the introduction of
+\term{NULL} values (\term{ternary logic}) and default values (\term{default
+logic}), combined with annotations (\term{higher-order logic}). On the other
+hand, data description should be easy to compute, so even \term{first-order
+predicate logic} can be too complex --- there is no automatic method to decide
+whether a general set of statements can be true (the problem is equivalent to
+the problem of \Term{decidability} or \term{computability} described in
+section~\ref{sec:informatics}). For this reason, subsets of \term{predicate
+logic} called \Term{description logic} are preferred, especially for
+\term{knowledge representation} \cite{Baader2010}. In description logic, only
+specific kinds of statements are allowed with up to three variables. There are
+unary predicates ($A, B, C\ldots$) to describe concept types, binary predicates
+($R, S\ldots$) to describe relationships (also called `roles`), and a set of
+possible methods to combine statements from these predicates. The statements in
+description logic are typically divided into statements about concepts and
+roles (\Term{TBox}) and statements that make use concept and role predicates
+with concrete variables (\Term{ABox}).  A TBox together with an ABox are also
+called a \term{knowledge base}.  Table~\ref{tab:dlogic} summarizes the
+statement types of $\mathcal{ALC}$. This \Term{Attributive Concept Language
+with Complements} is used as base of other description logics, some of which go
+beyond predicate logic.\footnote{See \url{http://www.cs.man.ac.uk/~ezolin/dl/}
+for an overview of description logic variants and their computable complexity.}
+%For instance OWL~Lite = $\mathcal{SHIF(D)}$, OWL~DL = $\mathcal{SHOIN(D)}$
+%etc. but \acro{ORM} cannot be fully expressed in \acro{DL} (Halpin2008, p.
+%870).
+%
+To express and exchange logic statements in data there are some standards such
+as \term{ISO Common Logic} \cite{ISO24707:2007}, \term{conceptual graphs}
+\cite{Sowa1992,Sowa2000}, and controlled natural language \cite{Fuchs1999}.
+
+\begin{table}
+\centering
+\begin{tabular}{|clll|}
+\hline
+& \textbf{description logic} & \textbf{notation} & \textbf{predicate logic} \\
+\hline
+TBox
+& concepts                & $A, B, C\ldots$  & $A(x), B(x), C(x)\ldots$ (unary predicates) \\
+& roles                   & $R, Q\ldots$     & $R(x,y), Q(x,y)\ldots$   (binary predicates) \\
+& top concept             & $\top$           & $\forall x: \top(x)$ (predicate hold for all $x$) \\
+& bottom concept          & $\bot$           & $\lnot \exists x: \bot(x)$ (predicate holds for no $x$) \\
+& concept complement      & $\lnot C$        & $\lnot C(x)$ \\
+& concept intersection    & $A\sqcap B$      & $A(x) \lor B(x)$  \\
+& concept union           & $A\sqcup B$      & $A(x) \lor B(x)$ \\
+& concept hierarchy       & $A\sqsubseteq B$ & $A(x) \to B(x)$ \\
+& universal restriction   & $\forall R.C$ & $\forall y: R(x,y) \to C(x) $ \\
+& existencial restriction & $\exists R.C$ & $\exists y: R(x,y) \to C(x) $ \\
+\hline
+ABox
+& concept assertion       & $a:C$     & $C(a)$ \\
+& role assertion          & $(a,b):R$ & $R(a,b)$ \\
+\hline
+\end{tabular}
+\caption{Allowed types of logical statements in description logic $\mathcal{ALC}$}
+\label{tab:dlogic}
+\end{table}
+
+
+\subsection{Set theory}
+\label{sec:settheory}
+
+Sets and properties occur in data description at least everywhere you deal with
+multiple objects (see the `collections and types` paradigm in section
+\ref{sec:collectionstopic}).  We hereby define `naive' set theory and notation
+in natural language.  A deeper introduction and axiomatic definition that avoid
+some paradoxes can be found by \textcite{Jech2003}.  In short, a \Term{set} is
+a defined collection of objects. The objects in a set are called its
+\Term[element!of a set]{elements} or \Term[member!of a set]{members}.  We write
+$a \in A$ to denote that $a$ is \emph{a member of} the set $A$ or
+\emph{contained in} the set $A$ and $a \notin A$ to denote that $a$ is not a
+member of $A$. A set that contains no elements is called the \Term{empty set} and
+denoted by $\set{}$ or $\emptyset$. The number of members in a set $A$ is
+called its \Term{cardinality} and denoted by $|A|$. The cardinality of the set
+of natural numbers $\mathbb{N}$ is denoted $|\mathbb{N}| = \aleph_0$.  Sets
+with cardinality $\aleph_0$ are called \Term{countable infinite} in contrast to
+a \Term{countable finite} set with finite number of elements.  The cardinality
+of the continuum (the set of real numbers) is denoted
+$|\mathbb{R}|=\mathfrak{c}$ which is strictly greater than $\aleph_0$.  If
+every member of a set $A$ is also member of a set $B$ we call $A$ a
+\Term{subset} of $B$ and write $A \subset B$. Reciprocally if every member of
+$B$ is also member of $A$ then $B$ is a \Term{superset} of $A$ or
+\Term[inclusion!of sets]{included} in $A$ and we write $B \supset A$. To denote
+that $A$ is not a subset of $B$ we write $A \not\subset B$ and $B \not\supset
+A$. If for two sets $A$ and $B$ both $A \subset B$ and $A \supset B$ then the
+sets contain the same members and are called \Term[equality!of sets]{equal},
+written as $A = B$. If $A$ and $B$ are not equal we write $A \neq B$. If $A$ is
+a subset of $B$, but not equal to $B$, then $A$ is also called
+\Term[proper!subset]{proper subset} of $B$ and we write $A \supsetneq B$ and $B
+\subsetneq A$. A \Term[partition!of a set]{partition} of a set $A$ is a set of
+subsets of $A$ such that every member of $A$ is exactly in one of the subsets
+and none of the subsets is the empty set. Furthermore we define the following
+operations on sets:
+
+\begin{itemize}
+ \item $A \cup B$ is the \Term[union!of sets]{union} of two sets $A$ and $B$, 
+ which is the set of all objects that are members of one or both of the two sets.
+
+ \item $A \cap B$ is the \Term[intersection!of sets]{intersection} of two sets 
+ $A$ and $B$, which is the set of all objects that are members of both sets.
+
+ \item $B \setminus A$ is the \Term[complement!of a set]{complement} of one set
+ $A$ relative to another set $B$, which is the set of all objects that are not 
+ members of $A$ but members of $B$.
+
+ \item $\mathcal{P}$ is the \Term{power set} of a set $A$, which is the set of 
+ all of its subsets. The set of all subsets with a given cardinality $n$
+ is written as $\mathcal{P}_{n}(S)$.
+\end{itemize}
+
+To define particular sets, there are two methods. First, one can provide a
+\Term[property!of set members|see{membership function}]{property} that all
+members of the set must satisfy.  In set-builder notation we write
+$\set[x]{\phi(x)}$ to denote the set of all elements that satisfy the property
+$\phi$ and $\phi$ is also called the sets \Term{membership function}. For
+instance the set of all prime numbers could be written as $\set[x]{x~\textrm{is
+a prime}}$. With membership functions we can give more formal definitions of
+operations on sets, for instance $A \cup B = \set[x]{x \in A \land x \in B}$.
+Properties and sets can be used interchangeably: each property
+defines a set and each set $A$ defines a property `being member of set $A$'.
+Using properties to define sets, however, requires to somehow refer to a
+collection of all possible members, which may or may not satisfy a property.
+This collection is called the \Term{universal set} $\mathcal{U}$ or a
+\Term{universe} if it is limited to some specific objects.  The second method
+to specify a set is to write down a list of its elements in curly brackets. For
+instance $\set{\times, \triangle, \heartsuit }$ can denote the set of a cross
+symbol, a triangle symbol, and a heart symbol. Note that neither the order of
+listed members nor any repetition of the same member is relevant --- the same
+set could also be written as $\set{ \triangle, \heartsuit, \times, \triangle
+}$. The identification of `same' elements is out of the scope of set theory
+(unless elements are restricted to sets themselves). For instance the sets
+$\set{ +, \blacktriangle, \texttt{<3} }$ and $\set{ \times, \triangle,
+\heartsuit }$ both contains a cross symbol, a triangle symbol, and a heart
+symbol. Whether both sets are equal depends on whether visual differences
+between the symbols in both sets matter or not. Using properties such as
+$\set{x|x~\textrm{looks like a heart symbol}}$ neither solves the \term{symbol
+grounding problem}: arbitrary properties based on a general \term{universal
+set} lead to paradoxes such  the impossible set $R = \set{ X | X \notin X }$
+(\term{Russell's paradox}). This set is defined to contain all sets that do not
+contain themselves, so $R$ must contain itself if it does not contain itself,
+which is a contradiction. 
+
+To avoid such paradoxes of naive set theory there are several strategies.
+Zermelo-Fraenkel set theory with the axiom of choice assigns each set a
+\Term[rank!of a set]{rank}, that is the smallest ordinal number greater than
+the ranks of its members. There is no universal set but only the set
+$\mathcal{V}_\alpha$ of all sets with rank $\alpha$. The full cumulative
+hierarchy, starting with $\mathcal{V}_0 = \emptyset$, is called \Term{von
+Neumann universe}. Another strategy adds \Term[class!in set theory]{classes}
+or \Term[category]{categories} as distinct objects to sets. A class is defined
+in the same way as a set, but it can only have sets as members. For every
+property $\phi$ one can define the class $\Phi$ of all sets with property
+$\phi$. Every set is also a class, but some \Term[proper!class]{proper
+classes}, such as the class of all sets, and the paradoxical class $R$ cannot
+be described as sets but only as classes. Classes and categories as
+abstractions of sets and other mathematical objects are also studied in
+\term{category theory}.
+
+%\TODO{Basics of category theory and/or finite model theory may also be useful,
+%because related to type theory, but I probably better skip them because of
+%complexity. Maybe some aspects can be included in the section on sets or the
+%section on tuples and relations, at least the term \Term{isomorphism}.}
+
+% remark: We record that for defining a set one either needs to list its 
+% distinct members or one needs to define a property.
+
+% remark: hidden assumptions: data and referents are sets (but they mayb be not!)
+
+% \TODO{Fuzzy sets may briefly be described here, if needed later.}
+
+% Fuzzy sets are sets whose elements have a \Term{grade} of membership. Fuzzy
+% sets have been introduced by Lotfi A. Zadeh (1965) as an extension of the
+% classical notion of set...
+
+\subsection{Tuples and relations}
+\label{sec:relations}
+
+Tuples and relation are mathematical constructs that appear at many places in
+data description. They can best be defined based on set theory. A \Term{tuple}
+is a finite ordered list, also known as sequence. A tuple with $n$ elements is
+called an \Term{$n$-tuple}. The 2-tuple is also called \Term{ordered pair}. We
+use angle brackets and write $\tuple{x_1 \ldots x_n}$ to denote the $n$-tuple
+of $x_1$ to $x_n$. Similar to sets, tuples have members, but the order of
+elements in a tuple is relevant ($\tuple{a,b} \neq \tuple{b,a}$). The same
+element can also occur multiple times in a tuple ($\tuple{a,a} \neq \tuple{a}$ but
+$\set{a,a} = \set{a}$).  Tuples are useful for further definitions of objects
+with distinct members, for instance an $n$-ary \term{predicate} could be
+defined as $n$-tuple. One applications of tuples is the definition of
+mathematical relations.
+
+A \Term{relation} is a set of similar tuples. More precisely, an $n$-ary
+relation is a set of $n$-tuples $\tuple{x_1,x_2,\ldots x_n}$ and a set $n$ of
+sets $X_1\ldots X_n$ where every element $x_i$ is member of some specific set
+$X_i$. For each sequence of sets, there is a total relation, called the
+\Term[product!of sets]{cartesian product}. Every $n$-ary relation is a subset
+of a cartesian product, which is defined as: \[ X_1 \times X_2 \times \cdots
+\times X_n = \set[\tuple{x_1,x_2\ldots x_n}]{x_i \in X_i, i=1\ldots n} \]
+
+\index{recursive relation|see{digraph}}%
+\index{relation!recursive|see{digraph}}%
+%
+A \Term{binary relation} $r$ between two sets $A$ and $B$ is some set of
+ordered pairs $\tuple{a,b}$, where $a$ is element of $A$ and $b$ is element of
+$B$. In this case, $A$ is called the \Term{domain} of $r$ and $B$ is the
+\Term{codomain} of $r$, and we write $r: A \rel B$ (not to be confused with the
+logical implication arrow $\to$).  The set of all such ordered pairs is the
+cartesian product $A \times B = \set[\tuple{a,b}]{a \in A \wedge b \in B}$. The
+sets of a relation do not necessarily have to be disjoint. For instance a
+binary relation $r$ over a set $A$ is $r \subseteq A \times A$.  Binary
+relations over sets are also studied in graph theory as these relations are
+isomorph to \term{digraph}s (see section~\ref{sec:graphtheory}). In data
+structures these relations are called \term{recursive}. Obviously one can turn
+any binary relation over two sets $A$ and $B$ into a relation over one set $C$
+with $C = A \cup B$.
+
+Binary relations can be classified according to which kind of tuples they
+contain. Table~\ref{tab:binaryrelprops} lists the most important types for a
+binary relation $z: X \rel Y$. Part of the terminology was originally coined by
+the Bourbaki group \cite{Bourbaki1970}. For functional relations the notation
+$r(x)$ denotes the element from $r$'s codomain where $\tuple{x,r(x)}$ is in
+$r$.  The \Term{domain of definition} and \Term{range} refer to the subset of
+\term{term} and \term{codomain} that actually take part in the relation, but
+the usage of this terms is not coherent and `domain' implicitly refers to the
+domain of definition.  Figure \ref{fig:binaryrelations} illustrates the basic
+terms and types with several binary relations over two out of four sets
+$A=\set{a_1,a_2,a_3}$, $B=\set{b_1,b_2,b_3}$, $C=\set{c_1,c_2,c_3}$,
+$D=\set{d_1,d_2,d_3}$ and its subsets $A'$, $B'$, and $D'$.  
+
+\begin{table}
+\centering
+\begin{tabular}{|rl|}
+\hline
+\Term{injective} (left-unique)  
+  & $\forall \tuple{x_1,y_1},\tuple{x_2,y_2} \in r: (y_1 = y_2) \rightarrow (x_1 = x_2)$ \\
+\hline
+\Term{functional} (right-unique) 
+  & $\forall \tuple{x_1,y_1},\tuple{x_2,y_2} \in r: (x_1 = x_2) \rightarrow (y_1 = y_2)$ \\
+\hline
+\Term{one-to-one}
+  & $\forall \tuple{x_1,y_1},\tuple{x_2,y_2} \in r: (y_1 = y_2) \leftrightarrow (x_1 = x_2)$ \\
+\hline
+(left-)\Term{total}
+  & $\forall x \in X\, \exists y \in Y : \tuple{x,y} \in z$ \\
+\hline
+\Term{surjective} (right-total) 
+  & $\forall y \in Y\, \exists x \in X : \tuple{x,y} \in z$ \\
+\hline
+\Term{function} or \Term{map}
+  & $\forall x \in X\, \exists! y \in Y : \tuple{x,y} \in z$ \\
+\hline
+\Term{bijective} 
+  & $\forall x \in X\, \exists! y \in Y : \tuple{x,y} \in z$ and \\
+  & $\forall y \in Y\, \exists! x \in X : \tuple{x,y} \in z$ \\
+\hline
+\Term{correspondence}
+  & $\forall x \in X\, \exists y \in Y : \tuple{x,y} \in z$ (total) and \\
+  & $\forall y \in Y\, \exists x \in X : \tuple{x,y} \in z$ (surjective) \\
+\hline
+\end{tabular}
+\caption{Types of binary relations}
+\label{tab:binaryrelprops}
+\end{table}
+
+A bijective relation is also injective and surjective and a one-to-one
+correspondence.  The extension of this concept in \term{category theory} is
+called \term{isomorphism}, while structures that can be transformed injectively
+or surjectively are called monomorphism or epimorphism, respectively. Binary
+relations can also be combined to create new relations. The relation 
+$g \circ f$ is defined as the set 
+$\set[\tuple{x,z}]{\exists y: \tuple{x,y} \in f \wedge \tuple{y,z} \in g}$ (see 
+figure \ref{fig:binaryrelations} for an example). 
+
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[orm,label distance=0mm]
+  \begin{scope}
+    \node[align=center,anchor=north,label=below:domain of $r$] (A)
+      at (0,-2) {$A$};
+    \draw[thick] (0,0) ellipse (1 and 1.7);
+    \draw[thick,dotted] (0,0.3) ellipse (0.75 and 1);
+    \node[gnode,label=below:$a_1$] (a1) at (0,0.8) {};
+    \node[gnode,label=below:$a_2$] (a2) at (0,0) {};
+    \node[gnode,label=below:$a_3$] (a3) at (0,-1) {};
+    \draw[dotted] (0,1.4) -- (0,2) node[align=center,anchor=south]
+      {$A'$ domain of\\definition of $r$};
+  \end{scope}
+
+  \begin{scope}[xshift=3cm]
+    \node[align=center,anchor=north,label=below:codomain of $r$]
+      (B) at (0,-2) {$B$};
+    \draw[thick] (0,0) ellipse (1 and 1.7);
+    \draw[thick,dotted] (0,0.3) ellipse (0.75 and 1);
+    \node[gnode,label=below:$b_1$] (b1) at (0,0.8) {};
+    \node[gnode,label=below:$b_2$] (b2) at (0,0) {};
+    \node[gnode,label=below:$b_3$] (b3) at (0,-1) {};
+    \draw[dotted] (0,1.4) -- (0,2) node[align=center,anchor=south,
+      label=above:range of $r$] (B') {$B'$};
+  \end{scope}
+
+  \draw[garc] (a1) edge (b1) (a2) edge (b2) (a2) edge (b1);
+
+  \begin{scope}[xshift=6cm,yshift=2mm]
+    \node (C) at (0,1.8) {$C$};
+    \draw[thick] (0,-.2) ellipse (1 and 1.55);
+    \node[gnode,label=below:$c_2$] (c1) at (0,0.8) {};
+    \node[gnode,label=below:$c_3$] (c2) at (0,-0.1) {};
+    \node[gnode,label=below:$c_4$] (c3) at (0,-1) {};
+  \end{scope}
+
+  \draw[garc] (b1) edge (c1) (b2) edge (c2);
+
+  \begin{scope}[xshift=9cm]
+    \node[align=center,anchor=north] (D) at (0,-2) {$D$};
+    \draw[thick] (0,0) ellipse (1 and 1.7);
+    \draw[thick,dotted] (0,0.3) ellipse (0.75 and 1);
+    \node[gnode,label=below:$d_1$] (d1) at (0,0.8) {};
+    \node[gnode,label=below:$d_2$] (d2) at (0,0) {};
+    \node[gnode,label=below:$d_3$] (d3) at (0,-1) {};
+    \draw[dotted] (0,1.4) -- (0,2) node[align=center,anchor=south,
+      label=above:range of $g$] (D') {$D'$};
+  \end{scope}
+
+  \draw[garc] (c3) edge (d2) (c1) edge (d1) (c2) edge (d2);
+
+  \draw[thin,->] (A) edge node[above] {$r$} (B);
+  \draw[thin,left hook->,in=180,out=-10] (B')
+    edge node[above,pos=0.7] {$f$} (C);
+  \draw[thin,->,out=0,in=-170] (C) edge 
+    node[above,pos=0.3] {$g$} (D');
+  \draw[thin,->,out=+10,in=170] (B')
+    edge node[above] {$g \circ f$} 
+         %node [below,pos=0.5,sloped,inner sep=2pt] {$\sim$} 
+		 (D');
+\end{tikzpicture}
+
+\begin{tabular}{rccl}
+& & & \\
+relation & domain & codomain & type of relation \\
+\hline
+$r$	       & $A'$  & $B$  & left-total \\
+	       & $A$   & $B'$ & right-total (or surjective or onto) \\
+	       & $A'$  & $B'$ & correspondence (left- and right-total) \\
+$f$        & $B'$  & $C$  & injective and partial function \\
+	       & $C$   & $D$  & (total) function \\ 
+$g$        & $C$   & $D'$ & surjective and function \\
+$g\circ f$ & $B'$  & $D'$ & bijective \\
+	       & $B$   & $D$  & one-to-one \\
+\end{tabular}
+\caption{Terms and types of binary relations}
+\label{fig:binaryrelations}
+\end{figure}
+
+% TODO: need to explain?!:
+% \textit{order} (\textit{transitive order}, \Term{total order}, %t
+% \textit{partial order} \Term{strict order} \ldots)
+
+\subsection{Graph theory}
+\label{sec:graphtheory}
+
+Formal graphs as method of description were introduced in the late 19th century
+by \textcite{Cayley1857} and \textcite{Sylvester1878} for chemical structures.
+Among other applications, graphs can be used to model binary relations over a
+set of objects. Most of the following definitions can be found in any
+introduction to graph theory but terminology differs among authors in slight
+details.
+
+A \Term{graph} is a pair $\tuple{V,E}$ where $V$ is a finite set of
+\textit{nodes} \index{node!of a graph} (or \textit{vertices})
+\index{vertex|see{node}} and $E$ is a finite set of \textit{edges}\index{edge}.
+Unless otherwise indicated the graph is a \Term{simple graph}, that means edges 
+are 2-sets without orientation and cannot connect a node with itself:
+$E \subseteq \mathcal{P}_{2}(V)$ Two nodes $u,v$ are \Term{adjacent} if
+$\set{u,v} \in V$. The \Term{degree} of a node $v$ is the number of adjacent
+nodes $\set[u]{\set{u,v} \in V}$. A \Term{path} is a sequence of two or more
+nodes $v_1,\ldots v_n$ such that $v_i$ and $v_{i+1}$ are adjacent for 
+$1 \le i < n$. Unless otherwise noted a path uses every edge at most once. 
+A \Term{cycle} is a path with $v_1=v_n$. If there is a path between two nodes
+$u$ and $v$, they are \Term{connected} and their \Term{distance} is the length
+of their shortest connecting path. A graph is said to be connected if every pair
+of nodes in the graph are connected. Unless otherwise noted a graph is
+assumed to be connected. A \Term{planar graph} can be drawn on a plane without
+intersecting edges. A graph is \Term[bipartite graph]{bipartite} if its nodes
+can be partitioned into two sets such that no nodes of the same set are
+adjacent. Unless mentioned otherwise we will use the term \term{bipartite
+graph} more specific for a \Term{fixed bipartite graph} $\tuple{V_1,V_2,E}$ with
+specific node partition -- which is isomorph to a binary relation (see 
+example~\ref{ex:hypergraph}).
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+  \begin{scope}[every node/.style={gnode}]
+    \node (A) at (0,0) {}; \node (B) at (1,0) {}; \node (C) at (2,0) {};
+    \path[garc] (A) edge (B) (B) edge (C);
+  \end{scope}
+  \node at (1,-.5) {\ormtext\textbf{a)} sequence graph};
+  \begin{scope}[every node/.style={gnode},xshift=3cm]
+    \node (A) at (0.5,1) {};
+    \node (B) at (1.5,1) {};
+    \node (C) at (0.0,0) {};
+    \node (D) at (1.0,0) {};
+    \node (E) at (2.0,0) {};
+    \node (F) at (2.5,1) {};
+    \path[garc] (A) edge (B) (C) edge (A) (C) edge (D) 
+                (D) edge (E) (E) edge (B) (D) edge (B) (E) edge (F);
+  \end{scope}
+  \node at (4.25,-.5) {\ormtext\textbf{b)} acyclic digraph (DAG)};
+  \begin{scope}[every node/.style={gnode},xshift=6.5cm,yshift=-1cm]
+    \node (A) at (0.5,3) {};
+    \node (B) at (1.5,3) {};
+    \node (C) at (2.0,2) {};
+    \node (D) at (1.5,1) {};
+    \node (E) at (0.5,1) {};
+    \node (F) at (0.0,2) {};
+    \path[garc] (A) edge (B) (B) edge (C) (C) edge (D) 
+                (D) edge (E) (E) edge (F) (F) edge (A);   
+  \end{scope}
+  \node at (7.5,-.5) {\ormtext\textbf{c)} cycle graph};
+  \begin{scope}[xshift=10.5cm,yshift=1cm]
+    \matrix[row sep=.8cm,column sep=.8cm,every node/.style={gnode}] {
+      \node (A) {}; & \node (B) {}; & \node (C) {}; \\
+      \node (D) {}; & \node (E) {}; & \node (F) {}; \\
+      \node (G) {}; & \node (H) {}; & \node (I) {}; \\
+    };
+    \path[garc] (A) edge (B) (B) edge (C) (D) edge (E)
+                (E) edge (F) (G) edge (H) (H) edge(I);
+    \path[garc] (A) edge (D) (B) edge (E) (C) edge (F)
+                (D) edge (G) (E) edge (H) (F) edge (I);   
+  \end{scope}
+  \node at (10.5,-.5) {\ormtext\textbf{d)} grid graph};
+\end{tikzpicture}
+\caption{Some digraph types exemplified}
+\label{fig:digraphtypes}
+\end{figure}
+
+A \Term{directed graph} or \Term{digraph} is a graph whose edges (also called
+\textit{arcs}) are ordered pairs: $E \subseteq V \times V$. An arc $\tuple{u,v}$
+is said to direct, link, or point from $u$ to $v$; unless otherwise indicated a
+\Term{loop}, that is an arc that pairs a node to itself ($u=v$), is not allowed.
+An arc $\tuple{u,v}$ is \Term{symmetric} if its reverse link $\tuple{v,u}$ is
+also present. A simple graph can be modeled by a digraph that only holds
+symmetric links. In a digraph we must distinguish the number of edges pointing
+to a node as \Term{indegree} and the number of edges pointing from a node as
+\Term{outdegree}. A (directed) \textit{path}\index{path} is a non-empty sequence
+of nodes, one pointing to the next without use a link twice. A node $u$ is
+\Term{reachable} from another node $v$ if there is a directed path from $v$ to
+$u$. A path that starts and ends in the same node is a \textit{\term{cycle}}.
+If a node $u$ can be reached from $v$ on two disjoint paths, the union of
+both paths is called a \Term{diamond}. Adding all reverse links to a
+diamond results in a cycle. A digraph is \Term{strongly connected} if every node
+is reachable from every other node and \Term{weakly connected} if adding all
+missing symmetric links would result in a strongly connected digraph. Unless
+otherwise noted a digraph is assumed to be weakly connected.
+
+Some types of directed graphs deserve special treatment: A \Term{sequence graph} 
+(figure~\ref{fig:digraphtypes}~{\ormbf a}) is a strongly connected digraph in
+which only one one node has indegree 0 and all other nodes have indegree 1.
+A (directed) \Term{cycle graph} ({\ormbf c}) is a digraph that consists of a
+single cycle. A \Term[directed acyclic graph (DAG)]{directed acyclic graph}
+(DAG) or \Term{acyclic digraph} ({\ormbf b}) is a directed graph containing no
+cycles. \index{acyclic digraph graph|see{directed acyclic graph (DAG)}}
+The edges of a (directed) \Term{grid graph} ({\ormbf d}) are defined by a
+$n$-tuple $\tuple{s_1,\ldots,s_d}$ where $d$ is the \Term[dimension!of a grid
+graph]{dimension} of the graph and $s_i \in \mathbb{N}^+$ are its
+\Term[size!of a grid graph]{sizes}.
+
+% define: \mathbb{N}^+
+
+% The nodes of a grid graph are bijectively mapped to the set of
+% \Term[coordinate!in a grid graph]{coordinates} which is
+% $C=\set[\tuple{p_1,\ldots,p_n}]{0 \le p_i < s_i}$. For every combination of
+% coordinates $c_1,c_2 \in C$ there is a directed edge from the lower coordinate
+% to the higher coordinate if and only if their distance is one.
+
+\begin{example}
+\centering
+\begin{tikzpicture}[orm,label distance=1mm]
+  \begin{scope}[every node/.style={gnode}]
+   \node[label=left:$a_1$] (A) at (0,2) {};
+   \node[label=right:$a_2$] (B) at (1,2) {};
+   \node[label=left:$a_3$] (C) at (0,1) {};
+   \node[label=right:$a_4$] (D) at (1,1) {};
+   \node[label=left:$a_5$] (E) at (0,0) {};
+   \node[label=right:$a_6$] (F) at (1,0) {};
+  \end{scope}
+   \draw[gedge] (C) edge (0.7,1.4) (0.7,1.4) edge (B) (D) edge (0.7,1.4);
+   \draw[gedge] (A)--+(0.4,0) node[anchor=south] {$b_1$};
+   \node at (0.5,1.6) {$b_2$};
+   \draw[gedge] (C) -- node[anchor=west] {$b_3$} (E);
+  \node at (0.5,-1) {{\ormbf a)} hypergraph};
+  \node at (2,1) {$\simeq$};
+
+  \begin{scope}[xshift=3cm,every node/.style={gnode}]
+   \node[label=left:$a_1$] (A) at (0,2.25) {};
+   \node[label=left:$a_2$] (B) at (0,1.75) {};
+   \node[label=left:$a_3$] (C) at (0,1.25) {};
+   \node[label=left:$a_4$] (D) at (0,0.75) {};
+   \node[label=left:$a_5$] (E) at (0,0.25) {};
+   \node[label=left:$a_6$] (F) at (0,-.25) {};
+   \node[label=right:$b_1$] (a) at (1.2,2.25) {};
+   \node[label=right:$b_2$] (b) at (1.2,1.25) {};
+   \node[label=right:$b_3$] (c) at (1.2,0.5)  {};
+  \end{scope}
+  \begin{scope}[xshift=3cm]
+   \draw[garc] (A) edge (a) (B) edge (b) (C) edge (b) 
+               (D) edge (b) (C) edge (c) (E) edge (c);
+  \end{scope}
+  \node at (3.75,-1) {{\ormbf b)} bipartite graph};
+
+  \begin{scope}[xshift=5.5cm]
+  \node[anchor=west] at (0,2.4)  {$A=\set{a_1,a_2,a_3,a_4,a_5,a_6}$};
+  \node[anchor=west] at (0,1.9)  {$B=\set{b_1,b_2,b_3}$};
+  \node[anchor=west] at (.3,1.4) {$=\{\{a_1\},\{a_2,a_3,a_4\},\{a_3,a_5\}\}$};
+  \node[anchor=west] at (0,0.9)  {$V=A \cup B$};
+  \node[anchor=west] at (0,0.4)  {$E=\set[\tuple{v,e}]{e \in A, v \in e}$};
+  \node[anchor=west,align=right] at (.3,-.3) 
+   {$=\{\tuple{a_1,b_1},\tuple{a_2,b_2},\tuple{a_3,b_2},$\\
+     $\tuple{a_4,b_2},\tuple{a_3,b_3},\tuple{a_5,b_3}\}$};
+  \end{scope}
+  \node at (7.5,-1) {{\ormbf c)} surjective relation (E)};
+\end{tikzpicture}
+\caption{A hypergraph and its (fixed) bipartite graph}
+\label{ex:hypergraph}
+\end{example}
+
+The graph concept can be further extended: A \Term{multigraph} is a
+graph in which multiple edges can exist between any two nodes. The maximum
+number of edges linking two nodes is called the \Term{multiplicity} of the
+multigraph. A multigraph can be defined two ways: Either the edges $E$ do not
+form a set but a bag; in this case multiple edges are indistinguishable. Or the
+two nodes that are connected by an edge are not their element but but there
+is an additional function $\vartheta: V \rel E \times E$ that maps edges to
+node-pairs. There can be simple and directed multigraphs. Unless defined
+otherwise edges are not ordered.
+
+In a \Term{hypergraph} an edge can connect any positive number of nodes. The
+edges of a hypergraph are also called \Term{hyperedge}. There is an isomorphism
+between hypergraphs and fixed bipartite graphs that have no unconnected nodes
+in the second partition (example~\ref{ex:hypergraph} {\ormtext b}): Let
+$H=\tuple{A,B}$ with $B \subseteq \mathcal{P}(A) \setminus \emptyset$ be a
+hypergraph. You can then construct a directed bipartite graph $P=\tuple{V,E}$
+as shown in example~\ref{ex:hypergraph}, or express the hypergraph as
+surjective relation between two disjoint sets. By lifting the disjointness
+constraint, one gets a \Term{generalized hypergraph} in which edges can also
+connect other edges.  This neutralizes the distinction between nodes and edges
+-- if the graph is also a multigraph, one can simply view nodes as empty edges.
+It is easier to visualize generalized hypergraphs as directed acyclic graphs
+(if edges can only contain edges of smaller rank) or as general directed
+graphs. Nodes of the new graph correspond to edges in the hypergraph and edges
+represent edge containment. This representation of a generalized hypergraph is
+sometimes called \term{Levi graph}.
+
+% http://wiki.github.com/tinkerpop/gremlin/modeling-hypergraphs
+
+There are several forms of \Term{graph labeling}, that is the assignment of
+labels, or other elements to edges, nodes, or both of a graph. We define a
+\Term{property graph} as tuple $\tuple{V,E,P,\Phi}$ with $E$ being a
+finite set of edges, $V$ being a finite set of nodes, $P$ being a finite set
+of properties and $\Phi: G' \rel P$ with $G' \subseteq (V \cup E)$ a partial
+function that maps edges and/or nodes to properties. For $\Phi: E \rel P$
+(only edges have properties) the graph is a \Term{edge-property graph} and for
+$\Phi: V \rel P$ (only nodes have properties) it is a \Term{node-property
+graph}. This definition makes no assumption on the nature of nodes and thus
+can be applied to all kinds of graphs (simple graphs, directed graphs,
+multigraphs, hypergraphs). There is no assumption on properties: they can
+be labels, types, weights, colors, identifiers, attributes, sets, tuples etc.
+depending on the particular property graph type. A relevant instance is a
+property graph where $(V \cup E)$ can be mapped via \term{bijection}
+to $P$ so every node and edge can be identified uniquely by its property.
+
+\begin{figure}
+\centering
+ \begin{tikzpicture}
+  \begin{scope}[every node/.style={gnode}]
+    \node at (0.5,2) (A) {};
+    \node at (0,1) (B) {};
+    \node at (1,1) (C) {};
+    \node at (2,1) (D) {};
+    \node at (0.5,0) (E) {};
+    \node at (3,0.5) (F) {};
+    \node at (3,1.5) (G) {};
+    \path[gedge] (A) edge (C) (B) edge (C) (E) edge (C) (C) edge (D)
+                 (C) edge (D) (D) edge (F) (D) edge (G);
+  \end{scope}
+  \node at (1.5,-.5) {\ormtext \textbf{a)} undirected tree};
+  \begin{scope}[every node/.style={gnode},xshift=4cm]
+    \node (A) at (1,2) {};
+    \node (B) at (0.5,1) {};
+    \node (C) at (1.5,1) {};
+    \node (D) at (0,0) {};
+    \node (E) at (1,0) {};
+    \node (F) at (2,0) {};
+    \path[garc](A) edge (B) (A) edge (C) (B) edge (D) (C) edge (E) (C) edge(F);
+    \path[glink] (B) edge (C) (E) edge (F);
+  \end{scope}
+  \node at (5,-.5) {\ormtext \textbf{b)} ordered tree};
+  \begin{scope}[every node/.style={gnode},xshift=7cm]
+    \node at (0,2) (A) {};
+    \node at (1,2) (B) {};
+    \node at (2,2) (C) {};
+    \node at (0.5,1) (D) {};
+    \node at (1.5,1) (E) {};
+    \node at (0,0) (F) {};
+    \node at (1,0) (G) {};
+    \node at (2,0) (H) {};
+    \path[garc] (A) edge (B) (B) edge (E) (C) edge (E)
+                (D) edge (F) (D) edge (G) (E) edge (G) (E) edge (H);
+  \end{scope}
+  \node at (8,-.5) {\ormtext \textbf{c)} polytree};
+  \begin{scope}[every node/.style={gnode},xshift=10cm]
+    \node at (0.5,2) (A) {};
+    \node at (0,1) (B) {};
+    \node at (1,1) (C) {};
+    \node at (2,1) (D) {};
+    \node at (0.5,0) (E) {};
+    \node at (1.5,0) (F) {};
+    \node at (1.5,2) (G) {};
+    \path[garc] (A) edge (B) (A) edge (C) (E) edge (C) (E) edge (B) (C) edge (D)
+                (C) edge (F) (A) edge (G);
+  \end{scope}
+  \node at (11,-.5) {\ormtext \textbf{d)} multitree};
+\end{tikzpicture}
+\caption{Tree types}
+\label{fig:treetypes}
+\end{figure}
+
+\Term*{tree}
+An \Term{undirected tree} (figure~\ref{fig:treetypes}~{\ormbf a}) is a
+simple graph without cycles. Tree nodes with degree one are also called
+\Term[leaf]{leafs}. An unconnected tree is called a \Term{forest}. By
+selecting a single tree node as \Term[root!of a tree]{root}, one gets a 
+\Term{rooted tree} ({\ormbf b} without the dashed lines). This
+selection implies a direction on every edge. The direction is typically defined
+pointing outwards from the root. Unless noted otherwise the term tree will be
+used for such rooted trees. By reversing the direction on all edges, one gets
+\Term{inverted tree}. The tree nodes that are directly connected from a
+given node via one outgoing edge are its \term{child node} which are
+\term{siblings} to each other. All nodes reachable from another are its
+\Term[descendant]{descendants} which for a subtree. All nodes that can reach
+another node are its \Term[anchestor]{ancestors} which form a sequence graph
+starting from the root. An \Term{ordered tree} is a tree in which the
+child nodes of each node are ordered. In (figure~\ref{fig:treetypes}~{\ormbf b})
+ordering is indicated by dashed linkes pointing from one sibling to the next.
+% TODO: see section XX on how to implement (orderd) trees
+There are two special kinds of DAGs that are also called trees: A
+\Term{polytree} ({\ormbf c}) is a directed acyclic graph containing no
+undirected cycles and a \Term{multitree} ({\ormbf d}) is directed
+acyclic graph without directed diamonds \cite{Furnas1994}. In a multitree the
+descendants of any node form a tree and the ancestors of any node form an
+inverted tree but there may be undirected diamonds. Every polytree is also a
+multitree and every directed tree is also a polytree.

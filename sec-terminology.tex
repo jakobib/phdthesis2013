@@ -1,0 +1,176 @@
+\section{A structural typology of data structuring [+4-5]}
+\label{sec:typology}
+
+
+\TODO{Glossary with consistent typology of core concepts.}
+
+% me: schema languages are formal languages and rules with human-readable annotations.
+
+\ignore{
+% TODO: hierher verweisen von anderer Stelle
+
+\begin{itemize}
+\item[data] \ldots
+\item[information] \ldots
+\item[(digital) document] \ldots
+\item[metadata] \ldots
+\item[description/describe] \ldots
+\item[pattern] \ldots
+\item[encode] \ldots
+\end{itemize}
+
+% Given data and structure: What is the meaning? Meaning is often not
+% obvious and/or fuzzy!
+
+% data vs. information
+% (have not used this word before, but in:
+% 'metadata includes any information about digital or non-digital content,'
+% what does ``includes'' mean?
+
+% my terminology: data structuring = data encoding
+
+
+% Some more precise research questions:
+
+% How is metadata structured?
+% How is metadata structured/encoded?
+% What types of metadata structuring methods exist?
+% How do the types of metadata structuring methods differ?
+% How do the types of metadata structuring methods relate to each other?
+% What patterns in metadata structuring exist?
+% what is a language?
+% what is a format?
+
+% \item what are entities?
+% \item what is formalizing?
+% \item what is modeling?
+% \item what is metadata?
+% \item what is a standard?
+% \item what is bibliographic data?
+% \item how can data be processed?
+% \item what is data modeling?
+% \item what is identity?
+
+%
+
+\TODO{
+This section presents a structural typology of metadata derived from the
+survey in the previous chapter. We will determine several distinct types
+of metadata encoding methods
+}
+
+%See my 'An algebraic structure of formats, models, and schemas'
+% as a result?
+
+In this section we will answer the following research questions:
+
+\begin{itemize}
+ \item What types of metadata encoding methods exist?
+ \item How do the types of metadata encoding methods differ?
+ \item How do the types of metadata encoding methods relate to each other?
+\end{itemize}
+
+% CSV= \Seq{\Seq{\formati{UInt}{8}}} ?
+
+% For the results
+%\begin{eqnarray*}
+% \format{UTF-8}: \format{u:String} \mapsto \Seq{ \format{Byte} } \\
+%\end{eqnarray*}
+
+% 'No book is ever finished. It is abandoned.' -- Joyce Carol Oates:
+% cited by Tim O'Reilly (u.a. in Dougherty1987)
+
+% meaning is structure
+% Sperberg-McQueen 2000 ``Meaning and Interpretation of Markup``
+
+% Markup: syntax (tree vs event), syntax, escaping, supported characters...
+%
+%Each syntax may restrict the set of expressable character strings
+%Tree is good to enforce specific kind of nesting (see ch~X for about trees).
+%Some markup is character-based flags:
+
+% Findings from markup languages:
+% 1. Youn can migrate from one DSL to another (\acro{SGML} to \acro{XML}).
+% 2. difference between presentational and descriptive is difficult
+% 3. Use of Macros to add descriptive markup,
+% 4. ML focus un syntax. Two ways: (tree vs. event-based)
+
+% finding: citation styles are markup languages for output
+
+% \acro{DSL}s are most used to is lies on the exchange of data structures
+% between different programming languages and applications. 
+% clear and strict specification, availability of reference implementations
+% event-stream !! (YAML)
+% with or without type information
+
+% Interesting type systems: J, Haskell
+
+If data in a database is restricted to a specific \tacro{data structuring
+language}{DSL}, the database can also be seen as simple file system. The
+database model is then implied by the underlying \acro{DSL}'s model 
+(\ref{sec:dsl}).
+
+\begin{tabular}{l|l}
+  XML & ordered trees with node properties \\
+  JSON & trees with typed leafs and support of indexed or ordered edges \\
+  YAML &  a more powerful superset of JSON (\ref{sec:yaml}) \\
+  CSV & tabular data, spreadsheets \ref{sec:csvandini}) \ldots
+\end{tabular}
+
+
+% Null values in data base management a denotational semantics approach (1978)
+% Even no data has a value (1984)
+
+% The importance of normalization ... but not at the logical level!
+
+% Neue Ergebnisse, die über die Literatur in \ref{ch:foundations} hinausgehen.
+
+The Typology used in the previous chapter (\ref{ch:methods}) defines less
+groups but more dimensions. In practice we rarely have pure schemes,
+formats, identifiers etc. but languages that work (and/or are used) on
+multiple levels at the same time. 
+
+% Q: If logical and conceptual are well divided. Why not easy to map each of
+% (UML, ORM, ERM\ldots) to (Relational, XML-DB, RDF-DB, Network-DB etc.)?
+
+\begin{center}
+\begin{tabular}{l|l|l|l}
+            & Schema & Path & Query \\
+\hline
+File system & . & Path & POSIX \\
+Database    & . &  \\
+Graph database  & . & Gremlin? \\
+Data Structuring Language & \\
+XML & XSD, DTD, Relax NG\ldots & XPath & XQuery, XSLT \ldots \\
+JSON & \ldots \\
+\end{tabular}
+\end{center}
+
+\begin{table}
+\begin{tabular}{|l|l|l|}
+\hline
+language & model & format(s) \\
+\hline
+XML & XML Information Set (Infoset) & the XML format \\
+RDF & RDF data model %(URIs, triples, literals, language tags, datatypes)
+    & RDF/XML, N3 \ldots \\
+JSON & (implicit) & the JSON format \\
+YAML & YAML information model / representation graph & YAML syntax \\
+CSV & columns and rows & various dialects \\
+XDR & External Data Representation Standard (RFC 4506) & \ldots \\
+Pig Latin & Pig Data Types & Pig Syntax \\ % Good for parallel processing
+\hline
+\end{tabular}
+\label{t:dsls}
+\caption{Summary of popular data structuring languages with model and
+serialization format}
+\end{table}
+
+\TODO{I must better explain why this section is about \emph{meta}data in
+particular while I talk about data in general.}
+
+\TODO{I am not sure if my triangle method (format, rules, practice) fits
+in here and whether it still the best way to classify metadata standards.}
+}
+
+\pagebreak

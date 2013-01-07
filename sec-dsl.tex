@@ -1,0 +1,528 @@
+\section{Data structuring languages}
+\label{sec:dsl}
+
+\Tacro[data structuring language]{Data structuring languages}{DSL}
+or \Term[data serialization language|see{data structuring language}]{data
+serialization languages} are used to express, exchange, and store
+data structured in general forms such as records, lists, sets, and
+tables. Similar to most file systems (\ref{sec:filesystems}) and 
+databases (\ref{sec:databases}), and unlike specific markup languages 
+(\ref{sec:markuplanguages}) the elements of a \acro{DSL} do not
+hold special semantics but general patterns and constraints. These
+constraints may further be tightened by schemas (\ref{sec:schemas})
+that define concrete formats based on a particular \acro{DSL}.
+Data that is only structured by a \acro{DSL}, but not by a more
+specific schema is often denoted as \Term{semi-structured data}.
+
+Each \acro{DSL} defines a simple \term{type system} and at least one syntax to
+serialize data in form of a stream of characters or bytes. The type system can
+be seen as (conceptual) data model of the \acro{DSL} and the syntax as logical
+model of the \acro{DSL}. Some \acro{DSL}s provide a syntax and a clear
+definition of its data model (\acro{XML}, \acro{RDF}, \acro{YAML}).  Others
+only define a syntax, that implies a model (\acro{JSON}) or they do not define
+a strict standard at all (\acro{INI}, \acro{CSV},
+\acro{S-EXP}%,\acro{ZZSTRUCT}). This section will describe some popular data
+structuring languages with focus on their underlying data model: \acro{CSV} and
+\acro{INI} (\ref{sec:csvandini}), \acro{JSON} (\ref{sec:json}), \acro{YAML}
+(\ref{sec:yaml}), and \acro{XML} (\ref{sec:xml}) all provide a syntax that is
+also human-readable to some degree. The focus of \acro{RDF} (\ref{sec:rdf}) is
+more communication between machines. Depending on what one considers as core
+part of \acro{RDF}, it can also be seen as simple conceptual modeling language
+(section~\ref{sec:modelangs}).
+% \acro{ZZSTRUCT} (\ref{sec:zzstructure}) is a less known, theoretical
+% \acro{DSL}, developed for the \term{Xanadu} hypertext project. 
+If one removes all executable parts from a \term{programming language}, its
+\term{type system} can also be seen as \acro{DSL} -- a popular example is
+\acro{JSON} that evolved as subset of JavaScript. Data binding languages
+(\ref{sec:databinding}) provide a compact and abstract form of a type system
+independent from a specific programming language . Some programming languages
+even structure data and programs in the same way: that means every program is
+semi-structured data in the programming language's own type system.  Rules of
+the programming language act like a schema that restricts the \acro{DSL} to
+valid, executable code. A typical example of such a data-oriented programming
+language is \term{Lisp}, which is purely based on S-Expressions (\acro{S-EXP}).
+
+
+\subsection{Data binding languages}
+\label{sec:databinding}
+
+A special form of data structuring languages are language-specific
+\Term[serialization format]{serialization formats}. These are used to convert
+data structures in programming languages into byte streams and vice versa, a
+process that is also called marshalling or deflating (structures to bytes); and
+unmarshalling, deserialization, or inflating (bytes to structures). The general
+application of a serialization format is also called \Term{data binding}
+because several application can be `bound together' by exchanging data in a
+common serialization format. Table~\ref{tab:dslrpcformats} lists several
+languages that have been developed for data binding. Some binding languages
+come with a more general \term{interface description language} to specify
+\acro{API}s and with \tacro[data definition language]{data definition
+languages}{DDL} to specify more concrete formats (see
+section~\ref{sec:schemas}). The absence of a \acro{DDL} does not mean one
+cannot specify concrete formats based on the particular \acro{DSL}, but there
+is no common and defined language to express these formats.
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{|X|X|X|}
+\hline
+\textbf{\acro{DSL}} & \textbf{first defined} & \textbf{\acro{DDL}} \\
+\hline
+\tacro{Abstract Syntax Notation One}{ASN.1} & 1984 by ISO 
+& \tacro{Encoding Control Notation}{ECN}
+\\ \hline
+\tacro{External Data Representation}{XDR} &  1987 by Sun (RFC~1014)
+& -- 
+\\ \hline
+\tacro{CORBA Common Data Representation}{CDR} & 1991 by \acro{OMG}
+& \tacro{Interface Description Language}{IDL} 
+\\ \hline
+\tacro{Structured Data eXchange Format}{SDXF} & 2001 as RFC~3072
+& -- % (?) 
+\\ \hline
+\term{Hessian} & 2004 by Caucho
+& -- % (?) 
+\\ \hline
+\term{Fast Infoset} & 2007 by ISO 
+& same as for \acro{XML} (see~\ref{sec:xmlschemas})
+\\ \hline
+\term{Thrift} & 2007 by Facebook
+& -- % (?) 
+\\ \hline
+\term{Protocol Buffers} & 2008 by Google 
+& .proto files \\
+\hline
+\term{Etch} & 2008 by Cisco 
+& -- % (?) 
+\\ \hline
+\term{MGraph} & 2008 by Microsoft 
+& \term{MSchema}/\term{MGrammar} 
+\\ \hline 
+\acro{BSON} & 2010 by MongoDB 
+& -- 
+\\ \hline
+\end{tabularx}
+\caption{Data structuring languages developed for data binding}
+\label{tab:dslrpcformats}
+\end{table}
+
+% For ``M`` from Microsoft (aka Oslo) see
+% http://startbigthinksmall.wordpress.com/2008/12/10/mgraph-the-next-xml/
+% http://dvanderboom.wordpress.com/2009/01/17/why-oslo-is-important/
+% This includes MSchema, MGraph, MGrammar
+
+% Good critizism
+% http://blog.jclark.com/2008/11/some-thoughts-on-oslo-modeling-language.html
+% http://dewpoint.snagdata.com/2008/10/21/google-protocol-buffers/
+
+\subsectionexample{Protocol Buffers}
+\label{ex:proto}
+
+\term{Protocol Buffers} is a serialization format with associated schema language
+developed by Google. It was first introduced for remote procedure
+calls and now is used for storing and interchanging all kinds of structured
+data (the Protocol Buffers developer Guide names it as ``Google's lingua franca
+for data'') \cite{Varda2008}. The format's serialization is binary and thereby
+much smaller and quicker to parse then \acro{XML}.  Schemas (see
+section~\ref{sec:otherschemas}) are defined in \verb|.proto| files that can be
+used to automatically generate parsers and serializers in many programming
+languages. The underlying data model is hierarchical: The basic data type of
+Protocol Buffers is the ``message'', that is a multimap with unique, unsorted
+keys, and repeatable, sorted values. Values can be other messages or instances
+of 16 scalar core data types (table~\ref{tab:protocolbuffersdatatypes}). An
+earlier version of Protocol Buffers also included a group data type which is
+now deprecated. Some types only differ in the way they are serialized (for
+instance int32 and sint32) but encode the same values.
+
+\begin{table}[h]
+  \centering
+  \begin{tabularx}{\linewidth}{|l|l|l|X|}
+    \hline
+    \textbf{Type(s)} & \textbf{in XML} & \textbf{in Java} & \textbf{Content} \\
+    \hline
+    int32, sint32 & int32 & int & signed 32-bit integer \\
+    \hline
+    uint32, fixed32 & uint32 & int & unsigned 32-bit integer \\
+    \hline
+    int64, sint64 & int64  & long & signed 64-bit integer \\
+    \hline
+    uint64, fixed64 & uint64 & long & unsigned 64-bit integer \\
+    \hline
+    float & float & float & 32 bit floating point (IEEE 754) \\
+    \hline
+    double & double & double & 64 bit floating point (IEEE 754) \\
+    \hline
+    bool & bool & boolean & true of false \\
+    \hline
+    string & string & String & Unicode or 7-bit ASCII string \\
+    \hline
+    bytes & string & ByteString & sequence of bytes \\
+    \hline
+    enum & enum & enum & choice from a set of given values \\
+    \hline
+    message & class & class & multimap with unique, unsorted keys
+       repeatable, sorted fields (possibly constraint by a schema) \\
+    \hline
+\end{tabularx}
+\caption{Core data types of Protocol Buffers}
+\label{tab:protocolbuffersdatatypes}
+\end{table}
+
+
+\subsection{INI, CSV, and S-Expressions}
+\label{sec:csvandini}
+
+\Tacro{Comma-separated values}{CSV}, \Tacro{initialization files}{INI}, 
+and \Tacro{S-expressions}{S-EXP} exist as \acro{DSL} in several variants.
+Despite the lack of a strict and commonly agreed specification, these 
+languages are used because of their simplicity in a wide range of
+applications. Descriptions of the most used variants of each language
+can be found in \textcite{RFC4180} and \textcite{Repici2010} for \acro{CSV},
+in \textcite{WP:INI} for \acro{INI}, and in \textcite{Rivest1997} for
+\acro{S-EXP}. Each language uses a tiny set of data types with strings or 
+byte sequences as the only atomic type. Syntaxes of \acro{INI}, \acro{CSV},
+and \acro{S-EXP} are mainly defined as \term{context-free language} in 
+\term{Backus-Naur Form} with some additional constraints.
+
+We will now show underlying models for each of these languages. \acro{INI} 
+is primarily used for configuration files. In its most basic form, it is
+just a \term{key-value} structure with field names (\format{Field}) and 
+values (\format{Value}). Some \acro{INI} files may have a second level 
+(\format{Section}). Section names should be unique per file and field 
+names should be unique per section, but both constraints depend on the
+particular variant of \acro{INI}. A general model is shown in 
+figure~\ref{fig:inimodel}. In summary, \acro{INI} files are a special 
+instance of the record database model as described in 
+section~\ref{sec:records} (see see flat file database model in
+figure~\ref{fig:flatfilemodel}).
+
+\acro{CSV} is popular to exchange simple lists of database records. 
+An example is given in figure~\ref{fig:csvexample}. \acro{CSV}
+is based on a  tabular model (figure~\ref{fig:csvmodel}) where
+data is stored in cells (\format{Cell}) that form a grid of rows
+(\format{Row}) and columns (\format{Column}). In general, all rows
+must have the same set of columns, or they are automatically unified
+by adding missing cells with a default value. 
+
+\acro{S-EXP} originates in the \term{Lisp} programming languages and
+it is also used in some data exchange protocols. The model of
+\acro{S-EXP} is a rooted, ordered tree with strings or empty lists
+as leafs  (figure~\ref{fig:sexpmodel}). There is not one standard
+but several dialects. A canonical subset of \acro{S-EXP} with binary
+form has been proposed by \textcite{Rivest1997}.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[orm]
+ \entity (section) (section) {Section\\(.name)};
+ \entity[right=1.8 of section] (field) {Field}
+        edge node[roles=3,unique=1-2,unique=3] (r) {} (section);
+ \value[right=1.4 of field] (value) {Value}
+        edge[required by] node[roles,unique] {} (field); 
+ %\value[below=of r.south] {FieldName} edge (r.south);
+ \binary[below=1.0 of r.two split south,unique=1:-1,unique=2:-1] (rfn) {};
+ \value[left=of rfn] (fname) {Name} edge (r.south);
+
+ \plays (rfn.east) -| (field) (rfn) to (fname); 
+
+ \limits (r.two split south) to node[constraint] (c) {*} (rfn.north);
+ 
+ \node[constraint=partition,below=3mm of r.south east] (d) {};
+ \limits (r.three south) to (d) (d) to (rfn.two north);
+
+ \node[rule=*,align=left,anchor=north west] at (6.2,0.5) {
+  Fields may be required to be in a Section\\
+  Fields may be ordered and/or repeatable\\
+  within a Section. Sections may also be\\
+  ordered and/or repeatable (not shown).
+ };
+\end{tikzpicture}
+\acro*{INI}%
+\caption{Model of \acrostyle{INI} with variants}
+\label{fig:inimodel}
+\end{figure}
+%
+\begin{figure}
+\centering
+\begin{tikzpicture}[orm]
+ \entity (cell) {Cell};
+ \value[right=1.4 of cell] (value) {Value}
+      edge[required by] node[roles,unique=1] {} (cell); 
+ \ternary[left=of cell,unique=1-2,index=1:r,index=2:c] (r) {};
+ \plays[mandatory] (cell) to (r);
+ \entity[below=of r.south west] (row) {Row\\(.nr)};
+ \entity[below=of r.south east] (col) {Column\\(.name)};
+ \plays[mandatory] (row) to (r.one south);
+ \plays[mandatory] (col) to (r.two south);
+ \limits (r.one split north) to +(0,0.4) node[constraint] (c) {*};
+ \node[rule=*,anchor=north west,align=left] at (3.2,0.7) {
+   Rows and Columns should form a complete grid:\\
+   each Row that plays r must do so with every\\
+   Column that plays c (and vice versa). In most\\
+   cases Rows and/or Columns are ordered.
+   Columns\\may also have no names but only numbers.
+ };
+\end{tikzpicture}
+\acro*{CSV}
+\caption{Model of \acrostyle{CSV} with variants}
+\label{fig:csvmodel}
+\end{figure}
+%
+\begin{figure}
+\centering
+\begin{tikzpicture}[orm]
+\entity (e) {Element};
+\entity[below=5mm of e.south west,anchor=north east,xshift=-4mm] (l) {List}   
+  edge[suptype] node[pos=0.3] (a) {} (e);
+\entity[below=5mm of e.south east,anchor=north west,xshift=4mm] (s) {String} 
+  edge[suptype] node[pos=0.3] (b) {} (e);
+
+%\node[constraint=xor,below=of e] (c) {};
+\limits (a) edge node[constraint=xor] {} (b);
+
+\binary[above=6mm of l,xshift=2mm,unique=2] (r) {};
+\limits (r.north) to +(0,0.3) node[constraint] (c) {*};
+\plays (l) -- (r.one south) (r) -- (e);
+
+\value[right=1.4 of s] {Value} edge[required by] node[roles,unique] {} (s);
+\node[rule=*,align=left,anchor=north west,right=of e] {
+  Elements together must form\\an ordered, rooted tree.
+};
+\end{tikzpicture}\acro*{S-EXP}
+\caption{Model of \acrostyle{S-EXP}}
+\label{fig:sexpmodel}
+\end{figure}
+
+The \format{Value} of a \format{Field}, \format{Cell}, or \format{String} in 
+\acro{INI}, \acro{CSV}, or \acro{S-EXP} respectively can hold arbitrary 
+byte sequences or character strings, depending on the specific language variant. 
+Some byte or character sequences may be disallowed, especially for names of 
+sections, fields, and columns in \acro{INI} and in \acro{CSV}.
+
+
+\subsection{JSON}
+\label{sec:json}
+
+\Tacro{JavaScript Object Notation}{JSON} is based on notations of the
+\term{JavaScript} programming language. First specified by
+\textcite{Crockford2002} and later standardized as \acro{RFC} \cite{RFC4627} it
+soon became a widespread language to exchange structured data between web
+applications, serving as an alternative to \acro{XML}. \acro{JSON} was first
+published in form of a \term{railroad diagram} (see section~\ref{sec:bnf}) and
+later expressed in a variant of \term{Backus-Naur Form}.
+Figure~\ref{fig:jsonbnf} shows a full \acro{BNF} grammar of \acro{JSON}. In
+a nutshell \acro{JSON} is based on data model with five atomic value types
+(\format{String}, \format{Number}, \format{Boolean}, and \format{Null}), and
+two composite types \format{Array} and \format{Object}. Strings can hold any
+\term{Unicode} codepoint, but most application will limit codepoints to allowed
+Unicode characters.  Numbers include integer values and floating point values
+without limit in length and precision.\footnote{Special numbers like
+\texttt{-0}, \texttt{NaN}, and \texttt{Inf} are not allowed.} An \format{Array}
+holds a (possibly empty) list of values, and a \format{Object} holds a
+(possibly empty) map from strings as keys to data elements as member values.
+
+\begin{figure}[h]
+\centering
+\begin{lstlisting}[language=BNF,tabsize=11]
+Composite	= s* ( Object | Array ) s*
+Object	= "{" ( Member ( "," Member )* )? "}"
+Array	= "[" ( Value  ( s* "," s* Value )* )? "]"
+Member	= Key ":" s* Value s*
+Key	= s* String s*
+Value	= Composite | String | Number | Boolean | Null
+String	= '"' ( char - ( '"' | '\' ) | charref )*  '"'
+ charref	= '\' ( ["\/bfnrt] | [0-9A-F][0-9A-F][0-9A-F][0-9A-F] )+
+Number	= "-"? ( "0" | [1-9] [0-9]* ) ( "." [0-9]+ )? 
+	  ( ( "e" | "E" ) ( "+" | "-" )? [0-9]+ )?
+Boolean	= "true" | "false"
+Null	= "null"
+s	= ( #x20 | #x9 | #xA | #xD )
+\end{lstlisting}
+\caption{Formal grammar of \acrostyle{JSON}}
+\label{fig:jsonbnf}
+\end{figure}
+
+The definition of \acro{JSON} syntax as context-free language imposes 
+the mathematical structure of a partly-ordered tree on models of
+\acro{JSON}. In such a model, nodes are values but atomic types
+must be leaf nodes and the root node must be a composite.
+Similar structures to \acro{JSON} are found in many programming languages, 
+for instance \Term{JavaScript} and \Term{Perl} but they may contain
+pointers that go beyond the tree structure. In addition, virtually all
+implementations add uniqueness constraint on objects keys,\footnote{repeated 
+object keys (like \texttt{\{"a":1,"a":2\}}) are allowed in theory.}
+limit maximum size of text, numbers, and nesting level, and restrict 
+\format{String} to the Unicode character set.\footnote{Unicode codepoints
+outside of \acro{UCS} are allowed but not supported by all
+implementations.} With the rise of \term{NoSQL} (see~\ref{sec:nosql})
+\acro{JSON} is also used more and more to store data in databases. Most 
+\acro{JSON} databases put additional restrictions on special object keys
+(\texttt{""}, \texttt{\_id}, \texttt{id}, \texttt{\$ref}\ldots) that are 
+used for uniquely identifying and linking \acro{JSON} documents or parts 
+of it. Other extensions such as \tacro{Binary JSON}{BSON} restrict atomic 
+types and/or add data types that are not part of the \acro{JSON} 
+specification.\footnote{\acro{BSON} extends some parts of \acro{JSON}
+but is does not support numbers of arbitrary length}
+There are some proposals for schema languages for \acro{JSON}
+(JSON Schema,\footnote{see \url{http://json-schema.org}},
+\term{Kwalify},\footnote{see \url{http://www.kuwata-lab.com/kwalify/}}
+JSONR\footnote{see \url{http://web.archive.org/web/20070824050006/http://laurentszyster.be/jsonr/}}\ldots), and for 
+query languages to select a subsets of a given \acro{JSON} document
+(JPath,\footnote{see \url{http://bluelinecity.com/software/jpath/} and
+\url{http://bitcheese.net/wiki/code/hjpath} for two different \acro{JSON}
+path languages}
+JSONPath\footnote{see \url{http://goessner.net/articles/JsonPath/}}\ldots) but
+none of them is widely accepted. Manipulation of \acro{JSON} data is usually
+done directly in programming languages or via custom database APIs.
+
+The clear and simple definition of \acro{JSON} has made it a popular data 
+structuring language not only for web applications but also for ad-hoc
+tasks in structuring, storing, and exchanging data. Proplems may result
+from differences in compatibility of atomic types (especially keys and numbers)
+and from data that does not fit into the tree-model of \acro{JSON}.
+
+\subsection{YAML}
+\label{sec:yaml}
+
+\Aterm{YAML}{YAML Ain't Markup Language} was developed as human-readable 
+alternative to \acro{XML} and first published by \Person[Clark]{Evans} 
+in 2001 \cite{YAML2009}. Unlike most other \acro{DSL} it can natively 
+express hierarchical and non-hierarchical structures. In contrast to most
+other data serialization languages, the \acro{YAML} specification defines
+in one document: a syntax, a conceptual model, and an abstract serialization
+to map between syntax in model.
+
+\acro{YAML} syntax is very flexible: it allows multiple alternatives to
+express complex structures in a simple, human readable way as stream of
+Unicode characters. Some examples of language constructs are given in
+figure~\ref{fig:yamlsyntax}. Apart from repeatable object keys and Unicode 
+\format{Surrogate} codepoints, which are not allowed in \acro{YAML}, the 
+syntax is a superset of \acro{JSON} syntax. Other similarities exist with
+the \tacro{semistructured data expression syntax}{ssd} used by 
+\textcite{Abiteboul2000}. The abstract serialization of \acro{YAML} is 
+called its \Term[serialization (YAML)]{serialization tree}. The
+serialization tree can be be traversed as sequence of parsing/serializing 
+events, similar to the event-driven \tacro{Simple API for XML}{SAX}
+(see page~\ref{note:sax}). The conceptual model of \acro{YAML} is called
+its \Term[representation graph (YAML)]{representation graph}.
+%
+% \term[representation graph (YAML)]{representation graph}, the specification
+% defines an intermediate ordered \Term[serialization tree (YAML)]{serialization tree}
+% http://robotlibrarian.billdueber.com/data-structures-and-serializations/
+% No standard path and schema languages (but proposals)
+It is defined by the specification as ``rooted, connected, directed graph
+of tagged nodes''. Eventually this is a special multi-property graph with 
+possible \term{loop}s and three disjoint kinds of nodes. Figure~\ref{fig:yamlmodel}
+gives a partial model of the representation graph in ORM2 notation:\footnote{Roots,
+scalar values, (local) tag names and URIs are not included.}
+\format{Sequence}
+nodes impose on order on outgoing edges, and \format{Mapping} nodes have
+their outgoing edges indexed by node values, as described below. Nodes
+of \term{outdegree} zero can also be of the \format{Scalar} kind, which
+each holds a \term{Unicode} string as value. Mapping keys can be arbitrary 
+nodes, which makes the structure rather complex
+-- but in practice most \acro{YAML} instances represent simple hierarchies. 
+Each node in a \acro{YAML} representation graph has exactly one \format{Tag}
+as node type.
+
+% TODO: clarify the following:
+Tags can be either identified by an \acro{URI} 
+(\format{GlobalTag}) or by a simple string (\format{LocalTag}).
+A \Term[schema!in YAML]{YAML schema} is a set of tags. Each tag is defined
+by an URI, an expected node kind (scalar, sequence, or mapping) and a 
+mechanism for converting its node's values to a canonical form.\footnote{See
+\url{http://yaml.org/type/} for a registry of known tags.} Furthermore,
+a tag may provide additional information such as the set of allowed values
+for validation and the schema may provide a mechanism for automatically
+resolving values to tags. For instance a schema could automatically 
+tag the string \texttt{true} as boolean value instead of a literal string.
+Normalization of node values to their canonical form is important for
+node comparision. Keys of a mapping node must not only be different but 
+unequal. Two nodes are equal if they have the same tag and the same 
+canonical content. Equality of sequences and mappings is defined
+recursively.\footnote{Note that recursive equality checks may require
+determining whether the subgraphs used as keys are isomorphic -- a
+problem that is not solvable in polynomial time in worst case.} 
+The \acro{YAML} specification lists some possible types and schemas
+but their support depends on particular implementations of \acro{YAML}
+parsers. \acro{YAML} neither defines a standard how to express types
+and schemas in a machine-readable way so their defintion is only adressed
+to implementors and users. Support of additional collection types such as 
+sets and ordered mappings also depends on additional conventions.
+
+% TODO: graph ismomorphism complexity
+% TODO: summary?
+
+In summary the data structuring philosophies behind \acro{YAML} are very
+sophisticated but too complex for most applications. Especially the support
+of arbitrary nodes as array keys has little practical value but complicates
+the construction of a full \acro{YAML} model. 
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[orm]
+\matrix (m) [column sep=1.2cm,row sep=4mm,matrix of nodes,nodes in empty cells]
+{
+           &|[entity]|Sequence     & |[entity]|SequenceTag \\
+ |[entity]|Node &[18mm]|[entity]|Scalar & |[entity]|ScalarTag 
+  & |[entity]|Tag \\ %& |[value]|TagName \\
+                &|[entity]|Mapping      & |[entity]|MappingTag \\
+};
+\draw[subtype] (m-2-1) to (m-1-2);
+\draw[subtype] (m-2-1) to (m-3-2);
+\draw[subtype] (m-2-1) to (m-2-2);
+\limits ($(m-2-1)!.5!(m-1-2)$) to node[constraint=partition](c){}
+        ($(m-2-1)!.5!(m-3-2)$);
+\draw[subtype] (m-2-4) to (m-1-3);
+\draw[subtype] (m-2-4) to (m-3-3);
+\draw[subtype] (m-2-4) to (m-2-3);
+\limits ($(m-2-4)!.5!(m-1-3)$) to node[constraint=partition](c){}
+        ($(m-2-4)!.5!(m-3-3)$);
+\draw[mandatory] (m-1-2) to node[roles,unique]{} (m-1-3);
+\draw[mandatory] (m-2-2) to node[roles,unique]{} (m-2-3);
+\draw[mandatory] (m-3-2) to node[roles,unique]{} (m-3-3);
+
+\draw (m-1-2) -| node(r)[roles,xshift=9mm]{} (m-2-1);
+\limits (r.one north) to +(0,4mm) node[constraint] {$<$};
+
+\draw (m-3-2) to (m-3-1) 
+  node(s)[roles=3,xshift=2mm,unique=2-3]{};
+\draw (s.one north) to node[role name,anchor=east]{[value]} (m-2-1);
+\draw (s.two north) to node[role name,anchor=west]{[key]} (m-2-1);
+
+\limits (s.two split south)  to +(0,-3mm) node(c)[constraint] {};
+
+\node[anchor=north west,xshift=-3mm] at (c) 
+  {keys must be recursively unequal per mapping};
+
+\end{tikzpicture}
+\caption{\acrostyle{YAML} data model (partial)}
+\label{fig:yamlmodel}
+\end{figure}
+
+\begin{table}
+\begin{tabularx}{\textwidth}{rX}
+ \verb|&x foo| & 
+    Scalar node with link anchor \texttt{x} and value \texttt{"foo"} \\
+ \verb|[ *x, bar ]| & Sequence node with previously defined node
+    \texttt{x} and another scalar node with value \texttt{"bar"} as members \\
+ \verb|{ key1: foo, key2: bar }| & Mapping node with two key-value pairs \\
+ \verb|{!!str 42}|               & 
+    \texttt{"42"} tagged as string (instead of number) \\
+ \verb|!point {x: 12, y: 4}|     & Mapping node with local tag \texttt{point} \\
+ \verb|? [ a, b ] : [ 1, 2, 3 ]| & Mappping node with one sequence as
+    key and another sequence as value \\
+ \verb|&n [ *n, *n ]| & Sequence node that contains itself twice \\
+ \verb|&m { *m : *m }| & Mapping node that maps itself to itself \\
+\end{tabularx}
+\acro*{YAML}
+\caption{Examples of \acrostyle{YAML} syntax, including some edge cases}
+\label{fig:yamlsyntax}
+\end{table}
+
+\input{sec-xml}
+
+\input{sec-rdf}
+
+% \input{ssec-zzstructures}
+

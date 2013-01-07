@@ -1,0 +1,471 @@
+\chapter{Introduction}
+\label{ch:introduction}
+\renewcommand{\thepage}{\arabic{page}}% start with roman page numbers
+\setcounter{page}{1}
+
+\begin{quotation}%
+Beginning thinkers in this area often suppose that what will
+be offered to the screen reader will be merely individual stored documents,
+available on line quickly, but based somehow on conventional documents
+ensiling in conventional computer files.
+
+\vspace*{1mm}
+
+Our point of view is different.\\
+\quotationsource \Person[Ted]{Nelson} \cite*{Nelson1981}:
+\textit{Literary Machines}, page 1/9
+\end{quotation}
+
+\section{Motivation}
+
+Bibliographic data conceals a sneaky complexity. At first glance it is all
+quite familiar and simple: there is an author, a title, and a date of
+publication. Not by chance computer science publications frequently exemplify
+data by bibliographic data and metadata by library catalogs. On closer
+inspection everything falls apart: how about multiple authors, editors,
+publishers, and translators? What if authors are unknown or known under
+different names? What about subtitles and abbreviations? Which date does one
+specify in which detail and when does it change? Library science has elaborated
+detailed cataloging rules to answer these questions. But bibliographic data is
+not created, stored, modified, and used solely by skilled librarians --- even
+they do not commit to a single schema. Moreover the subject of cataloging is
+changing.  Although \Person[Ted]{Nelson}'s vision of a purely digital ecosystem
+of interconnected documents has not become reality yet, more and more
+publications appear in digital form. Traditional concepts such as `document',
+`page', `edition', and `copy' blur or change meaning --- the continuing
+popularity of print-oriented techniques like the \tacro{portable document
+format}{PDF} is only a sign of reaction to this process.
+
+In library and information science the description of physical documents is
+still relevant but it has largely been solved as research topic. The topic of
+this thesis is the description of \emph{digital} documents which are given as
+data.  While there is an increasing research interest in (digital) documents
+--- see \textcite{Buckland1998}, \textcite{Pedauque2006}, and
+\textcite{Skare2007} for approaches --- the nature of these documents as data
+has received less attention. Digital documents and all digital content share
+two crucial and basic properties, that have long been neglected in library
+science: bits can freely be copied and rearranged.  Despite their nature as
+artifacts of communication, physical documents are still considered as stable,
+distinguishable, and atomic entities. But given a digital document one can
+create any number of identical copies, indistinguishable from the original.
+With same ease one can create modifications, that may or may not constitute
+documents in their own right. These properties of digital documents complicate
+their bibliographic description by metadata. Despite the success of full text
+search for simple retrieval, the importance of metadata for digital content is
+even higher than for physical objects: if metadata is used to differentiate
+digital copies from each other, it does not only describe but also constitute
+the document. Digital documents are also much more likely processed,
+transformed, and aggregated than physical documents. In doing so, metadata is
+needed to state when two different strings of bits represent the same document.
+Lacking a physical structure of pages, we also require metadata to structure
+documents into parts.
+
+As documents become digital, so does metadata. To understand the nature of
+bibliographic data, we must first understand the nature of data. If it is
+`something given' (as indicated by the Latin origin \emph{datum}) where
+does the act of giving originate? If data describes other data, what properties
+does it refer to? We will approach this questions by analysis of existing
+methods of structuring and describing data. The results apply to both data and
+metadata.  Later it will be shown what constitutes the relationship between
+data and metadata and how the results apply to metadata about digital documents
+in particular. A clear distinction between data and metadata is difficult for
+several reasons. Sometimes it is not even clear whether metadata is added as
+description about a piece of data or whether it is part of it. Can citations be
+considered as metadata only if extracted from a document? Are they metadata
+about the citing document, the cited document, or both? We may answer this
+question by metadata about metadata, but does this lead to an infinite chain of
+descriptions?  Furthermore not only metadata but also most data is about
+something. Its referent may be no document and not digital, but it is not
+directly accessible: in digital environments the association between data and
+its referent is always constructed by a document because non-documents, such as
+people, places, and ideas, are not directly accessible in the digital realm.
+The affinity between metadata and data has an effect on every new system and
+method to structure data. For instance it has been mentioned from the beginning
+of the \term{Semantic Web} \cite{TBL1997,Guha1997,Lassila1999} although it took
+some time to shift the focus from information about documents
+(`\term{information resource}s') to information about any objects
+(`\term{non-information resource}s'). Meanwhile concrete forms of data are
+undervalued in favor of a common data language such as the \tacro{Resource
+Description Framework}{RDF}. However, a look at existing data shows that there
+is not one common data language but a multiplicity of formats, languages,
+systems, and structures. Data and metadata is structured in many forms, e.g.
+file systems, databases, markup, formats, encodings, schemas, and queries. It
+is unlikely that this plurality will be replaced by one type of data only.
+
+This thesis will look into this variety without proposing one method of data
+structuring as superior to the other. Instead I want to find common patterns as
+frequent strategies that occur over and over again in data and metadata. Just
+like linguistic analysis of natural language reveals insights to (social)
+reality, a deeper understanding of structures in data and metadata can give
+insight to structures of the world, that is reflected in data. Grammar,
+dialects, rhetoric figures, and other patterns that shape natural language are
+deeply studied in linguistics. A similar approach to data, which could be
+called `data linguistics', is still to be founded. A deeper understanding of
+data patterns is crucial especially for libraries and archival institutions.
+Future librarians and archivists will likely be confronted with more and more
+digital documents that have been structured and described by outdated methods.
+Knowledge of common patterns in data can help when \term{digital preservation}
+has failed, by application of what could be called `data archaeology'. It could
+be argued that there is no need for data patterns, because concrete data
+structures and models already implement and define data much more precisely.
+Yet existing approaches are not enough, because they each focus to one specific
+formalization method.  This practical limitation blocks the view to more
+general data patterns, independent from a particular encoding, and it conceals
+blind spots and weaknesses of a chosen formalism. Even a perfect theoretical
+system of data, metadata and digital documents may not suffice. In practice
+data is often far less organized than it was meant to be. Standards are
+misinterpreted or ignored.  Documentation is sketchy. Markup and formats are
+unknown or broken. Eventually documents turn out to be inherently as fuzzy as
+the reality that they deal about.  At least digital libraries cannot just
+reject data if it lacks appropriate descriptions, so they must recognize their
+complexity and uncertainty. To understand and reveal concealed structures in
+data, we must not only know the techniques that have been applied to it, but
+also the patterns that underlie and motivated the application of specific
+technologies. This thesis will hopefully provide at least some basic guidance
+for this challenge.
+
+\pagebreak
+\section{Background}
+\label{sec:background}
+
+\begin{quotation}%
+We do not, it seems, have a very clear and commonly\\
+agreed upon set of notions about data.\\
+\quotationsource \Person[George]{Mealy} \cite*{Mealy1967}:
+\textit{Another look at data}
+\end{quotation}
+
+\noindent The main topic of this thesis is the structure and description of
+data in digital documents. The concept of data is relevant to many disciplines
+with various meanings: a summary of different philosophies of data is given by
+\textcite{BallsunStanton2010,BallsunStanton2012} with data as the product of
+objective, reproducible measurements (``data as hard numbers''), data as
+product of any recorded observations (``data as observations''), and data as
+processable encodings of information and knowledge (``data as bits'').  This
+research commits to the third understanding of data, which is found both in
+computer science and library and information science.  Without committing to a
+specific definition of information and knowledge, we assume that data is given
+as processable encoding of something, at least as a sequence of bits. This
+definition is compatible with notions of data in some disciplines that provide
+tools and related works for data research. Chapter~\ref{ch:foundations} gives
+an overview of basic concepts and foundations from mathematics
+(section~\ref{sec:mathematics}), computer science
+(section~\ref{sec:informatics}), library and information science
+(section~\ref{sec:lis}), philosophy (section~\ref{sec:philosophy}), semiotics
+(section~\ref{sec:semiotics}), and pattern theory (\ref{sec:patterntheory}).
+This thesis can best be located between library and information science on the
+one hand and computer science on the other. Both disciplines do not deal with
+data as primary topic but they prefer the term \Term{information} which data is
+related to as secondary form. The scope of library and information science
+includes the description of documents with data as one aspect of digital
+documents. Computer science neither deals with data as such but with
+computation and the implementation of automatic processes. This involves data,
+but data was never the central object of research as suggested by
+\textcite{Naur1966}. Over the past years there has been an increasing interest
+in data motivated by the growing amount of \Term{Open Data} and tools for data
+analysis. This has brought up ideas of ``data science'' and ``data journalism''
+\cite{Bradshaw2011}. However, both commit to the philosophies of data as hard
+numbers or data as observations as they deal with aggregating, filtering, and
+visualizing large sets of data, based on statistical methods of data analysis.
+Such analyses require a basic understanding of data as prerequisite but they do
+not make it to their primary object of investigation.  The main concern of data
+science is ``big data'', that is `'when the size of the data itself becomes
+part of the problem'' \cite{Loukides2010}. In contrast, the problem of this
+research is the inherent complexity of data, which exists independent from its
+size. It is my aim to show how data is actually structured and described,
+independent from particular application for which, and independent of
+particular technologies in which data is processed.
+
+For the most part, the research question is focused on digital documents as
+instances of data. The \Term{document} is a core concept of library and
+information science (see section \ref{sec:lis}).  Nevertheless, there exists no
+commonly agreed upon definition, even within the discipline. As described by
+\textcite{Buckland1997, Buckland1998b} the nature of (digital) documents can
+better be defined in terms of function rather than format: whatever functions
+as a document can be a document. The document must only be usable as recorded
+``evidence in support of a fact'' \cite{Briet1951}.\footnote{Translation from
+French by \textcite{Buckland1997}.  In practice a fact that is supported by a
+document can be any statement, whether valid and true or not.} A digital
+document, in short, can be any data object that eventually exists as sequence
+of bits. Such data objects are often referred to as `information'. However
+\Person[Ted]{Nelson}~(\citeyear[300]{Nelson2010}) is right as he writes in
+response to a misleading summary of his hypertext system \term{Xanadu} by
+\Person[Tim]{Berners-Lee}: ``not `all the world's information', but all the
+world's \emph{documents}. The concept of `information' is arguable, documents
+much less so.''\footnote{\label{fn:nsl}The quote from \textcite{BernersLee1999}
+that Nelson refers to is: ``Ted described a futuristic project, \term{Xanadu},
+in which all the world's information could be published in hypertext.''} An
+important distinction between digital documents, that are subject to
+bibliographic description, and general data objects or information, that are
+subject to general data management in business, is the stability of documents.
+While business databases are designed to cover the \emph{current} state,
+bibliographic data is designed to cover what \emph{has been} published or
+recorded. Description and interpretation of a digital document may change, be
+extended, reduced, or turn out to be wrong. Still there is the assumption of
+facts, which a document is evidence for, even if both the facts and the
+documents can be expressed in several ways.  Business data in contrast
+describes facts that change in time: products are created and sold, people are
+hired and fired, etc. Most information systems cover both types of data: static
+data, that is not changed, and dynamic data, that may change.  For instance a
+library system holds description of publications: these publications are
+documents which are not changed after they have been published. At the same
+time the system holds descriptions of dynamic holdings, which are bought, lend,
+and sort out.  Dynamic data can be transformed into static data by just
+`freezing' it -- this process of archiving or preservation is one major task of
+library institutions. This `frozen data' is what constitutes a digital
+document. This finding, however, does not answer which data constitutes a
+document and how one determines its relevant parts. The definition of a
+document is either passed on to the eye of the beholder or to the level of
+metadata about documents. The former cannot be automatized, and the latter
+forms a digital document on its own. As there is no obvious distinction between
+data and metadata, metadata only shifts the problem of document identity to
+another level. Nevertheless metadata provides useful methods to tackle the
+nature of digital documents in particular and data in general. To further
+identify digital documents, we need to reveal structures in data and metadata,
+which will be described by data patterns.
+
+\pagebreak
+\section{Method and scope}
+\label{sec:method}
+
+My research method is based on a phenomenological description of existing
+methods that structure and describe data. The phenomenological method views
+data as social artifacts, that cannot be described from an absolute, objective
+point of view. Instead occurrences of data are studied as '''phenomena`:
+appearances of things, or things as they appear in our experience``
+\cite{Smith2009}.  Phenomenology as philosophical discipline has its origins in
+the thinking of \person[Edmund]{Husserl} (\citeyear{Husserl1931,Husserl1986}),
+followed by writings of \person[Martin]{Heidegger},
+\person[Maurice]{Merleau-Ponty}, \person[Jean-Paul]{Sartre} and others.
+According to \textcite[681ff.]{Spiegelberg1982} a phenomenological
+investigation can be laid out in three steps: phenomenological intuiting,
+phenomenological analyzing, and phenomenological describing. First, the
+phenomenon must be experienced ``without becoming absorbed in it to the point
+of no longer looking critically''. Second, it is examined in all of its aspects
+without adhering to possibly known concepts and categories. This step
+``trace[s] the elements and the structure of the phenomena obtained by
+intuiting. It does not in any sense demand dissecting them into separate parts.
+It comprises the distinguishing of the constituents of the phenomena as well as
+the exploration of their relations to and connection with adjacent phenomena.''
+Finally, the phenomenological description ``forces us to concentrate on the
+central and decisive characteristics of the phenomenon and to abstract from its
+accidentals''. The description should reveal the \Term{essence} of a phenomenon
+and give a ``reliable guide to the listener’s own actual or potential
+experience of the phenomena.''
+
+% Another overview of the phenomenological method:
+% \textcite{Schmicking2009} \ldots
+
+The phenomenon investigated in this research is the way digital data is
+structured and described. A detailed analysis of this phenomenon is given in
+chapter~\ref{ch:methods}.  Chapter~\ref{ch:findings} summarizes general
+constituents and provides a typology to talk about data. The essential
+description of data structuring is finally provided with
+chapter~\ref{ch:patterns} in form of a pattern language, as explained in
+section~\ref{sec:patterntheory}.  As far as I know, a combination of
+phenomenological method and pattern theory has not explicitly been practiced
+before.\footnote{At least a literature search for terms like ``phenomenological method''
+and ''Husserl'' combined with ``pattern theory'' and ``Alexander'' led to no
+results. Only \textcite{Palmer2009} follows a related approach with a
+phenomenological analysis of meta-systems and systems engineering -- among 
+them some patterns and schemas.}
+
+% TODO: ask Palmer if this is cited right (and proofread this chapter)
+%
+% see http://webspace.ship.edu/cgboer/phenandexist.html
+% see http://mailer.fsu.edu/~bcompton/garnet-bwc9865/Dissertation.htm (3.1)
+%
+% In short, a phenomenon is analyzed ``purely'' by describing it from all
+% possible angles without any theoretical or experimental presuppositions as
+% starting point.
+
+The research method can be justified by limitations of existing approaches.
+These are either theoretical, as they normatively describe how metadata
+\emph{should} be structured, or empirical but limited on statistics (\term{data
+mining}) and automatic methods (\term{machine learning}). Both are limited in
+their scope. Normative data descriptions do not necessarily reflect existing
+data, because norms are often (mis)interpreted, ignored, and changed. In
+practice, data is shaped by both explicit and implicit structures. For instance
+every document in the \tacro{extensible markup language}{XML} is an ordered
+tree, but the nesting and order of elements might be chosen intentionally or in
+an arbitrary manner, just because there has to be some order. Data schemas,
+like those expressed in \tacro{XML Schema}{XSD}, rarely cover all aspects, so
+they are extended by conventions like cataloging rules and profiles, which may
+only exist as conceptions. Explicit and implicit structures are intertwined on
+multiple levels, and both structure and describe data.
+
+Data mining and \term{machine learning}, on the other hand, can only recognize known
+structures at one level of description, but they cannot automatically
+detect and interpret unexpected kinds of structures. In a nutshell, one cannot
+find out whether and how different things relate to each other by treating them
+all as equal.  Quantitative methods only show patterns within the constraints
+of a fixed format. For instance \term{data mining} can find co-occurrences in
+data fields from a large number of records, but first one must identify what
+constitutes a field and a record.  These entities are examples of general data
+patterns, which we are looking for.
+
+The goal of this thesis is not yet another, unified `\"uber-model', but
+``another look at data'' as \textcite{Mealy1967} titled his early work on data
+theory. Since then, information technology has created a plethora of different
+models, formats, languages, and methods to structure data.  It is disputable
+whether there will ever be a final unification in addition to the universal
+binary code. Data integration, migration, and mapping are still useful and
+worth to investigate in concrete domains, but they can only provide partial
+solutions. The goal of this thesis is not to unify data structuring methods, but
+to analyze, relate, and describe them. To further locate the scope of this thesis,
+data is assumed to be digital, stable, and finite. Aspects of transforming 
+non-digital or dynamic digital material into fixed sequences of bits are not
+dealt with, and details of implementation, such as performance and security, 
+are only mentioned where they show how and why specific structures have evolved.
+
+%\pagebreak
+\section{Related work}
+\label{sec:relatedworks}
+
+\begin{quotation}% Newton: Auf den Schultern von Giganten Newton (1676)
+If I have not seen as far as others, it is because 
+there were giants standing on my shoulders.
+\\\quotationsource \Person[Harold]{Abelson}
+\end{quotation}
+
+% In computing, we mostly stand\\ on each other's feet.
+% \\\quotationsource \Person[Richard Wesley]{Hamming}
+
+\noindent Both, the scope of this thesis, and its method applied to the revealing
+of patterns in data description, independent from particular technologies, are
+unique. Nevertheless there are several related works to build on. These works
+either deal with particular technologies and parts of the problem, or they
+tackle the problem of data description from different points of view and with
+different methods. The following section gives a brief overview of related work
+with emphasis on concrete publications and authors.  The overview begins
+historically with early and foundational works, followed by analyzes of
+patterns in particular domains, including metamodels and taxonomies. Some
+additional works are relevant because they share theoretical or methodological
+fundamentals with this thesis. In order to better find revealed aspects of data
+structuring I also paid particular attention to researchers that complained
+about established treatment of data and digital documents
+(\person[William]{Kent}, \person[Ted]{Nelson}, \person[Peter]{Naur}, etc.).
+General approaches from specific disciplines and methods (mathematics, computer
+science, library and information science, semiotics, philosophy, and the study
+of patterns and pattern languages) will be dealt with in
+chapter~\ref{ch:foundations}.
+
+Some data patterns before the advent of computer systems may be found in forms
+and questionnaires (page \pageref{sec:forms}). Most aspects of the of history
+of forms, however, still have to be written, so I skipped this topic.  The use
+of \term{bit}s as most fundamental unit of data also dates back to the
+pre-electronic age.\footnote{The binary number system is attributed to
+\textcite{Leibniz1703} and \textcite{Boole1854}. Earlier examples of
+non-numerical uses of binary systems are the African Ifa divination and the
+Chinese I~Ching hexagrams.} The first foundational analyzes were created in the
+late 1950s until the 1960s --- around the same time when distinctions between
+data and information were introduced \cite{Gray2003} and when computer science
+emerged as an independent discipline. These early works remain important also
+because they are less bound to particular technological trends and paradigms,
+that later emerged. For instance the ``abstract formulation of data processing
+problems'' by \textcite{Young1958} contains a clear separation between
+information sets (sets of possible information items belonging to the same
+class, from which data is drawn), and documents (collections of related
+information items). The concept of a ``hierarchy of models'' in models of data 
+\cite{Suppes1962} can also help understanding general problems of data
+structuring, although early notions of data tend to conform to the idea of data
+as recorded observations (see page~\pageref{sec:philofdata}). Later the
+interest of researchers shifted from data to concepts like `information' (or
+even `knowledge'). Against this, \textcite{Naur1966,Naur1968} suggested the
+term `\term{datalogy}' for ``the science of the nature and use of data''. As
+described by \textcite{Sveinsdottir1988}, Naur also criticized the focus of
+computer science curricula on formalization, disregarding social aspects,
+psychology of programming and applications. My application of pattern analysis
+instead of mathematical formalisms follows Naurs understanding of datalogy.
+Another foundational discussion on data is given by \textcite{Mealy1967} and a
+response by \textcite{Chapin1968}. 
+
+Several works deal with intellectual analysis of data patterns or similar
+concepts \emph{in particular domains}: \textcite{Armstrong2006} identified
+common patterns in \term{Object Orientation}  by literature analysis and named
+them ``quarks''.  The most common quarks, asserted as characterizing Object
+Orientation in more than every second analyzed article, are inheritance (71 of
+88 articles), objects (69), classes (62), encapsulation (55), methods (50),
+message passing (49), polymorphism (47), and abstraction (45). Patterns in
+hierarchical documents, with focus on \acro{XML} based languages, have been
+analyzed by Dattolo et al. (\citeyear{Dattolo2007a}). Their basic patterns for
+segmentation and extraction of structural document elements, first identified
+by \textcite{Vitali2005}, are: markers (with meaning depending on position),
+atoms (such as unstructured plain text), block and inline elements, records
+(sets of unordered, optional and non-repeatable elements), containers (sets of
+unordered, optional and repeatable elements), and tables (sequences of
+homogeneous elements).  More collections of patterns can be found in
+(conceptual) \term{data modeling} literature, although their primary focus is
+on problems in business enterprises. The most general compilations have been
+collected by \textcite{Hay1995} and by \textcite{Silverston2001}. Among other
+business tasks, the former contains a brief chapter on simple document
+modeling, and the latter provides template data models for common entities such
+as people, organizations, products, orders, and accounting.
+ 
+The follow-up publications by \textcite{Hay2006} and by
+\textcite{Silverston2009} describe more \emph{general modeling patterns}:
+Silverston's  \term{Universal Data Model} is an example of the many
+\term{metamodeling} approaches one finds in conceptual data modeling
+literature.  Other examples include metamodels based on mathematical notations
+\cite{Keet2008a}, meta-standards \cite{OMG2009}, and hypergraph models
+\cite{Boyd2005} among other approaches. Given that even normal data modeling is
+not consistently applied in practice, the practical benefit of meta-modeling
+seems limited, and existing works tend to ivory-tower research. Nevertheless
+some general data patterns exist in metamodels in the same way as in other kind
+of data models (see section \ref{sec:metamodeling} on meta-modeling). More
+practical publications include review articles that summarize and compare
+specific technologies of data structuring. Examples include
+\textcite{Kerschberg1976} with a taxonomy of database models,
+\textcite{Kent1983b} with a taxonomy of entity-relationship models, and
+\textcite{Riley2010} with a broad overview of metadata formats and
+technologies.
+
+Important principles of data structuring and description are dealt with in the
+works of \Person[William]{Kent} and \Person[Ted]{Nelson}. Both criticize data
+structuring and description in the best sense of the term, as they show that
+different methods are possible. An example is given by \textcite{Kent1988} in a
+paper on the multiplicity of forms to encode a simple fact in data. In his main
+work \textcite{Kent1978} deals with the relation between data and reality.
+Several fundamental issues, such as normalization and identity
+\cite{Kent1983,Kent2003} are topic of his later works. His analyzes are focused
+on (limitations of) data and data models in traditional databases, but he
+explicitly says that the topics are relevant in general. To a large degree my
+work confirms and updates Kent's results, also for new data technologies.
+\Person[Ted]{Nelson} thought about properties and possibilities of \emph{purely
+digital} documents before the invention of elaborated file systems, word
+processing and related technologies \cite{Nelson1965}. During the last decades
+he kept criticizing the way we deal with digital documents --- a way that still
+resembles properties of physical media \cite{Nelson1981,Nelson1986}. His vision
+of \term{hypertext}, in contrast, is based on documents which (parts of) can be
+referenced, cited, and reused by deep links and \term{transclusion}
+\cite{Nelson1999}.  This requires knowledge about the structure of digital
+documents and methods to identify particular document pieces.
+
+% It has been said that Kent has partly proven wrong because of 
+% new techniques like object oriented modeling (said where?),
+% ORM, XML, and RDF. I don't think so. 
+
+
+% \textcite{Buckland1997, Buckland1991} gives an introduction to the
+% question what a document is from the information science point of view.
+% Information as ``thing``: \cite{Buckland1991}
+
+Related topics that partly overlap with my research include the design of
+information systems \cite{Hirschheim1995}, semantic data heterogeneity
+\cite{Sheth2005,Bergman2006,Pluempitiwiriyawej2000,Hayes2008}, and the creation
+of data standards \cite{Meek1995,Stamper2000}. Another concept of data patterns
+has been developed by \cite{Jay1995,Jay2009}, but his model is more related to
+pattern matching than design patterns. The most similar works compared to my
+thesis are ISO~11404 (\citeyear{ISO11404}) with a collection of language
+independent \term{data type}s \cite{Meek1994a}, and the thesis by
+\textcite{Honig1975} (see \textcite{Honig1978} and appendix~\ref{appendixA}).
+Honig conducted a survey of data structures in 21 representative programming
+languages and database management systems, resulting in a description model
+with core properties, such as homogeneity, atomicity, repeatability etc.,
+similar to the patterns identified in this thesis. Honig's work, apparently, has
+neither been taken up nor updated so far. Both ISO~11404 and Honig's model are
+compared with the final data pattern language in section~\ref{sec:evaluation}.
+
+% Jay: ``The pattern calculus is indeed related to shape theory.  Patterns are
+% a means of describing shapes or, more generally perhaps, structures''
+

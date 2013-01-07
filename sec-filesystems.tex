@@ -1,0 +1,337 @@
+\section{File systems}
+\label{sec:filesystems}
+
+A file is the most basic method to store and manage digital data. Other methods
+are build on files by one means or another.  A \Term{file system} is a method
+of storing, organizing and retrieving files on all sorts of storage devices,
+such as a hard disk, flash drive, and magnetic tape. Provided as core part of
+the operating system, the file system abstracts from underlying storage media.
+Thus application can work on files without having to bother where and how their
+content is physically stored. Operating systems may also provide file systems
+as interface to read and write from and to devices and programs.\footnote{This
+design principle is brought to a head in \term{Plan 9}: this successor to the
+\term{Unix} operating system represents every object as file.} In the following
+we will limit a \Term{file} to an object that holds a (possibly empty) finite
+stream of sequent bytes. Issues of performance and security -- the main driving
+force behind file system development -- will be ignored as well as any relation
+to physical storage media. General introductions to file systems are given by
+\textcite{Tanenbaum2008}, \textcite{Reimer2008}, and \textcite{Giampaolo1999}.
+
+\subsection{Origins and evolution}
+
+Despite all variety, basic properties of file systems have not changed much
+since their introduction in the early 1960s. Compared to other trends in
+computing the evolution of file systems is very slow, because they are
+deep-rooted in operating systems and bound to properties of storage media. The
+basic layout of todays file systems evolved parallel to the change from storage
+devices with sequential access (piles of \term{punched cards} or magnetic
+tapes) to \term{disks} that allowed \term{random access}. The next shift may
+take place today with techniques like cloud computing and solid state drives
+(SSD), that blur the borders between local and external storage, and between
+random-access main memory and hard disk drives (see section~\ref{sec:nosql}).
+
+In most early operating systems such as \term{Multics}~(1969),
+\term{CP/M}~(1975), and \term{Apple DOS}~(1978) there was only one `native'
+file system which could not be separated from the operating system.  Later
+systems such as \term{SunOS~2.0}~(1985), \term{System~V}~(Release~3 in 1986)
+and \term{Linux} (in~1992) introduced a \term{virtual file system} as
+abstraction layer to access multiple file systems in a uniform way. However a
+clear separation between operating system and file system is still difficult
+because the operating system may impose additional restrictions on files.
+
+To overcome incompatibilities between different \term{Unix} dialects, the
+\tacro{Portable Operating System Interface}{POSIX} was standardized in 1988
+\cite{POSIX1988}. \acro{POSIX} defines a common set of utilities and
+programming interfaces, among them an API to access different file systems in a
+consistent way. Most modern file systems conform to \acro{POSIX}. This is good
+for interoperability but limits the conceptual evolution of file systems to a
+least common denominator. \textcite{Nelson1965}, in his first influental talk
+about ``\term{hypertext}'',\footnote{Actually, he had already given a talk
+about hypertext at the conference of the \tacro{International Federation for
+Information and Documentation}{FID}, in the same year \cite{Nelson1965a}.  The
+abstract is reprinted in \textcite[p. 154]{Nelson2010}. Nelson later revised
+his proposed design of the ``evolutionary list files'' to the \term{Xanadu}
+project and the \term{Zzstructure}.}  asserted that ``there are probably
+various possible file structures that will be useful in aiding creative
+thought''.  Regularly he complained about ``The tyranny of the file'' and
+hierarchical directory structures \cite{Nelson1986}.\footnote{Everyone who ever
+tried to use a shared network folder in a cooperation should know that
+monohierarchies just do not work.  However file system characteristics are so
+deep-rooted in (our perception of) computer systems that we can hardly imagine
+alternatives. See the video `Ted Nelson on Software' at
+\url{http://www.youtube.com/watch?v=zumdnI4EG14} for a short overview (8
+minutes) of his critique on traditional file systems and their impact.} His
+article was referenced in the specification of Multics file system
+\cite{Daley1965} but never really picked up among file system developers, so
+today \acro{POSIX} remains the standard way of thinking about files.
+
+
+\subsection{Components and properties}
+
+Operating systems provide methods to access a file system by `mounting' it from
+a specific disk or other location. Files can then be accessed independent of
+their location by APIs such as \acro{POSIX}. \Term[virtual file system]{Virtual
+file systems} combine and wrap multiple file systems into one.  In general we
+can call every mountable storage system a file system.  This also includes
+\term{revision control system}s, \term{HTTP} (especially with \term{WebDAV}),
+and archive files (see section~\ref{sec:archivfiles}).  The following analysis
+of general file system components and properties abstracts from different
+access methods. Therefore file name prefixes such as protocol, host name,
+device, disc, volume, port etc.  are not included --- these namespace
+identifiers should not be treated as part of a file system and its file names,
+but as part of an \acro{API} for file access.  The following description is
+organized chronologically as most properties are based on historic trends that
+date back to the origins of computer systems.
+
+\subsubsection{Files and file names}
+
+The first commercial disk drive, the \term{IBM~350} was announced in 1956 and
+stored 5~million 6-bit-characters (4~megabytes). The drives had the size of a
+wardrobe and were also called ``files'', leading to the modern usage of the
+term. The file concept gained importance with time-sharing operating systems
+that allowed user to directly interact with a computer. Before this data was
+primarily exchanged in form of physical storage media. In the early 1960s the
+\tacro{Compatible Time-Sharing System}{CTSS} introduced the concept of
+\term{user files}:
+
+\begin{quotation}%
+These are files of information which a user wishes to store away for future
+reference. They may consist of programs, data for programs, or any other
+information the user desires. They are kept on the disk indefinitely and allow a
+user to retrieve a program several weeks after he wrote it. Thus, the disk
+replaces the decks of cards and reels of magnetic tape usually associated with a
+large computer installation.\\
+\quotationsource \textcite[p. 3]{Saltzer1965}
+\end{quotation}\label{quot:files}
+
+File systems normally do not restrict the content of files, even files of zero
+byte length are allowed. The maximum file size, the maximum number of files,
+and the maximum sum of file sizes may be limited in a given context.  To
+uniquely identity files, each file should have a \Term{file name}.  This simple
+assumption is complicated by operating systems and file systems which impose
+different restrictions on file names. In its most general form a file name is a
+non-empty sequence of bytes. All systems exclude at least the NUL byte
+\texttt{0x00}. File systems also limit the length of a file name to a maximum
+number of bytes and/or Unicode characters. Modern file systems (\term{NTFS},
+\term{HFS+}, \term{ZFS} etc.) only accept valid Unicode characters, so file
+names are (possibly normalized) Unicode strings. Nevertheless there is a strong
+tradition in the \term{Unix} community to view file names sequences of as raw
+bytes. Some file systems are \term{case sensitive} (one can have two distinct
+file names \verb|A| and \verb|a|), some are case insensitive, and some are case
+insensitive but case preserving (\verb|A| and \verb|a| refer to the same file
+but its name can be named either of them).  Moreover each system disallows some
+special characters or bytes, for instance the directory separator \verb|/| or
+\verb|\|. Other special characters include quotes (\verb|"| and \verb|'|),
+brackets (\verb|<|, \verb|>|, \verb|[|, \verb|]|), dot (\verb|.|), colon
+(\verb|:|), vertical bar (\verb#|#), asterisk (\verb|*|), and question mark
+(\verb|?|).
+
+\subsubsection{Extensions and types}
+
+In the first \term{CTSS} system, files were composed of two parts, each with up
+to six characters. The first part was used as descriptive name and the second
+indicated the file's type. Many operating systems followed this convention and
+supported or required \Term[file extension]{file extensions}. However the
+extension may not reflect a well-defined type or a file may not have an
+extension at all. Therefore many programs treat the extension as one of
+multiple indicators to determine \term{file type}. Depending on the context
+file(name) extensions are part of the the file name or additional metadata of
+the file.
+
+\subsubsection{Versions}
+
+% TODO: HammerFS, LogFS, NILFS, BtrFS ...
+
+\Term[versions!in file systems]{Versioning} files is not common in todays file
+systems although it was already supported in early time sharing system systems
+such as \term{ITS} \cite{Eastlake1972} and \term{TENEX} \cite{Bobrow1972}. The
+ITS system simply treated numeric file extensions as \term{version numbers}.
+The user could select to read a file with the highest version number of a given
+name or to increment the highest version number and create a new version for
+writing. In TENEX and its successors (\term{TOPS-20} and \term{OpenVMS}) the
+version number is an additional part of the file name. Today versioning is
+rarely implemented in the file system but on top of it in applications, for
+instance in \term{revision control system}s (\term{Subversion}, \term{git},
+\term{mercurial}, etc.), or in storage services that can be accesed like a file
+system such as \term{Amazon~S3} \cite{S3DevGuide}. Other file system features
+like cloning or snapshots as provided in \term{ZFS} and \term{NTFS} can emulate
+versioning to some extend.  Just like file extensions version numbers can be
+considered as part of the file name or as special kind of additional metadata.
+However version numbers allow multiple versions to share the same file name,
+and they define a strict order between all versions of a files (or a partial
+order in revision control systems that allow branches and merges). The version
+number itself does not have to be a simple integer but can also be a timestamp.
+
+\subsubsection{Directories and hierarchies}
+
+\Term[directory]{Directories} are a common method to group files. In
+\acro{CTSS} each user had a private directory and there were common
+\term{directories} for sharing. A directory acts like a \term{namespace} for
+file names (see section~\ref{sec:qualifiers}): different files in different
+directories can share the same name. From a conceptual point of view there is
+little difference between simple directories and other file system prefixes
+such as volume or disk: both hold simply a set of file names.  In a broader
+context each directory must have a unique name just like a file.  Hierarchical
+file system as introduced with \term{Multics} typically apply the same rules to
+file names and directory names while flat file systems such as \term{Apple DOS}
+and \term{Amazon~S3} have different rules for directory names and file names.
+In addition the maximum number of files per directory can be limited.
+
+In the mid-1960s \Term[hierarchy!in file systems]{hierarchies} were introduced
+in the \term{Multics} project that led to the development of \term{Unix} after
+\term{Bell Labs} pulled out of Multics in 1969 \cite{Ritchie1979}. In Multics a
+directory is a special kind of file and the file structure is a tree of files,
+some of which are directories \cite{Daley1965}. The user is considered to be
+operating in one directory at any one time, called his `working directory'.
+File names must only be unique with respect to the directory in which it
+occurs. For every file and directory one can define a unique name by prepending
+the chain of directory names required to reach the file from the root. This
+chain is called \term{absolute path} (`tree name' in Multics). One can also
+construct a relative path starting from a given working directory.  Pathes
+require a special character as directory separator that must not occur in file
+names. It should be noted that POSIX does not require a file system to form a
+tree. The first Unix file system had the shape of a general directed graph
+\cite{Ritchie1979}.  However the requirement to have unique pathes was more
+important. For this reson other hierarchies but trees such as directed
+(acyclic) graphs, or polytrees are forbidden by the file system or operating
+system. Other restrictions can be put on the maximum depth directory nesting
+and the maximum length of a path.
+
+\subsubsection{Links}
+\label{sec:symlinks}
+
+In simple file systems each file is identified by its name. \term{Multics} and
+\term{Unix} changed this one-to-one relationship by seperating files and
+directory entries (hard links) and by adding pointers to file names (symbolic
+links). Both kinds of links are included in POSIX and supported by most modern
+file systems today.\footnote{Symbolic links were available in Multics from the
+beginning but they were ported to Unix not until the Berkeley Fast File System
+implemented them in the BSD-branch of Unix in 1983.}
+
+A \Term{hard link} is a equipollent name of a file. Internally each file is identified
+by a unique number (\term{inode} number in POSIX) that all names link to. In
+reverse, the inode only stores a link count telling how many hard links point to
+it. The file is only deleted if the last hard link is removed (or even later if
+the file is held open by a running program). Usually all hard links to one file
+must lie on the same physical disk. Moreover hard links are restricted to normal files
+to avoid breaking the directory hierarchy. The operating system defines two
+unchangeable exceptions: each directory contains a file named `\verb|.|' (dot) as
+hard link to itself and a file named `\verb|..|' as hard link to the parent
+directory (or to itself in case of the root directory).
+
+\Term[symbolic link]{Symbolic links} are special types of files that consist of
+a pointer to another file or directory. The pointer is stored literally as
+relative or absolute path.  Symbolic links, in contrast to hard links, can 
+span different file systems and point to non existing targets. For most
+applications, the use of symbolic links is transparent: opening a symbolic link
+opens the target file for reading or writing. \term{NTFS} supports similar
+links named \term{junction points}.
+
+Both hard links and symbolic links are unidirectional: There is no simple
+lookup table to get all names a file is known under. One can think of
+alternative link mechanisms but few are implemented in the file or operating
+system. One example is the Linking file system (LiFS) proposed by
+\textcite{Amens2005} that introduces arbitrary links between files. Each link
+holds a set of attributes that express the nature of the relationship. The
+containment of a file within a directory is simply one relationship among many
+that can be expressed with these links. 
+
+In addition to hard links and symbolic links, there are link types such as
+`alias' in \term{Mac OS}, Windows shortcurts, desktop icons in KDE or GNOME.
+These links cannot be used on the file system level but require additional
+APIs. 
+
+% TODO: see Gremlink (graph database)
+
+\subsubsection{Attributes}
+
+\Term{File attributes} contain additional metadata about, or associated with a 
+file. POSIX defines a fixed set of attributes for file type (regular file, symbolic
+link, or directory), file size, access permissions, and the times of creation,
+last modification, and last access. The set and purpose of this so called regular
+attributes is fixed and defined by the operating system. Their content and
+effect cannot freely be choosen by the user, some attributes (such as the file
+size) are even automatically derived from other properties. Therefore one must
+carefully ponder whether a given attribute is part of the conceptual level or
+only a technical artifact.
+
+In addition to regular attributes, most file systems support \Term[extended
+file attribute]{extented file attributes} that can be choosen by the user. A
+file's extended attributes consist of a map between names and values. Both may
+be arbitrary sequences of bytes or Unicode characters depending in the specific
+system.  Typically the size and number of attribute names and values per file
+is limited. A \term{fork} is a special kind of extended file attribute
+introduced in the \term{Macintosh File System} (MFS) in 1984. Unlike other
+attributes the fork can be a byte sequence of arbitrary size just like the file
+content. Forks are available in Apple's successor file systems HFS/\term{HFS+}
+and as \term{Alternate Data Streams} in Microsoft's \term{NTFS} (1993).
+
+From a conceptual point of view the file content can be treated as one attribute
+or fork of the file among others. In practice extended attributes are rarely
+used beyond system applications because of limited support in user
+interfaces. The \term{BeOS} file system supported typed attributes (string,
+time, double, float, int, boolean, raw, and image) and indexing, searching, and
+sorting by any attribute field similar to a databases \cite{Giampaolo1999}. A
+query to all files with specific attribute properties could also be used as
+``virtual directories'' similar to views in a database.
+
+
+\subsection{Wrapping file systems} \label{sec:archivfiles} File system
+instances can also be embedded in a single file of another file system. The
+container file is called \Term{archive file} or \Term{disk image} depeding on
+the main purpose. Archive files are used to package and transfer files that
+otherwise may get corrupted or split up when directly copied from one system to
+another. In addition one can apply compression and encryption to the set of
+contained files. Two of the most used archive formats are \term{TAR}
+\cite{GNUtar} and \term{ZIP} \cite{ZIP2007}. The archive format defines the
+conceptual properties of its file system. For instance extended attributes or
+forks are not always included and older versions of TAR imposed more rigid
+restrictions on size and names of contained files \cite[section 8]{GNUtar}.  In
+contrast to most file systems, files in a TAR archive have an order and are
+permitted to have more than one member with the same name -- both cannot
+losslessly be mapped to most other file systems. Properties of the ZIP format
+have also changed, for instance to support plain UTF-8 file names since version
+6.3.2 \cite{ZIP2007}. Other extensions of ZIP such as file comments and extra
+fields cannot directly be mapped to other file systems without additional
+agreements. Archive files are also used as wrappers for more specialized file
+formats, for instance \term{OpenDocument} \cite{OpenDocument2012} and Java
+Archives (\texttt{.jar}) are ZIP files, and Debian software packages
+(\texttt{.deb}) are \texttt{.ar} archive files that each contains two TAR
+archives (thus two file systems wrapped in a file system wrapped in a file).
+Other file formats use non-standard archive file systems like the
+\term{Compound Document format} which many Microsoft products are based
+on\footnote{The Apache~POI project reverse-engineered and implemented this
+format and named it POIFS (Poor Obfuscation Implementation File System).} %
+% http://poi.apache.org/poifs/
+% http://msdn.microsoft.com/en-us/library/ms693383(VS.85).aspx
+A remarkable curiosity of compressed archives is the possibility to create an
+infinite chain of archives. \textcite{Cox2010} created a ``self-reproducing zip
+file''. It contains one file that is identical to the original. Each file
+contains another ZIP file so there is always one level more inside. See
+section~\ref{sec:collectionstopic} for more about the question whether this
+file contains itself or not.  \label{p:zipfile}
+
+Disk images store a file system's underlying raw stream of bytes in one file.
+Having access to the storage media one can transform every file system into
+an archive file.\footnote{On Unix one can copy a
+whole disk partition with its file system to a file on another partition and
+mount the resulting disk image this way:\\
+\texttt{dd if=/dev/partition of=/mnt/otherpartition/image}\\
+\texttt{mount -o loop image /mnt/image}
+}
+The program or location to mount a given disk image is also called
+\term{virtual drive}. Virtual drives are common to abstract from storage
+media, for instance when one emulates another computer system in a virtual
+machine. Mounting specific archive files is also possible but less
+common.\footnote{See \url{http://code.google.com/p/fuse-zip/} for a
+file system that mounts ZIP files.} Another way of abstracting a file system
+is to route all file system API calls through another API that wraps the
+underlying file system -- this is how virtual file systems like 
+GnomeFS/GVfs/gio\footnote{\url{http://library.gnome.org/devel/gio/}}
+and KIO\footnote{\url{http://api.kde.org/4.x-api/kdelibs-apidocs/kio/html/}}
+are implemented. % TODO: OLE could also be seen as VFS?
+
+% I have some notes about Amazon~S3 which can both be seen as
+% file system or as database system. This could be used as example.
+% Or better show the POSIX model (?)
+

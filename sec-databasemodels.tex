@@ -1,0 +1,911 @@
+\section{Databases}
+\label{sec:databases}
+
+\begin{quotation}%
+Historically, data base systems evolved as generalized access methods [\ldots]
+As a result, most data base systems emphasize the question of how data may be
+stored or accessed, but they ignore the question of what the data means to the
+people who use it.\\
+\quotationsource \Person[John F.]{Sowa} \citeyear{Sowa1976}: 
+\textit{Conceptual Graphs for a Data Base Interface}
+\end{quotation}
+
+\noindent
+A \Term{database} is a managed collection of data with some common structure.
+The general form of a database is shaped by its \Term{database model}, which
+is implied by the particular implementation of a \Tacro{database management 
+system}{DBMS}. Overviews of database models can be found in 
+\textcite{Silberschatz2010}; \textcite{Elmasri2010}; \textcite{Navathe1992};
+and \textcite{Kerschberg1976}. Although you can identify some general model
+types, the exact definitions of specific database models differ. As pointed 
+out by \textcite[chapter 9]{Kent1978}, comparisons should not confuse data models 
+and concrete implementations. Database models rarely occur as such, but only 
+as abstractions of \acro{DBMS} implementations. The model can be derived from 
+an explicit specification, from the \acro{DBMS}' schema language
+(see section~\ref{sec:sqlschemas}), and from its query \acro{API} (see 
+section~\ref{sec:apis}).
+
+% a database model is a set of conceptual tools to model representations in a database.
+
+The development of database systems and models is not a logical chain of
+improvements, but driven by trends and products. In the 1960s the difference
+between file systems, as described in the previous section, and database systems 
+was still small --- for instance IBM marketed a series of mainframe \acro{DBMS}es
+`Formatted File System'. Simple databases were (and still are) build of plain
+\term[record]{records} and tables without any elaborated model
+(section~\ref{sec:records}). The hierarchical model (section~\ref{sec:hierarchicaldatamodel})
+and the network model (section~\ref{sec:networkdatamodel}) were designed close to
+properties of the underlying storage media. A better separation between
+\term{logical level} and \term{physical level} was introduced with the
+relational model (section~\ref{sec:rdbms}). Since the 1970s (in database research) and
+the 1980s (in commercial products), it has become the preferred database model, 
+at least in its interpretation by \acro{SQL}. In the 1980s object oriented
+databases (section~\ref{sec:oodbms}) and graph databases appeared. Object orientation
+had impact on relational databases, which partly evolved to object-relational
+databases. Graph databases experience some revival since the late 2000s in
+connection with the NoSQL movement (section~\ref{sec:nosql}).
+
+So called `semantic database models' \cite{Hull1987,Peckham1988} will be 
+described as conceptual data models in section~\ref{sec:modelangs}. Other
+more specialized databases models not covered here are spatial, temporal,
+and spatio-temporal databases, and multidimensional databases. The former add
+better support of space, time, and versioning \cite{Chen2001}. The latter are
+used to efficiently summarize and analyze large amounts of data
+\cite{Vassiliadis1999}.
+
+\subsection{Record databases}
+\label{sec:records}
+The \Term{record model} dates back to pre-electronic data processing with
+\term{punched cards}. A database was a set of punched cards that each stored one
+record.\footnote{See \textcite{McGee1981} on database history and the quote about
+`files' \cite[p. 3]{Saltzer1965}, also at page~\pageref{quot:files}.} Records are
+usually stored in databases or files. Although records are still the most used
+form of structuring data, the record model is not often described in database
+textbooks and research. A detailed critique is given in \textcite{Kent1979} and
+\textcite[ch. 8]{Kent1978}. Internally data may be structured in different
+ways, but the most prominent medium to enter, edit, and display data is the
+\term{form}, which usually is shaped as a record. 
+
+In its most general sense the term \Term{record} is used for any
+collection of related data, storage devices, files, documents and more, equal to
+the general term of a digital `\term{document}'. In a more strict sense, a record
+is a grouped unit of data elements, that are called its \Term[field!of a
+record]{fields} or its \textit{attributes}. \index{attribute|see{field}} The
+fields may be ordered in a sequence and identified by \Term[field name]{field
+names} or indices. Field names often act as a mnemonic aid to human users. In
+most databases they are not part of the record, but included with field
+descriptions in the specification of a \Term{record type} or \Term{record
+schema} which records conform to. To map data elements of a given record to
+fields, the elements must be separated and identifyable. There are three
+methods to fulfill this requirement:
+
+\begin{itemize}
+ \item the record type defines a fixed set of fields with fixed length and
+       position
+ \item the record type defines a fixed set of fields with fixed order
+ \item field name are included in the record
+\end{itemize}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[decoration={brace}]
+\matrix (dcr) [datamatrix] {
+  dc:creator   & =
+    & Brian W. Kernighan; Dennis M. Ritchie & |[ucs]| 0A \\
+  dc:title     & =
+    & The C programming language            & |[ucs]| 0A \\
+  dc:publisher & =
+    & Englewood Cliffs, NJ : Prentice-Hall  & |[ucs]| 0A \\
+  dc:date      & =
+    & 1978                                  & |[ucs]| 0A \\
+};
+\draw[decorate] 
+(dcr-4-2.south west) -- node[anchor=north,inner sep=2mm] {field names}
+(dcr-4-1.south west); 
+\draw[decorate] 
+(dcr-4-4.south west) -- node[anchor=north,inner sep=2mm] {field values}
+(dcr-4-3.south west);
+\draw[decorate] (dcr-1-4.north east) -- node[anchor=west,inner sep=2mm]
+ {record} (dcr-4-4.south east);
+
+\draw[<-] (dcr-4-2.south) |- +(1em,-2.6em) node[anchor=west] 
+(sf) {separators};
+\draw[->] (sf) -| (dcr-4-4.south);
+\end{tikzpicture}
+\caption{Dublin Core record (field names included)}
+\label{fig:dcrecord}
+\end{figure}
+
+With the first two methods, the record type strictly defines, which fields must
+occur in which order. Fields may further be described by a \term{data type} or
+\term{domain}, that values of the field in each record must conform to. This
+corresponds to the classical notion of records as described by \textcite[ch.
+8]{Kent1978}, and as used in other database models. Both methods impose a
+restriction on field values, either on their length, or on the set of symbols
+allowed to represent field values. The second method needs at least one special
+symbol to separate field values (table \ref{ex:separatorchars}; other popular
+symbols are comma, semicolon, and space). If the field separator symbol occurs
+in field values, it must be escaped. The second method is favoured in database
+theory, because it directly maps to the mathematical concept of a \term{tuple}
+and you can list multiple record in a table (figure~\ref{fig:csvexample}).
+However single records are not self-describing and do not allow exceptions or
+repeated fields. In practice, they lead to the invention of special
+\term{NULL}-values to denote `not applicable' or `unknown' field values and to
+ad-hoc formatted lists of values, packed in one field.\footnote{See the list of
+names, the creator field in figure \ref{fig:dcrecord}.} The third method is
+more flexible, but it also needs some separators between field names and field
+values. An example of a self-describing\footnote{The term `self-describing' is
+used with similar carelessness as the term `semantic'.  In most cases, the only
+`description' of self-describing data is a simple mapping of data elements to
+their field names.} record is shown in figure~\ref{fig:dcrecord}. It contains a
+Dublin Core (\acro{DCMES}) record, encoded with the special characters `='
+(\U{3D}) and line break (\U{0A}).  Another example with numbers and characters
+as field names is given in appendix~\ref{appendixD}.
+
+The inclusion of field names in records is also known as \term{markup}, which
+is described in more detail in section~\ref{sec:markuplanguages}. Markup allows
+you to freely omit, repeat, and order fields. Such records do not even need a
+record schema but can consist of a simple list of field names and field values,
+such as in \acro{INI} files (see section~\ref{sec:csvandini}). These
+schema-free records have been avoided in most databases the last decades, but
+they are getting popular again with \term{NoSQL} databases. If fields are
+unordered and they can only occur once per record, the record model corresponds
+to the concepts of \term{associative arrays}, \term{maps}, \term{hashtables},
+or dictionaries from type theory and programming languages. If stored or sent
+as sequence of bytes, however, the record does not show, whether fields are
+ordered and which fields have been omitted. Given the record in
+figure~\ref{fig:dcrecord}, you need background knowledge about the record type
+\tacro{Dublin Core Metadata Element Set}{DCMES} to know, that the order
+\verb|dc:creator|, \verb|dc:title|, \verb|dc:publisher|, \verb|dc:date| is not
+relevant, and that there are eleven other possible fields defined in
+\acro{DCMES}.  Other interpretations of \acro{DCMES} allow repeating the
+\verb|dc:creator| field to express lists of creators, which requires field
+order to be preserved.  The limitation of fields of a record to non-repeatable,
+atomic values -- also known as \term{first normal form} -- is often assumed
+implicitely. But as described by \textcite{Fotache2006}, the notion of
+atomicity depends on context.  For instance in figure~\ref{fig:dcrecord} you
+could split the \verb|dc:publisher| field value into the publisher's name
+(\verb|Prentice-Hall|), place (\verb|Englewood Cliffs|), and state (\verb|NJ|).
+\verb|dc:title| could be split in words and characters, and \verb|dc:date| in
+century, decade, and year of the decade. The inclusion of field names in
+records increases flexibility, but it still selects a specific set of fields,
+that may be quite different in another context.
+
+Some record models, for instance the MultiValue/PICK database and \acro{MARC}
+records, allow fields to be repeated or split up into subfields. If you allow
+arbitrary nesting of records in fields, subfields, sub-subfields and so on, you
+end up with a hierarchical database. If you restrict the number of levels to a
+fixed value $n$ you can represent an ordered, \term{flat file database}
+structure with $n$ special separator elements that must not occur in (sub)field
+values. ASCII defines four such control characters that were used in many
+binary flat file formats (example~\ref{ex:separatorchars}).
+
+\begin{table}
+\begin{tabular}{|c|l|l|l|}
+ \hline
+ Code & \acro{ASCII} name & Unicode name & \acro{MARC} name \\
+ \hline
+ \U{1C} & File Separator (FS)   & INF. SEPARATOR FOUR
+        & -- \\
+ \U{1D} & Group Separator (GS)  & INF. SEPARATOR THREE
+        & Record Separator \\
+ \U{1E} & Record Separator (RS) & INF. SEPARATOR TWO
+        & Field Separator \\
+ \U{1F} & Unit Separator (US)   & INF. SEPARATOR ONE
+        & Subfield Delimiter \\
+ \hline
+\end{tabular} 
+\caption{Separator control characters in \acrostyle{ASCII}, Unicode, and 
+	 \acrostyle{MARC}}
+\label{ex:separatorchars}
+\end{table}
+
+Records are used as building blocks in many data structuring
+methods. The database model of a plain record store is also known as \Term{flat
+file database model}. Records in a \term{flat file database} are typically stored
+and accessed sequentially, which enforces an order on all records and fields, no
+matter if this order is relevant or not. Figure~\ref{fig:flatfilemodel} shows
+the model of a flat file database with atomic fields: Each file may have
+zero or more records, which each must belong to exactly one file. Each record
+may contain zero or more fields, which each must belong to exactly one record,
+and have exactly one field value. To refer to a particular record or field, it
+must be \Term[index!in a database]{indexed}. A record index is also called
+\Term{record identifier}. If records and/or fields are ordered, their position
+can be used as one index. Field names are the usual index for fields, but only
+for non-repeatable fields. Selected field values, or combinations of
+multiple field values, can be used as record identifier; but only if every
+record happens to contain the selected fields, and if their values uniquely
+identify the records. Such additional constraints are not part of the record
+model, but fundamental in the relational model.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[orm,lpin/.style={label distance=0mm},
+ormpin/.style={label=[lpin]above:\ormind{*}},
+nmrole/.style={roles,unique=2,ormpin}]
+\entity (file) at (-4,-2.7) {File};
+\entity[right=1.5 of file] (record) {Record} 
+       edge[mandatory] node[nmrole] {} (file);
+\entity[right=1.5 of record] (field) {Field} 
+       edge[mandatory] node[nmrole] {} (record);
+\value[right=1.5 of field] {Value} 
+       edge[both mandatory] node[roles,unique] {} (field);
+
+\node[rule=*,below=1mm of file.south west,anchor=north west]
+  {indexed by position (if ordered), identifier and/or field name};
+\end{tikzpicture}
+\caption{Flat file database model}
+\label{fig:flatfilemodel}
+\end{figure}
+
+A \Term{table of records} is the usual method to manage files of records, if
+all records share the same fixed set of fields (figure~\ref{fig:csvexample}).
+The first row contains the record schema by listing its field names, and each
+following row contains one record. The table header can be omitted, if fields
+are indexed by their position. Single records are also indexed by their
+position, so record identifiers are neither part of the record.
+
+\begin{example}
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{author} & \textbf{title} & \textbf{year} \\
+\hline
+Kerninghan and Ritchie & The C programming language & 1978 \\
+\hline
+Bjarne Stroustrup & The C++ programming language & 1985 \\
+\hline
+\end{tabular}
+
+\begin{tikzpicture}
+\matrix (csv) [datamatrix] {
+~ & & & & & & \\
+~ & author &,& title &,& year & |[ucs]| 0A \\
+~ & Kerninghan and Ritchie &,& The C programming language &,& 1978 & |[ucs]| 0A
+\\
+~ & Bjarne Stroustrup &,& The C++ programming language &,& 1985 & |[ucs]| 0A \\
+};
+\draw[<-] (csv-4-3.south) |- +(1em,-1.5em) node[anchor=west] (sf) {separators};
+\draw[->] (sf) -| (csv-4-5.south);
+\draw[->] (sf) -| (csv-4-7.south);
+\draw[-] (csv-4-1.south) |- +(.5em,-1.5em) 
+  node[anchor=west] {record schema (first row)};
+\draw[->] (csv-4-1.south) |- (csv-2-2.west);
+\end{tikzpicture}
+
+\caption{Table of records as formatted table and as \acrostyle{CSV}}
+\label{fig:csvexample}
+\end{example}
+
+% A general, non-obvious question whether indices are part of the record 
+% index is part of the record or not uniqueness 
+% indices that span multiple fields.
+
+The lack of a clear definition of record identifiers is one drawback of the
+record model. Without record identifiers as link target you cannot express
+relations that span multiple records. On the other hand there are implicit
+relationships between the fields of one record, but some relationships within
+a record cannot be described \cite[ch. 8.4f]{Kent1978}. It even depends on
+context, whether a record represent an entity or a relationship. In summary,
+records lack a clear method to express relationships while struggling with a 
+rich variety of representational alternatives \cite{Kent1988}. Nevertheless 
+the record concept is useful in grouping data elements, and can be found on
+various levels --- you must only take care which variant of the record model
+you deal with in a particular application.
+
+% Note that this general definition of a record contains no restriction on the
+% nature of its data elements.
+
+% Such a subdivision of fields can
+% result in a multimap, but you must carefully define whether subfields are
+% ordered and/or indexed.
+% the general model of a record is a tree of fixed depth.
+
+% TODO: type theory:
+% In computer science records are stored with the abstract data
+% type \textit{associative array}, also known as \textit{map}. 
+
+
+\subsection{Hierarchical databases}
+\label{sec:hierarchicaldatamodel}
+
+\textit{Hierarchical databases} are among the oldest and longest running
+database systems. \Term*{hierarchical database model}
+The first hierarchical \acro{DBMS} -- \term{IBM}'s
+\tacro{Information
+Management System}{IMS} -- was developed in 1966-1968 and is still
+used today by a large number of banks, insurance companies and similar
+organizations.\footnote{See \textcite{Blackman1998},
+\url{http://www.ibm.com/software/data/ims/}, and
+\cite[appendix E]{Silberschatz2010}.} 
+Popular specialized storage systems using the hierarchical model are file
+systems (section~\ref{sec:filesystems}), directory services such as 
+\aterm{LDAP}{Lightweight Directory Access Protocol}, and the
+\term{Domain Name System} (section~\ref{sec:dns}). 
+
+In a hierarchical database the data is organized into mathematical tree structure.
+Records may be typed and may contain data in typed field values (attributes).
+There is one special type to connect records via 1:m parent-child relationships.
+Each record can only have one parent node (unless it is the root
+node that has no parent) and may have one or more child nodes. A database 
+can be described as a set of trees, each having the same structure (you can also
+have multiple parallel tree structures by adding a virtual root node). Managing
+data in a hierarchical database is comfortable as long as the information to be
+stored is also hierarchic in nature. Other structures require
+additional arrangements as shown in the following example:
+
+Figure~\ref{fig:hnetexamples} at the left shows a hierarchical database to
+store information about libraries and their publications. Each {\ormtext
+library} has one {\ormtext catalog}. A {\ormtext publication} in the catalog may
+be assigned to one {\ormtext topic} or more. Topics can be arranged into a
+hierarchy. We assume that topics follow the mono-hierarchy of a classification
+but not the poly-hierarchy of a thesaurus. Each time the library acquires an
+item, the {\ormtext vendor} and the {\ormtext publication} are stored.
+As there are only 1:n relationships, the hierarchic database cannot ensure
+that each library has only one catalog ({\ormtext\small\textbf 1}).
+Relations only span two records, therefore the ternary relationship between
+library, vendor, and publication must be expressed as record
+({\ormtext\small\textbf 2}). This also requires a virtual hierarchy
+(called ``logical'' in contrast to ``physical'' in \acro{IMS}) between vendor
+and acquisition and between publication and acquisition. The n:1 relationship
+between acquisition and publication also requires a virtual hierarchy
+({\ormtext\small\textbf 5}). The n:m relationship between publications and
+topics ({\ormtext\small\textbf 4}) and the recursive 1:n relationship between
+topics and subtopics ({\ormtext\small\textbf 3}) are also modeled by virtual
+hierarchies but the monohierarchy cannot be expressed.
+
+Virtual hierarchy pointers can be used to circumvent some of the hierarchic
+model's limitations, similar to \term{symbolic links} in file systems
+(section~\ref{sec:symlinks}). Yet in practice they are less efficient and
+their integrity is not ensured by the \acro{DBMS}. Other hierarchic
+\acro{DBMS}, for instance native \acro{XML} databases share similar
+limitations.
+
+
+\begin{figure}
+\begin{tikzpicture}[orm,
+level 1/.style={sibling distance=2cm},
+pointer/.style={dashed,->,shorten >=2pt,shorten <=2pt,thick},
+set/.style={<-,shorten <=2pt,thick}
+]
+\entity (vendor) at (2.2,0) {vendor};
+\entity (library) at (0,0) {library}
+  child {
+    node[entity] (catalog) {catalog}
+    child {
+      node[entity] (topic) {topic}
+    }
+    child {
+      node[entity] (publication) {publication}
+    }
+  }
+  child {
+    node[entity] (acquisition) {acquisition}
+  };
+  \draw (acquisition) edge [pointer] (publication);
+  \draw (publication) edge [pointer] (topic);
+  \draw[pointer] (topic.240) arc (360:90:3mm);
+  \draw (acquisition) edge [pointer] (vendor);
+
+  \node[above=0.3 of library] {\textit{hierarchy 1}};
+  \node[above=0.3 of vendor] {\textit{hierarchy 2}};
+
+  \node at (-.8,-.7) {\ormind{1}};
+  \node at (1.0,-.9) {\ormind{2}};
+  \node at (-2.6,-2.7) {\ormind{3}};
+  \node at (-1.2,-2.9) {\ormind{4}};
+  \node at (.1,-2.3) {\ormind{5}};
+
+  \rules[anchor=north west] at (-3, -4.2) {
+    \node {\textbf{Hierarchical database}};\\
+    \node[rule=1] {1:1 constraint not expressible};\\
+    \node[rule=2] {n-ary relationship requires virtual hierarchy};\\
+    \node[rule=3] {recursive relationship requires virtual
+hierarchy\textbf{\small{*}}};\\
+    \node[rule=4] {m:n relationship requires virtual hierarchy};\\
+    \node[rule=5] {n:1 relationship requires virtual hierarchy};\\
+    \node[rule=*] {some hierarchical models allow recursion};\\
+  };
+
+% \draw [dotted] (4.3,1.4) to (4.3,-7.4);
+
+\entity (vendor) at (9.5,.5) {vendor};
+\entity (library) at (7.7,.5) {library}
+  child[set] {
+    node[entity] (catalog) {catalog}
+    child {
+      node[entity] (topic) {topic}
+      child[bend right] { node[entity] (tlink) {tlink} }
+    }
+    child {
+      node[entity] (publication) {publication}
+      child { node[entity] (tplink) {tplink} }
+    }
+  }
+  child[set] {
+     node[entity] (acquisition) {acquisition}
+  };
+  \draw[set] (publication) to (acquisition);
+  \draw[set] (topic) to (tplink);
+  \draw[set] (topic) to[bend right] (tlink);
+  \draw[set] (vendor) to (acquisition) ;
+
+  \draw (library)++(-.7,-.7) node {\ormind{1}};
+  \draw (library)++(1,-1) node {\ormind{2}};
+  \draw (tlink.west)++(-.2,0) node {\ormind{3}};
+  \draw (tplink.west)++(-.2,0) node {\ormind{4}};
+
+  \rules[anchor=north west] at (4.8, -4.9) {
+    \node {\textbf{Network database} (link types not shown)};\\
+    \node[rule=1] {1:1 constraint not expressible};\\
+    \node[rule=2] {n-ary relationship modeled as record};\\
+    \node[rule=3] {recursive relationship modeled as record};\\
+    \node[rule=4] {m:n relationship modeled as record};\\
+  };
+
+\end{tikzpicture}
+\caption{Hierarchical and a network database with its limitations}
+\label{fig:hnetexamples}
+\end{figure}
+
+\subsection{Network databases}
+\label{sec:networkdatamodel}
+
+The \Term{network database model} evolved in the 1960s from the
+\tacro{Integrated Data Store}{IDS} \acro{DBMS}. Under the guidance of
+\Person[Charles]{Bachman} and the \tacro{Database Task Group}{DBTG}
+within the \tacro{Conference of Data Systems and Languages}{CODASYL}, 
+it resulted in the first database standard specification
+\cite{CODASYL1971,CODASYL1978}. Many basic concepts of database
+terminology were introduced by the \acro{DBTG}, including the 
+difference between a \tacro{data description language}{DDL} to
+define the \term{database schema} and a \tacro{data manipulation 
+language}{DML} to query and modify the content of a database. The 
+\acro{DBTG} model can be described as a partly ordered graph with typed
+\Term[record!in a network database]{records} as nodes and typed
+\Term[link!in a network database]{links} as edges. Records can have attributes
+as described in section~\ref{sec:records}. Similar to the hierarchical model,
+links are limited to 1:n relationships. In the \acro{DBTG} model a
+relationship is called \Term[set!in a network database]{set} with the
+relationship type as \textit{set type}, one record as \textit{owner} and zero
+or more records as \textit{member} of the set. The \acro{DDL} statement
+``\texttt{insertion is automatic; retention is mandatory}'' can mark a set type as
+required for the member record. Other features of the \acro{DBTG} model include
+unique key attributes, ordering sets by a selected record attribute, and
+singular sets. \index{ordered set!in network databases}
+
+In contrast to the hierarchical model there is no separation between
+hierarchical links and virtual pointers. A record can be a member of multiple
+owners, as long as each membership takes place in a different set type.
+Other limitations of the hierarchical model are also present in the network
+model: there is no separation between 1:n and 1:1 relationships
+({\ormtext\small\textbf (1)} in fig.~\ref{fig:hnetexamples} on the right) and
+relationships with more then two members must be modeled by records
+({\ormtext\small\textbf (2)}). Such additional 
+\Term[junction record!in a network database]{junction records} are also used to model
+recursive relationships ({\ormtext\small\textbf 3}) and
+n:m relationships ({\ormtext\small\textbf 4}).
+
+Later extensions of the network database model evolved to the \Term{role data
+model}. It was planned as generalization of the network and the relational
+model, similar to object databases, but never got really adopted
+\cite{Bachman1977,Steimann2007}.
+
+
+\subsection{Relational databases}
+\label{sec:rdbms}
+The \Term{relational database model} was introduced by \textcite{Codd1970} as
+superior alternative to hierarchical and network database models. It overcomes
+data dependency on ordering, indexing, and access paths, and it highlights 
+the separation between logical level and physical level. Together with the
+relational model, \person[Edgar F.]{Codd} introduced the idea of 
+\term{database normalization} to avoid redundancy and inconsistencies.
+Based on set theory and predicate logic, the relational
+model gave database research a highly stimulating, mathematical foundation.
+However its properties are often confused with those of the 
+\tacro{structured query language}{SQL}, and the 
+conceptual \tacro{entity-relationship model}{ERM}. Both are influenced
+from the relational model, but with deviation from its original design, and both 
+had far more impact on implementations. These implementations are now known as 
+\Tacro{relational database management system}{RDBMS}. 
+
+In the \term{relational database model}, you declare data and queries as 
+logic predicates in form of  $n$-ary \Term[relation!database]{relations}, while 
+the \acro{DBMS} takes care of storing and retrieving the data. Similar to the
+mathematical sense of a \term{relation}, database relations are defined as 
+subset of the cartesian product $S_1 \times \cdots \times S_n$ over $n$ sets
+$S_1, \ldots, S_n$. The sets $S_i$ ($i=1,\ldots,n$; the sets need not be distinct)
+are indexed by unique names for each relation, and called its 
+\Term[column of a database]{columns}. In contrast to mathematical relations, the
+rows of a database relation have no order. The relation's tuples, which are 
+called its \Term[row of a database]{rows} are also unordered. In short, a
+relation in the relational model is a set of distinct \term{record}s, like in
+the record database model, with a fixed set of fields, which are indexed by 
+names. Each fields can be restricted to a given \term{data type}, that is 
+called its \Term{domain}. The collection of fields, field names, and domains
+of a relation are sometimes called its \Term[record type]{(record) type}. 
+The relational model defines a \Term{relational algebra} based on relations
+and types, with the basic operators selection, projection, cross join, 
+relational set union, relational set difference, and rename. 
+
+% The exclusion of other possible relations, for instance 
+% \term{transitive closure} is one of the limitations of the 
+% relational model. (TODO: where is transitive close described?)
+
+Originally, \person[Edgar F.]{Codd} did not specifiy a \term{query language}
+for the relational model, but required that any relational query language must
+be based on relational algebra. \textcite{Chamberlin1974} presented such a query 
+language, that later evolved to \acro{SQL}. Current dialects of \acro{SQL} 
+include numerous extensions, and only share basic ideas with the original
+relational model. As explained by \textcite{Darwen1995}, \acro{SQL} violates
+the relational model in several ways, especially by using simple tables of
+records, which allow duplicated rows instead of set-based relations, and by 
+inclusion of \term{NULL} values. \textcite{Atkinson1989} point to
+\acro{SQL} as the ``classical, and unfortunate, pattern in the computer field 
+that an early product becomes the \emph{de facto} standard and never disappears''.
+At the same time there is no consensus on what \acro{SQL} really is.
+Only between 1987 and 1996, the \tacro{National Institute of Standards and 
+Technology}{NIST} provided a test suite for \acro{SQL}, which \acro{RDBMS} 
+vendors had to conform to, to get used in governmental funded projects.%
+\footnote{The latest test suite from 1996, testing \acro{SQL}, as specified
+in ANSI X3.135-1992 (SQL-92) is available at %
+\url{http://www.itl.nist.gov/div897/ctg/sql_form.htm}.}
+Meanwhile each \acro{RDBMS} has its own restrictions and extensions. 
+The \acro{SQL} standard, as specified by \acro{ISO}, has grown in complexity 
+and size with each new version, and no product fully implements each detail.
+Moreover, the specification is not freely available, which makes it hard to 
+check, whether a specific language construct or implementation conforms to
+standard \acro{SQL}. Despite its divergence from the relational model, and 
+its lack of a reliable, vendor-independent specification, which deserves that 
+appellation, \acro{SQL} is perceived as lingua franca of \acro{DBMS} in 
+general. This dominance also takes into account for the dominance of the 
+relational database model.\footnote{In short, the relation model had a
+lot of impact, especially spoiled and misinterpreted by
+\acro{SQL}, which also had a lot of impact, especially spoiled and 
+misinterpreted by its differing implementations.}
+Critics from database research, such as \textcite{Stonebraker2007} and
+\textcite{Darwen1995} therefore often argue against \acro{SQL} and 
+\acro{RDBMS}, but less against the relational model as introduced by 
+\person[Edgar F.]{Codd}.
+
+The concept of \Term{database normalization} \index{normalization!in relational databases} 
+was a basic part of the relational model from the beginning.
+%introduced by \textcite{Codd1970} as basic part of the relational model. 
+Similar to relational model in its original form, normalization is not 
+fully applied in practice \cite{Fotache2006}. Beginning with the 
+\tacro{first normal form}{1NF}, normalization techniques were soon 
+extended by the \tacro{second normal form}{2NF} and the \tacro{third normal form}{3NF}
+\cite{Codd1971}, the \tacro{Boyce-Codd normal form}{BCNF} \cite{Codd1974},
+the \tacro{fourth normal form}{4NF} \cite{Fagin1977}, and more forms. The 
+general objective of normalization is to map relations and dependencies
+information to database relations, without introducing possible redundancy
+and inconsistencies. Single facts should only be stored once, and facts, that
+can be derived from other facts, should not be stored at all. As a result,
+no queries are favoured at the expense of others. Any complex query can 
+be build by joining multiple tables, that share fields of the same domain.
+To speed up specific queries, indexes and views, that act
+as caches of query results, can be created. In practice, some parts of the database are
+not normalized on purpose for performance reasons --- in this case, the
+database user must take care of database integrity.%
+\footnote{A popular example of denormalized databases are data cubes in
+\tacro{Online Analytical Processing}{OLAP}.}
+
+Leaving performance issues aside, normalization is also useful independent
+from relational databases. \Acro{1NF} deals with \term{uniformity} and 
+\term{atomicity}: all \term{row}s of a \term{record type} must contain
+the same number of fields, and field values must not be decomposable into
+smaller data items (\term{subfield}s). First normal form is often assumed
+implicitly, but silently ignored at the same time. For instance a table
+of publications and authors must contain exactly one author for each 
+single publication to fulfill \acro{1NF}. To express publications without
+author, we must either introduce a new table of all publications, or
+a virtual `anonymous' author as \term{NULL} value.  Lists of
+authors (like ``Kerningham and Ritchie'' in figure~\ref{fig:csvexample})
+can be allowed by either adding another table with author-list
+and list-member, or by allowing lists as atomic data types. The latter 
+solution has been favoured by advocates of object-relational models
+such as \textcite{Darwen1995}, as the notion of atomicity depends
+on context \cite{Fotache2006}. However, the ad-hoc introduction of
+\term{NULL} values and lists without any strict definition of their
+meaning does neither align with \acro{1NF} nor with any other database 
+formalism.%
+\footnote{In practice, \term{NULL} values often cover a fuzzy bunch of
+meanings, and lists are encoded by introduction of separators (for instance 
+the string ` and '), that are not part of any database definition 
+known to the \acro{DBMS}.}
+
+Second and third normal forms\Acro*{2NF}\Acro*{3NF} ground on the concepts
+of \Term{database key}s and \Term[functional dependency]{functional dependencies}.
+Both can also be applied to other types of databases. A key is a set of
+one or more fields (or table columns), which in their relation (or table) uniquely
+identify a record. If relations are sets, every table has an implicit key, build 
+of all their columns. Generally, keys should be short, to be used as reference
+(also known as \term{foreign keys}) in other tables. Under \acro{2NF} and 
+\acro{3NF}, all non-key fields must functionally depend on the combination of all
+key fields. That means, the mathematical binary relations between all key-fields 
+and any non-key field must be a total function (totality is enforced by exclusion
+of NULL values with \acro{1NF}). In example~\ref{ex:dbnorm}, publications are
+listed in table {\ormtext a} with country, author, year, title, publisher,
+and place. If we choose the set $\{${\ormtext author}, {\ormtext year}$\}$ as
+database key (red uniqueness overline in \ref{ex:dbnorm}), each combination 
+of author and year must uniquely identify a 
+publication's country, title, publisher, and place. Obviously, an author can 
+create multiple titles per year, so we must modify the key. For instance, each
+publication can get a {\ormtext letter} suffix between `a` to `z`.%
+\footnote{Note that this only extends the number of publications per author 
+and year from one to 26.} Such additions of
+\term[artificial identifier]{artificial identifiers} are common,
+although they do not represent a given fact about the publication.
+
+The extended table {\ormtext b} now allows multiple publications per author
+and year, but it may violate \acro{2NF}. This is the case, if a non-key field
+depends on a subset of a key. If the non-key field {\ormtext country}
+denotes the country, an author origins from,\footnote{For some reasons, 
+nationalists and library classifications try to uniquely group authors under
+countries.} it should  be split up in another table, with $\{${\ormtext author}, 
+{\ormtext country}$\}$ as key (example~\ref{ex:dbnorm}, {\ormtext c}).
+
+\Acro{3NF} is violated when a non-key field depends on another non-key field. 
+For instance, if {\ormtext place} denotes the place of a publisher, and if places
+do not change over the years, the table should be decomposed as shown in 
+example~\ref{ex:dbnorm} {\ormtext d}.
+
+\begin{example}
+\begin{tikzpicture}[orm,b/.style={rectangle,draw},every orm line,
+ ma/.style={matrix of nodes,text height=0.8em, text depth=0.25ex,anchor=west}]
+\matrix(m1)[ma]{
+a &|[b]| country   &|[b]| author    &|[b]| year 
+  &|[b]| title     &|[b]| publisher &|[b]| place \\
+};
+\draw[constraint] ([yshift=1mm]m1-1-3.north west) to ([yshift=1mm]m1-1-4.north east);
+
+\matrix(m2)[below=6mm of m1.south west,ma]{
+b &|[b]| country   &|[b]| author    &|[b]| year  &|[b]| letter 
+  &|[b]| title     &|[b]| publisher &|[b]| place \\
+};
+\draw[constraint] ([yshift=1mm]m2-1-3.north west) to ([yshift=1mm]m2-1-5.north east);
+
+\matrix(m)[below=6mm of m2.south west,ma]{
+c &|[b]| author      &|[b]| country
+  &[4mm]|[b]| author &|[b]| year  &|[b]| letter 
+  &|[b]| title       &|[b]| publisher &|[b]| place \\
+};
+\draw[constraint] ([yshift=1mm]m-1-2.north west) to ([yshift=1mm]m-1-3.north east);
+\draw[constraint] ([yshift=1mm]m-1-4.north west) to ([yshift=1mm]m-1-6.north east);
+
+\matrix(m)[below=6mm of m.south west,ma]{
+d &|[b]| author      &|[b]| country 
+  &[4mm]|[b]| author &|[b]| year  &|[b]| letter 
+  &|[b]| title       &|[b]| publisher 
+  &[4mm]|[b]| publisher   &|[b]| place \\
+};
+\draw[constraint] ([yshift=1mm]m-1-2.north west) to ([yshift=1mm]m-1-3.north east);
+\draw[constraint] ([yshift=1mm]m-1-4.north west) to ([yshift=1mm]m-1-6.north east);
+\draw[constraint] ([yshift=1mm]m-1-9.north west) to ([yshift=1mm]m-1-10.north east);
+
+\matrix(m)[below=6mm of m.south west,ma]{
+e &|[b]| author &|[b]| language &|[b]| award \\
+};
+\draw[constraint] ([yshift=1mm]m-1-2.north west) to ([yshift=1mm]m-1-4.north east);
+
+\matrix(m)[below=6mm of m.south west,ma]{
+f &|[b]| author &|[b]| language &[4mm]|[b]| author &|[b]| award \\
+};
+\draw[constraint] ([yshift=1mm]m-1-2.north west) to ([yshift=1mm]m-1-3.north east);
+\draw[constraint] ([yshift=1mm]m-1-4.north west) to ([yshift=1mm]m-1-5.north east);
+
+%\matrix(m)[below=6mm of m.south west,ma]{
+%g &|[b]| author &|[b]| year &|[b]| letter &|[b]| title &|[b]| publisher &|[b]| language
+%  &[4mm]|[b]| author &|[b]| year  &|[b]| letter &|[b]| award \\
+%};
+%\draw[constraint] ([yshift=1mm]m-1-2.north west) to ([yshift=1mm]m-1-4.north east);
+%\draw[constraint] ([yshift=1mm]m-1-8.north west) to ([yshift=1mm]m-1-10.north east);
+\end{tikzpicture}
+
+\caption{Normalization of relational database tables}
+\label{ex:dbnorm}
+\end{example}
+
+\acro{4NF} and additional normal forms attempt to minimize the number of fields
+involved in a key. Let us assume we want to store information about the popularity
+of authors. Table {\ormtext e} in example~\ref{ex:dbnorm} list languages, that
+authors have been published in, and awards, that authors have received. Under
+forth normal form, the implicit key $\{${\ormtext author}, {\ormtext language}, 
+{\ormtext award}$\}$ should be split in two independent keys (tables~{\ormtext f}),
+because languages and awards are independent from each other. If the awards and
+languages are properties of publications, a normalized database should not
+contain tables {\ormtext e} and {\ormtext f} at all, because their content can
+be derived by \term{relational algebra} as view from other tables.
+
+Despite the theoretical importance of database normalization, it has failed to
+become an ultimate aid for database designers. At most, they use normalization
+for validation after creation of databases based on intuition.
+\textcite{Fotache2006} gives some reasons for this gap: popular textbooks on
+database design often describe and exemplify normalization poorly or even
+incorrectly. Most literature on normalization focuses on rigor and sober
+mathematics and uses artificial examples, instead of real world applications.
+There is a lack of graphical diagramming tools for functional dependencies, and
+other graphical modeling languages such as \acro{ERM} (section~\ref{sec:erm})
+base on different philosophies. Another problem, also raised by
+\textcite{Kent1983}, is the dependency on uniquely identified entities. If
+fields contain different values for the same object, for instance different
+spellings of names, speaking about keys and dependencies is futile. However
+normalization only reveals the difference between rigor data and fuzzy reality,
+that would also exist without it.
+
+% Even with fully normalized relations, you do not necesarrily get unique
+% representations \cite{Kent1988} (or 83?)
+
+% ``Semantic'' interpretation of the relational model: 
+% each tuple represents a particular proposition based on that predicate
+% constraints (types are constraints)
+
+% relationships are generally m:n and generated on the fly by join operations.
+% relational tables similar to kett-records
+
+\subsection{Object database}
+\label{sec:oodbms}
+
+\Tacro{Object Orientation}{OO} was introduced during the 1960s by
+\Person[Ole-Johan]{Dahl} and \Person[Kristen]{Nygaard} with creation 
+of the \term[Simula (programming language)]{Simula programming language} 
+\cite{Holmevik1994}. \Tacro{Object Oriented Programming}{OOP} was
+further popularized by \Person[Alan]{Kay}'s \term[Smalltalk (programming
+language)]{Smalltalk} and had large impact on many following programming
+languages. Core concepts of different \acro{OO} systems have been identified
+retrospectively by \textcite{Armstrong2006}. The main idea is to bundle data 
+and interactions in \term{object}s. An \Term{object} is a structure with data
+fields, attributes, or properties; and methods to invoke a specific
+behaviour. Both are combined in a \Term{class} that, like a record type, acts
+as blueprint to create objects, which then are \Term{instance}s of the class.
+In addition, the properties and methods of a class may be included or used as
+basis for another class via \Term{inheritance}. Details of implementation are
+concealed by the object via \Term{encapsulation}.
+
+When \acro{OOP} became widespread in the 1980s, the mismatch between
+object-oriented programs and relational databases led to the development
+of object(-oriented) databases. The classical definition of an \Tacro{object
+oriented database management systems}{OODBMS} in the `Object-Oriented Database
+System Manifesto' \cite{Atkinson1989}.  It identifies thirteen \acro{OODBMS}
+requirements, five of which hold for \acro{DBMS} in general (persistence,
+secondary storage management, concurrency, recovery, ad-hoc query facility),
+and eight of which are specific for object-oriented systems. 
+
+\begin{itemize}
+
+\item objects must be identifiable independent of their values. This implies
+two samenesses: same valued objects (\term{equivalence}), and same
+objects (\term{identity}).
+
+\item objects are defined only by which operations they can be modified and
+interact with. Internal representations are hidden (\term{encapsulation}).
+
+\item objects must have classes or types that define their characteristics.
+
+\item objects can be build from some basic types (integers, floats, characters,
+byte strings, booleans, etc.) and some object constructors (at least set, list,
+and tuple), that can be applied to any object, independent from its type.
+
+\item there is no distinction in usage between predefined basic types and
+newly constructed types.
+
+\item there are at least four types of inheritance for a class $T$
+and a subclass $S$: substitution (instances of $S$ can substitute instances
+of $T$),\footnote{This type of inheritance has formally been refined by
+\textcite{Liskov1987} and is known as \term{Liskov substitution principle}. It
+states that all provable properties of instances of $T$ must also be true for
+instances of $S$. Thus any algorithm designed for $T$ instances of will
+behave exactly the same if used with $S$ instances.} specialization (instances
+of $S$ contain more information than instances of $T$), inclusion, and
+constraint (every instance of $S$ is also instance of $T$ if
+it satisfies a given constraint).
+
+\item names can denote different operations for different object types.
+
+\item the \term{data manipulation language} must be a Turing-complete computational
+programming language.
+
+\end{itemize}
+
+In summary, the characteristics of object databases are
+\textit{i)} object identity, \textit{ii)} classes
+and types, and \textit{iii)} inheritance. It must be said that, `object
+oriented', like many terms in computing, is also used as marketing buzzword,
+or to indicate a rough direction, rather then specifying a final list of
+features. The list of requirements given above is rarely fulfilled in existing
+\acro{OODBMS}. \textcite{Stonebraker1990}, in response to
+\textcite{Atkinson1989}, published the `Third-Generation Database System
+Manifesto' and argued that \acro{OO}
+can be added to relational systems with keeping \acro{SQL} as common database
+language. Some \acro{OODBMS} concepts were incorporated into \acro{RDBMS},
+which led to \Tacro{object-relational databases}{ORDBMS}. However the
+predominance of relational databases persisted and therefore developers created
+\Term{Object-relational mappings} to combine \acro{OOP} and \acro{RDBMS}. 
+This error-prone task has been described by \textcite{Neward2006} as 
+`Vietnam of Computer Science': it ``starts well, gets more complicated as time
+passes, and before long entraps its users in a commitment that has no clear
+demarcation point, no clear win conditions, and no clear exit strategy.''
+Above all, migration to and from object databases is costly because the
+dominance of \acro{SQL} and the lack of an accepted query language for object
+databases, independent from type systems of specific programming languages.
+A unification of the relational model and the object orientation has been
+proposed by \textcite{Darwen1995} in a `Third Manifesto'. They made clear
+that progress is hindered by adherence to the \acro{SQL} database language,
+which is not even truly relational, but their proposed alternative
+\Term{Tutorial D} \cite{Date2006} had little impact on concrete implementations.
+Today the \term{NoSQL} movement shares some of the critics on \acro{SQL} and
+object databases are sometimes subsumed under the NoSQL approach. Maybe
+the most effective impact of \acro{OO} to data modeling is the
+\tacro{Unified Modeling Language}{UML} (see section \ref{sec:uml}). It is
+mostly used to model object oriented software but also for databases.
+
+% Examples of object databses: db4o, Perst, Caché ...
+
+\subsection{NoSQL databases}
+\label{sec:nosql}
+During the first decade of 21st century several providers of large web
+applications (\term{Google}, \term{Amazon}, \term{Facebook}, \term{Yahoo},
+etc.) had started to develop their own non-relational data stores. Database
+researcher \textcite{Stonebraker2007} declared the relational \acro{DBMS}
+obsolete, because of changed hardware limitations and data processing needs.
+
+When more new non-relational open source \acro{DBMS}es 
+were available in 2009 \term{last.fm} employee \Person[Johan]{Oskarsson}
+organized an event called NOSQL (for `not SQL'), which can be seen as baptism of
+the following NoSQL movement. NoSQL has brought a new momentum into the development
+of database systems by questioning some general properties of \acro{RDBMS},
+such as secondary storage management, concurrency, recovery, schemas, and ad-hoc
+query facility. The term refers to no common database model but compasses all
+non-relational or `structured storage' data stores, which may also subsume file
+systems. Beside object databases the following types can be distinguished:
+
+\begin{description}
+
+\item[key-value stores] provide a simple dictionary where keys are mapped
+to arbitrary values. These systems are more comparable with flat file
+systems that have no data types and may only put restrictions on keys.
+An exception is \term{redis},\footnote{\url{http://code.google.com/p/redis/}}
+a \acro{DBMS} that supports strings (sequences of bytes), sequences,
+sets, and ordered sets of strings. Other examples of key-value stores are 
+\term{Amazon~S3} \cite{S3DevGuide}, 
+\term{Berkeley DB}\footnote{\url{http://www.oracle.com/database/berkeley-db/}},
+and \term{Project Voldemort}.\footnote{\url{http://project-voldemort.com/}}
+
+\item[document databases] or document stores manage values as `documents' in a
+specific data structuring language (mostly \acro{JSON} or \acro{XML}). In
+general, documents are not constrained by a schema, and they may be versioned.
+Popular examples of document databases are
+\term{CouchDB},\footnote{\url{http://couchdb.apache.org/}}
+\term{MongoDB},\footnote{\url{http://www.mongodb.org/}} and
+\term{RavenDB}.\footnote{\url{http://ravendb.net/}} Native
+\acro{XML} databases, such as
+\term{eXist}\footnote{\url{http://www.exist-db.org/}} are less 
+often mentioned, but also fall into this category.
+
+\item[graph databases] allow storing arbitrary graph structures with
+nodes, edges, and properties. In most cases, graphs are schema-free without
+distinction between different structural kinds of relationships (1:n, 1:1, m:n,
+mandatory, recursive, unique, etc.). The specific graph model depends on the
+particular graph \acro{DBMS} \cite{Angles2008,Rodriguez2010}. Popular instances
+are based on the \acro{RDF}~graph~model for \term{triple store}s (see~\ref{sec:rdf})
+or on \term{property graph}s, but there also exist other
+models, for instance hypergraphs.\footnote{See
+\url{http://www.kobrix.com/hgdb.jsp} for a Hypergraph \acro{DBMS}.} Network
+databases can be seen as a restricted subset of graph databases. Examples of
+general graph databases include
+\term{Neo4J},\footnote{\url{http://www.neo4j.org/}} and
+\term{InfoGrid}.\footnote{\url{http://www.infogrid.org/}}
+\Term*{graph database model}\index{graph!database model}
+
+\item[column databases] are table-based databases, which seperately store 
+each column of all relation (or each field of all records), instead of
+keeping together rows or records. Column databases provide good performance
+especially for processing of sparse data. The most prominent column 
+\acro{DBMS} is Google's \term{BigTable} \cite{Chang2006} (also supporting
+versioning), another instance is \term{Cassandra} (Facebook, now Apache)%
+\footnote{\url{http://cassandra.apache.org/}}. Similar column data-structures
+are also used in databases and other software for statistical analysis of
+large data sets.
+
+\end{description}
+

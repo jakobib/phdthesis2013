@@ -1,0 +1,97 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\printbibliography%[heading=bibintoc]
+\addcontentsline{toc}{chapter}{Bibliography}
+
+% horizontal line
+%\vskip\medskipamount
+\leaders\vrule width \textwidth\vskip0.4pt % or other desired thickness
+\vskip\medskipamount
+
+\noindent All URLs in this thesis have been checked and updated at January 5th
+with a script documented at \url{http://tex.stackexchange.com/a/89521/1044}.
+The full bibliography is available at \url{http://www.bibsonomy.org/user/voj}. 
+
+\phantomsection
+\chapter*{Appendices}
+\addcontentsline{toc}{chapter}{Appendices}
+\renewcommand{\leftmark}{Appendices}
+
+\appendix
+\renewcommand{\thesection}{\Alph{section}}
+\renewcommand{\thefigure}{A\arabic{figure}}
+
+\input{appendixA}
+\clearpage
+\input{appendixB}
+\vfill
+\input{appendixC}
+\clearpage
+\input{appendixD}
+%\clearpage
+%\input{appendixE}
+
+%\chapter*{Index}
+
+% TODO: Separate names, terms, and people
+%\textsc{Person}, \textit{Name}, \texttt{data}, \textsl{slanted}
+%{\sffamily Language}
+
+%\pagebreak
+%\printsubindex[idx]
+
+%\pagebreak
+%\printsubindex[person]
+
+%\pagebreak
+%\printsubindex[acronym]
+
+\addtocontents{toc}{\protect\vspace{\baselineskip}}% empty line
+
+\clearpage
+
+\begin{otherlanguage}{ngerman}
+\unnumberedsection{Danksagung}
+
+Für die fachliche und praktische Unterstützung bei der Vollendung dieser Arbeit
+möchte ich mich ausdrücklich bedanken bei
+Andreas Krausz,
+Brian Ballsun-Stanton,
+Ed Summers,
+Felix Sasaki,
+Jindřich Mynarz,
+Kurt Jansson,
+Peter Becker,
+Phillip Mayr,
+Sally Chambers,
+Silvia Czerwinski, 
+Stefan Gradmann,
+Sven Porst,
+Till Kinstler,
+Thomas Hapke
+Ralph Voß,
+Reiner Diedrichs,
+Ulrike Reiner,
+Viola Voß,
+William Honig
+sowie den Mitgliedern der Online-Communities Wikipedia und Stack Exchange.
+
+% die FH Zwickau und die UB Bielefeld (?)
+
+\cleardoublepage
+
+\unnumberedsection{Selbständigkeitserklärung}
+
+Hiermit erkläre ich, Jakob Voß (Matrikel-Nummer 181714), dass ich die
+vorliegende Dissertation selbstständig und ohne Benutzung anderer als der
+angegebenen Hilfsmittel angefertigt habe.  Die aus fremden Quellen direkt oder
+indirekt übernommenen Gedanken sind als solche kenntlich gemacht.  Die
+Dissertation wurde bisher in gleicher oder ähnlicher Form keiner anderen
+Prüfungsbehörde vorgelegt oder veröffentlicht.
+
+~
+
+Göttingen, der 7. Januar 2013
+
+% TODO: Unterschrift
+
+\end{otherlanguage}

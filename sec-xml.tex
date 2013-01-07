@@ -1,0 +1,359 @@
+\subsection{XML}
+\label{sec:xml}
+
+\begin{quotation}%
+XML has succeeded beyond the wildest expectations as a convenient format
+for encoding information in an open and easily computable fashion. But it 
+is just a format, and the difficult work of analysis and modeling 
+information has not and will never go away.
+\\\quotationsource \textcite{Wilde2008}
+\end{quotation}
+
+\noindent
+The \Tacro{Extensible Markup Language}{XML} was designed between 1996
+and 1998 as simplified subset of the \tacro{Standard Generalized 
+Markup Language}{SGML} for the Web \cite{Bray1998}. Its origin in 
+\acro{SGML} (see section~\ref{sec:markuplanguages} about \acro{SGML} and 
+markup languages in general) gave \acro{XML} strong support for marked
+up text documents, but also some features, that for most applications 
+only add unnecessary complexity. Beginning from the late 1990s, more and 
+more domain specific data formats were created based on \acro{XML}, or they
+migrated to \acro{XML} from \acro{SGML}. \acro{XML}~1.0 was first published
+as \acro{W3C} recommendation in February 1998. Soon it was accompanied 
+by numerous extensions and revisions, such as the
+\tacro{Document Object Model}{DOM} in late 1998,
+% http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/
+\term{XML Namespaces} (1999),
+% http://www.w3.org/TR/1999/REC-xml-names-19990114/
+\term{XPath} (1999),
+%, see example~\ref{ex:xpath} at \pageref{ex:xpath}), % http://www.w3.org/TR/1999/REC-xpath-19991116
+\acro{XSLT} \cite{Clark1999x},  % http://www.w3.org/TR/1999/REC-xslt-19991116
+\tacro{XML Schema}{XSD} (2001), % http://www.w3.org/TR/2001/REC-xmlschema-0-20010502/
+\term{Canonical XML} (2001), % http://www.w3.org/TR/2001/REC-xml-c14n-20010315
+\term{XML Base} (2001), % http://www.w3.org/TR/2001/REC-xmlbase-20010627/
+\term{XML Infoset} (2001), % http://www.w3.org/TR/2001/REC-xml-infoset-20011024/
+and \term{XInclude} (2004). % http://www.w3.org/TR/2004/REC-xinclude-20041220/
+% W3C. XML Linking Language (XLink) Version 1.0, June 2001.
+% http://www.w3.org/TR/2000/REC-xlink-20010627/.
+% W3C. XPointer xpointer() Scheme, December 2002.
+% http://www.w3.org/TR/2002/WD-xptr-xpointer-20021219/.
+\acro{XML}~1.1 was introduced in 2004 as successor to \acro{XML}~1.0
+\cite{Bray2004}, but it never got widely adopted.
+% because it broke compatibility 
+% and introduced no compelling new features.% see "Xml 1.1 failed"
+The listed extensions define slightly different models of \acro{XML},
+and the degree of their support varies among applications, what 
+complicates an exact definition of \acro{XML} documents \cite{Dodds2002}.
+However, all definitions share a common subset, that can be described as 
+an ordered tree with Unicode strings and key-value-pairs as node-properties.
+Beginning with \acro{XML}~1.0, we will first describe the most common parts of 
+\acro{XML} syntax, then discuss aspects of \acro{XML} processing and differences 
+between models of the \acro{XML} family of standards, and finally give an 
+overview and review of the most common \acro{XML} structures.
+
+\acro{XML}~1.0 is defined based on a context-free grammar over a sequence of
+\term{Unicode} characters with some additional \Term[well-formed]{well-formedness}
+constraints. The grammar is given in a variant of \term{Backus-Naur-Form}. 
+Figure~\ref{fig:xmlbnf} shows a slightly adopted subset of the grammar rules: 
+A \bnf{document} starts with an optional \bnf{prolog}, followed by a mandatory 
+root \bnf{element}, and optional \bnf{comment}, processing-instructions (\bnf{pi}),
+and whitespaces (\bnf{s}). The \bnf{prolog} usually contains an 
+\acro{XML} declaration, that among other information can specify the 
+character encoding, a standalone flag, and a \tacro{document type definition}{DTD}.
+An \bnf{element} in \acro{XML} syntax either consist of a \bnf{starttag} and
+an \bnf{endtag} with the same \bnf{name}\footnote{The same name requirement
+that is one of the constraints that cannot be expressed in \acro{BNF}.} and some
+\bnf{content} in between, or it is an \bnf{emptytag}.
+Start tags and empty tags can have a list of \bnf{attribute}, which are
+key-value-pairs with unique \bnf{name} per attribute list.%
+\footnote{The uniqueness requirement of attribute names is another 
+additional well-formedness constraint.} A \bnf{content} may contain
+other \bnf{elements}, resulting in the general tree of \acro{XML} documents 
+(see example~\ref{ex:xmlmods} for a document).
+
+\begin{figure}[h]
+\centering
+\begin{lstlisting}[language=BNF]
+document  = prolog element misc*
+misc      = comment | pi | s
+s         = ( #x20 | #x9 | #xA | #xD )+
+element   = starttag content endtag | emptytag
+starttag  = "<" name (s attribute)* s? ">" 
+endtag    = "</" name s? "/>"
+emptytag  = "<" name (s attribute)* s? "/>"
+content   = text? ((element | reference | cdata | pi | comment) text?)*
+text      = chars - (chars ("<" | "&" | "]]>") chars)
+reference = charref | entityref
+charref   = "&#" [0-9]+ ";" | "&#x" [0-9a-fA-F]+ ";"
+entityref = "&" name ";"
+value     = (text | reference)*
+cdata     = "<![CDATA[" (chars - (chars "]]>" chars)) "]]>"
+comment   = "<!--" (chars - (chars "--" chars | chars "-") "-->"
+pi        = "<?" pitarget s (chars - (chars "?>" chars)) "?>"
+attribute = name s? "=" s? ( '"' (value - (value '"' value)) '"' 
+                            | "'" (value - (value "'" value ) "'" )
+\end{lstlisting}
+\caption{Subset of the formal grammar of \acrostyle{XML}}
+\label{fig:xmlbnf}
+\end{figure}
+
+Textual data (\bnf{text}) in \acro{XML} can be any \term{Unicode} 
+string, except some codepoints below \U{0020}, \U{FFFE} and \U{FFFF}. 
+Furthermore the characters `\verb|<|' and `\verb|&|', and in \bnf{content}
+the sequence `\verb|]]>|' is not allowed. To include these characters
+in an \acro{XML} document, you can use character references (\bnf{charref})
+which can refer to an allowed Unicode character by its \acro{UCS} codepoint.
+In addition there are predefined named entities (\bnf{entityref}): `\verb|&lt;|'
+for `\verb|<|', `\verb|&gt;|' for `\verb|>|', `\verb|&amp;|' for `\verb|&|', 
+`\verb|&apos;| ``for `\verb|'|', and `\verb|&quot;|' for `\verb|"|'.
+\acro{XML} is further complicated by the possibility to define named entities
+in a \acro{DTD}. These entities can either stand for an arbitrary piece 
+of \bnf{content} (\Term{internal entity}) or as placeholder for some other data
+that is referenced by an \acro{URI} (\Term{external entity}).
+
+Most entities are replaced by their content, when an \acro{XML} document is
+read by an \Term{XML processor} (a piece of software that parses the syntax
+of an \acro{XML} document and provides access to its content and structure). 
+However, some named entities can remain as unparsed artifacts because they 
+are external or because the \acro{DTD} is not taken into account by the
+processor. In practice the \tacro{Simple API for XML}{SAX} \cite{Megginson2004}
+\label{note:sax}
+is a common abstraction in \acro{XML} processors, especially for the \term{Java} 
+programming language. \acro{SAX} is not a formal specification but it originates
+in an implementation of an \acro{XML} parser that was first discussed in early
+1998. The \acro{API} of \acro{SAX} provides a stream of parsing events that can
+be used to construct an \acro{XML} document, if the stream of events follows the
+well-formedness constrain of \acro{XML} (every \acro{XML} document can be mapped
+to a stream of \acro{SAX} events but not vice versa).
+
+\acro{XML} 1.0 defines two types of \acro{XML} processors:
+validating and non-validating processors. Non-validating processors must
+only check whether a document is well-formed, but they do not need to
+process all aspects of a \acro{DTD}.\footnote{Some simple \acro{XML}
+processors just ignore the \acro{DTD} although this is against the 
+specification. Removal of \acro{DTD} is one of the most common request
+in discussions about a future ``\acro{XML} 2.0'', as most \acro{XML}
+documents have no \acro{DTD}, and validating is mostly done by
+using other schema languages.}
+Validating parsers must analyze the entire \acro{DTD}, including other 
+documents referenced from the \acro{DTD}, and they must check whether
+the document matches the additional rules from its schema (see 
+section~\ref{sec:xmlschemas}). A processor may even change the content of an
+\acro{XML} document by normalizing strings and by adding default values.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\node[text width=2.5cm,align=center] (d) {\textbf{\acrostyle{XML} document}\\(syntax)};
+\node[right=1.8cm of d,text width=3cm,align=center](m){\textbf{document model}\\(structure)};
+\draw[->] (d) to node[yshift=3mm] {parsing} (m);
+\node[right=0 of m,text width=5cm,yshift=-9mm] (l) {%
+parsed document can be:
+\begin{itemize}
+ \item not well-formed\\(syntax error, no model)
+ \item of some model type\\ (\acrostyle{DOM}, \term{Infoset}, \term{Canonical} \ldots)
+ \item modified by validation
+ \item invalid by validation
+\end{itemize}
+};
+\node[below=3mm of d,text width=3cm,xshift=4mm]{\texttt{<a b:c="d">\\%
+~<e f='g'>h</e>\\
+~\&i;<?j k?>\\</a>}};
+\node[below=2mm of m.south west,xshift=6mm] (a0) {};
+\begin{scope}[orm];
+\node at (a0) (a) {a};
+\node[right=2mm of a,yshift=0mm] (bc) {b:c};
+\node[right=2mm of bc] (d) {d};
+\draw (a) -- (bc) -- (d);
+\node[below=9mm of a] (e) {e};
+\node[right=2mm of a,yshift=-5mm] (j) {j};
+\node[right=0mm of a,yshift=-9mm] (i) {i};
+\node[right=1mm of e,yshift=-5mm] (h) {h};
+\draw (a) -- (e);
+\draw (e) -- (h);
+\draw (a) -- (i);
+\node[right=2mm of e] (f) {f};
+\node[right=2mm of f] (g) {g};
+\draw (e) -- (f) -- (g);
+\draw (e) -- (h);
+\node[right=2mm of j] (k) {k};
+\draw (a) -- (j) -- (k);
+\end{scope}
+
+\draw[decoration={brace},decorate,yshift=2mm] (l.south west) to (l.north west);
+\end{tikzpicture}
+\caption{\acrostyle{XML} document and \acrostyle{XML} document models}
+\label{fig:xmlparsing}
+\end{figure}
+
+Parsing \acro{XML} can best be understood as a process that converts \acro{XML}
+syntax, given as sequence of characters, to another data structure (figure%
+~\ref{fig:xmlparsing}). In general the act of parsing an \acro{XML} document 
+is not reversible, because some aspects of \acro{XML} syntax are considered
+as irrelevant (figure~\ref{fig:irrelevantxmlparts}). The resulting data 
+structure is a model not only of the parsed document, but of all other 
+``logically equivalent'' documents that result in the same model. Parsing
+\acro{XML} can result in different structures. If the 
+original data was not well-formed,
+there is no model, and the document is no \acro{XML} by definition.\footnote{%
+In practice you sometimes have to deal with not-well-formed documents that were 
+intended to be \acro{XML}. You can call this documents `broken' \acro{XML} if
+there is a chance to recover well-formedness.} The specific type of model
+defines, which parts of syntax are translated to which parts of a model and 
+which parts are omitted as irrelevant to the given model 
+(figure~\ref{fig:irrelevantxmlparts}). A processor may also modify the 
+document to some degree or it may mark the document as invalid.
+
+\label{p:xmlmodel}
+The most prominent models of \acro{XML} are the \Tacro{Document Object Model}{DOM}
+and \Term{XML Infoset}. \acro{DOM} evolved parallel to \acro{XML} in the late 1990s.
+It was created to harmonize existing \term{JavaScript}-Interfaces that had been created
+by Web browser makers for manipulating \acro{HTML} documents. The part of
+\acro{DOM} that deals with \acro{XML} documents is `\acro{DOM} Core'.
+Actually there are three variants: Level 1 is based on the
+tree structure of \acro{XML} 1.0, Level 2 expresses the structure of \acro{XML}
+with Namespaces, and Level 3 expresses a model compatible with XML Infoset
+\cite{Cowan2004}. Another model of \acro{XML} is shared by XPath 1.0 and 
+Canonical \acro{XML} \cite{Boyer2008}, XPath 2.0 and XQuery define yet 
+another model \cite{Berglund2010}. A given model may also be expressed in
+other languages but \acro{XML} syntax. For instance \Term{Fast Infoset} 
+\cite{FastInfoset2005} is a binary representation of Infoset based on
+\acro{ASN.1} and \textcite{Tobin2001} defines an \acro{RDF} Schema to serialize
+\acro{XML} document models as \acro{RDF} instances.
+
+\begin{figure}
+\begin{multicols}{2}
+\begin{itemize}
+ \item type of attribute delimiters ("/')
+ \item type of character entities
+ \item original character encoding
+ \item CDATA sections
+ \item standalone flag
+ \item all entity references
+ \item specified schemas
+ \item whitespaces
+ \item position of namespace declarations
+ \item namespace prefixes
+ \item attribute types (e.g. \dtd{ID}, \dtd{IDREF}\ldots)
+ \item explicit default attributes
+ \item original form of normalized attributes
+ \item original form of normalized Unicode
+ \item comments
+ \item processing instructions
+\end{itemize}
+\end{multicols}
+\caption{Some properties of \acrostyle{XML} considered as irrelevant by some processors}
+\label{fig:irrelevantxmlparts}
+\end{figure}
+
+Despite all minor differences, all document and processing models of \acro{XML}
+share a basic structure, that can be described as ordered tree with nodes of 
+different types. Basically, there are element nodes with
+exactly one element as root, attribute nodes, and text nodes. Other node
+types (processing-instructions, comments, external entity references etc.) are 
+much less used to hold relevant information, and they more depend on the 
+particular document model. 
+
+Each element node has a (possibly empty) set of unordered attribute
+nodes with unique attribute names, and an ordered (possibly empty) list
+of text and/or element nodes as child nodes. Attribute nodes cannot hold
+nested structures but only one text node each, and text nodes are Unicode
+strings with some code points excluded.
+
+Each attribute and each element node has a name. The exact definition of a
+\bnf{name} from figure~\ref{fig:xmlbnf} depends on the specific 
+\acro{XML} model: in \acro{XML} 1.0 a name is just a Unicode
+string that not contains some disallowed characters. The dependence on a particular version 
+of Unicode was lifted with the fifth edition \cite{Bray2008}. The most 
+important (and often confusing) extension to \acro{XML}~1.0 is 
+\acro{XML} Namespaces \cite{Bray2009}: namespaces allow names of elements 
+and attributes to be qualified by an \acro{URI}. This way names can be grouped
+together in vocabularies
+and elements from different vocabularies can be mixed in one document.
+In the model of \acro{XML} with namespaces (and in other techniques that 
+build upon namespaces, such as \acro{DOM} Level 2 and 3, \term{Infoset} etc.)
+a name is triple consisting of the namespace \acro{URI}, a local name, and a
+namespace prefix. In \acro{XML} syntax namespaces are declared by 
+special attributes that start with \verb|xmlns| (in example~\ref{ex:xmlmods}
+the namespace is declared at the root element so it applies to the whole
+document).
+Example~\ref{ex:xmlns} shows three \acro{XML} elements that make use of
+a namespace declaration. In most cases only the namespace 
+\acro{URI} and the local name matter, so the first two examples should
+be treated as equivalent. The prefix is also included in most
+models, and some applications rely on it.\footnote{
+See \url{http://www.w3.org/TR/xml-c14n\#NoNSPrefixRewriting} for details.}
+The third example \ref{ex:xmlns} is always 
+different from the two above: in contrast to \acro{RDF} Turtle syntax
+(see section~\ref{sec:rdf}), namespaces and local names cannot be used to 
+construct a canonical name, but they must be used together to identify the
+full name of an \acro{XML} element or attribute.\footnote{Some vocabularies
+may specify \emph{additional} identifiers for \acro{XML} elements, for
+example in \term{XML Schema} each element has an \acro{URI} that happens to
+be constructable by appending local name to namespace \acro{URI}. However
+there is no general rule to do so in other vocabularies.}
+
+\begin{example}
+\begin{tabular}{ll}
+\textbf{element in \acrostyle{XML} syntax} & \textbf{namespace, local name, prefix} \\
+\hline
+\lstinline[language=XML]|<x:zz xmlns:x="http://example.org/"/>|   & ( http://example.org/, zz, x ) \\
+\lstinline[language=XML]|<y:zz xmlns:y="http://example.org/"/>|   & ( http://example.org/, zz, y ) \\
+\lstinline[language=XML]|<xz:z xmlns:xz="http://example.org/z"/>| & ( http://example.org/z, z, xz )\\
+\end{tabular}
+\caption{Namespaces in \acrostyle{XML}}
+\label{ex:xmlns}
+\end{example}
+
+To allow more complex graph structures, there are several techniques to extend
+the basic tree model of \acro{XML} with links: attributes can be defined to
+only hold unique \dtd{ID} values or references to other identifiers
+(\dtd{IDREF} in \acro{DTD} or keyref constraints in \term{XML Schema}).
+\term{XLink} \cite{DeRose2010} and \term{XPointer} \cite{Grosso2003} describe
+other extensions to \acro{XML} to create links to portions of \acro{XML}
+documents. However, like other extensions to \acro{XML} 1.0, this adds another
+layer of complexity and another model that first must be agreed on to achieve
+interoperability. To reduce complexity within the family of \acro{XML}
+specification, simplified subsets have been proposed by \textcite{Bray2002},
+\textcite{Clark2010} and others, but none of them has widely been adopted yet.
+Nevertheless, \acro{XML} is successfully being used to encode and exchange data
+on the Web and in other areas from markup languages such as \acro{TEI} to
+structured metadata formats such as \acro{METS}, \acro{MODS}, and \acro{EAD}.
+Furthermore several serialization forms of other formats in \acro{XML} exist,
+for instance \acro{RDF/XML} for \acro{RDF} and \acro{MARCXML} for \acro{MARC}.
+As described by \textcite{Wilde2008}, many problems with \acro{XML} arose from
+overbroad claims for \acro{XML}, which in the end is just a format.  It still
+suits best for marked-up textual data and other records that can be modeled
+well as ordered tree, but less for data with arbitrary order and links.
+
+
+\begin{example}
+\centering
+\begin{lstlisting}[language=XML,morekeywords={xmlns}]
+<?xml version="1.0" encoding="UTF-8"?>
+<mods xmlns="http://www.loc.gov/mods/v3" version="3.4">
+  <titleInfo>
+    <nonSort>The </nonSort>
+    <title>C programming language</title>
+  </titleInfo>
+  <name type="personal">
+    <namePart>Kernighan, Brian W.</namePart>
+  </name>
+  <name type="personal">
+    <namePart>Ritchie, Dennis M.</namePart>
+  </name>
+  <originInfo>
+    <place>
+      <placeTerm type="text">Englewood Cliffs, NJ</placeTerm>
+    </place>
+    <publisher>Prentice-Hall</publisher>
+    <dateIssued>1978</dateIssued>
+  </originInfo>
+</mods>
+\end{lstlisting}
+\acro*{MODS}
+\caption{\acrostyle{MODS} record in \acrostyle{XML}}
+\label{ex:xmlmods}
+\end{example}
+
+

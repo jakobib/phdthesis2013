@@ -1,0 +1,805 @@
+\section{Identifiers}
+\label{sec:identifiers}
+
+\begin{quotation}%
+What's in a name? that which we call a rose by any other name would smell as sweet.\\
+\quotationsource{\Person[William]{Shakespeare}: Romeo and Juliet}
+\end{quotation}
+
+% Identifiers are used throughout all other encoding methods. They are used to
+% solve the problem of identification in a very limited context. In a broader
+% context this problem is much harder to tackle as shown in
+% section~\ref{sec:identityandequality}.
+
+\noindent While character and number encodings are used as base of data
+structuring, \term{identifier}s virtually pervade systems to structure and
+describe data on all levels. This section first introduces basic identifier
+principles (section~\ref{sec:idbasics}) followed by properties of namespaces and
+qualifiers (section~\ref{sec:qualifiers}) which identify the context of
+association between identifier and referred thing. Identifier systems
+(section~\ref{sec:idsystems}) provide an infrastructure in which identifiers are
+assigned, managed, and used. Part~\ref{sec:descrids} on descriptive identifiers
+and section~\ref{sec:orderedids} on ordered identifiers highlight two important
+but often overlooked properties of identifiers on a more theoretical level.
+Finally hash codes as special kind of distributed identifier systems are
+explained in section~\ref{sec:hashes}. A summarized overview of designated
+identifier properties is given in table~\ref{tab:idprops}.
+
+\subsection{Basic principles}
+\label{sec:idbasics}
+
+In its most general form, a digital identifier is a piece of data (string,
+number, letter, symbol, etc.) that refers to an object. This makes
+identifiers a special type of metadata which more generally describe objects.
+In contrast to general metadata, an identifier should be unique (no homonyms), 
+persistent and short, at least in some context. Distinct objects must have 
+distinct identifiers to avoid ambiguity, and the number of identifiers that 
+refer to the same object (synonyms) should be low for practical reasons. The 
+following analysis is limited to digital identifiers in their general form as 
+finite sequences of characters. Examples of identifiers from the previous 
+section include number encodings that refer to the mathematical concepts of 
+numbers, byte sequences that refer to Unicode code points, and Unicode code 
+points that refer to characters. It is shown that this forms -- also known as
+names, labels, locators, codes, or pointers -- only make the visible part of
+an identifier. The concluding example of Pica format field identifiers will 
+then illustrate some basic properties of data identifiers. 
+
+Most literature on identifiers deals with selected types of identifiers
+or with special aspects, such as identifier persistence. More general 
+discussions are provided by 
+\textcite{Eriksson2010}, % Rethinking the Meaning of Identifiers in...
+\textcite{Campbell2007} % Identifying the identifiers
+\textcite{Coyle2006}, 
+\textcite{Vitiello2004}, 
+\textcite{Lynch1997},
+and \textcite{Kent1991}. The authors define identifiers as data objects that
+``refer to'', ``reference'', ``represent'', or ``serve as surrogate for'' 
+other objects, but the general idea is the same: a relatively short
+piece of data is associated with another (data) object. 
+\textcite{Campbell2007} 
+provides a more detailed deconstructions of identifiers in six parts:
+
+\begin{enumerate}
+\item a ``thing'' that is referenced
+\item a ``symbol'' that references the thing. Unless otherwise indicated,
+  this symbol in particular is meant by the word ``identifier''
+\item an ``association'' between the symbol and the thing
+\item a ``context'' that the association occurs within
+\item an ``agent'' that states the association and context
+\item a ``record'' of the association, context, and ideally also the agent
+\end{enumerate}
+
+In the following the same terminology will be used. Symbol, thing, and
+association are typically found as ``symbol'', ``referent'', and ``thought'' or
+under different names in the \term{semiotic triangle} \cite{Ogden1923} as
+described in section~\ref{sec:semiotics}.  The important aspect for the
+analysis of identifiers is that there is no direct connection between symbol
+(signifier) and thing (signified).  It requires an association that always
+depends on some context, is established by an agent, and may or may not be
+recorded.
+
+Following the philosophical position of radical \term{constructivism}
+\cite{Glasersfeld1990}, one can even neglect the thing, as there is no direct
+access to real-world objects by language. This also applies to digital
+identifiers about things in the reality realm (in terms of data modeling).
+However, digital identifiers about digital objects can be compared with their
+referents, because both are recorded in data. In fact digital records of
+identifiers and their referents are common practice in many data structures and
+known as \Term[lookup table]{lookup tables}. In some cases one can even swap
+symbol and referent, because both are unique on their side of the table (see
+table~\ref{tab:pica3pp} for an example).
+
+Unambiguity (each identifier must refer to only one object) and uniqueness
+(for each object there should be only one identifier) of often combined as
+\Term{uniqueness} as most important requirement for an identifier.
+Other properties frequently cited as important qualities are \Term{persistence}
+(identifiers should not change over time), \Term{scope} (the context of an
+identifier should be broad or even `global'), \Term{readability} (identifiers
+should be easy to remember or contain information), and \Term{actionability}
+(given an identifier one should be able to do something with it,
+for instance access the identified object). A summary of these and more
+designated identifier properties is given in table~ \ref{tab:idprops}.
+To ensure the required
+properties it needs an \term{identifier system} as controlled mechanism 
+or convention for creating, managing, and using identifiers 
+(see part~\ref{sec:idsystems}). When we analyze general data, identifier 
+properties can also indicate whether some piece of data is actually used 
+as identifier or not: being an identifier is nothing inherently inscribed 
+in data, but it is an example of a popular data pattern, that is used all
+all over systems to structure and describe data. 
+
+\subsectionexample{Field identifiers in PICA format}
+\label{ex:picafieldids}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{r|l|l|l|l|l}
+description & year        & title       & edition     &  place and publisher & DDC \\
+\hline
+Pica3 tag   & \verb|1100| & \verb|4000| & \verb|4020| & \verb|4030| & \verb|5010| \\
+Pica+ tag   & \verb|011@| & \verb|021A| & \verb|032@| & \verb|033A| & \verb|045F| \\
+repeatable  & no & no & no & yes & yes \\
+\end{tabular}
+\term*{Pica}
+\caption{Some fields of Pica record format}
+\label{tab:pica3pp}
+\end{table}
+
+The bibliographic record format \Term{Pica} consists of a simple 
+field-subfield-structure, similar to \term{MARC} (compare with figure 
+\ref{fig:marcrecord}). Each field can be identified by a so called
+Pica3 tag or by a Pica+ tag. Figure~\ref{tab:pica3pp} lists a lookup table 
+for some fields with their tags and a repeatability flag from the cataloging 
+rules of the \acro{GBV} library network \cite{Pica2010}. 
+Assuming that the
+fields somehow refer to things in the reality realm, we cannot directly
+map from tags to these things. Fields like ``place and publisher'' also
+indicate that the referent can be quite artificial: most people know places
+and maybe publishers, but what kind of ontological status has their 
+combination? Beside the intangible referent of such artificial identifiers, 
+textual descriptions make no good identifiers, because one can write them in
+several forms (the original descriptions are given in German) and because 
+there may be different fields with same description. Tags in contrast can 
+at least identify field descriptions and tags of the other kind (Pica3 to 
+Pica+ and vice versa), because they all exist in the data realm. The 
+repeatability flag finally identifies a thing from the conceptual realm, 
+namely the set of fields, that are repeatable (\verb|yes|) or not repeatable
+(\verb|no|). In practice one must always take in mind, in which context an identifier 
+is used. A Pica3 tag like \verb|5010| may refer to the corresponding
+Pica+ flag \verb|045F|, to a concrete set of field value, or to the abstract
+concept of the field. In data structuring we often deal with cascaded 
+identifiers that only link to the reality realm in a last step. For instance 
+\verb|045F| refers to the ``DDC'' field, which in a bibliographic records 
+contains a notation from the \tacro{Dewey Decimal Classification}{DDC},
+which by itself is another identifier. % TODO: see part ...
+
+
+\subsection{Namespaces and qualifiers}
+\label{sec:qualifiers}
+% there seems to be no general literature on namespaces (!)
+
+\Term[namespace]{Namespaces} and \Term[qualifier]{qualifiers} are both used to
+avoid the problem of \term{homonymy}. In addition they can provide context and
+refer to authority through a hierarchy of identifiers. A possible term to 
+describe both is \Term{qualified identifier}. Qualified identifiers are used in 
+formal systems like programming languages and knowledge organization systems
+(thesauri, classifications, authority files etc.) where a name must always 
+refer to one distinct object. A defined syntax in a formal language is needed 
+to separate the namespace or qualifier part and the local part of a qualified 
+identifier. Otherwise it would be ambiguous for instance whether `band-spectrum'
+refers to a `band' of radio communication frequencies, or to the Australia band 
+`spectrum' which formed in 1969, or whether the minus sign does not indicate
+the existence of a namespace qualifier at all. Namespaces are typically 
+prepended to the local identifier and qualifiers are added in parentheses
+(see example~\ref{ex:contextids}). If the context is known as by definition of 
+a \Term{default namespace}, one may also omit the qualifier or namespace.
+
+\begin{example}[h]
+\centering
+\begin{tabular}{l|l|l|l|l}
+identifier & local & qualifier & syntax & description \\
+\hline
+\texttt{Frankfurt/Main} & \texttt{Frankfurt} & \texttt{Main} 
+ & \texttt{$L$/$Q$} & city name \\
+\texttt{Dublin, Ohio} & \texttt{Dublin} & \texttt{Ohio} 
+ & \texttt{$L$, $Q$} & city name \\
+\texttt{US-OH} & \texttt{OH} & \texttt{US} 
+ & \texttt{$Q$-$L$} & ISO 3166-2 area code \\
+\texttt{std::set} & \texttt{set} & \texttt{std} 
+ & \texttt{$Q$::$L$} & C++ identifier \\
+\texttt{rdf:type} & \texttt{type} & \texttt{rdf} 
+ & \texttt{$Q$:$L$} &  \acro{URI} reference in \acro{RDF} \\
+\texttt{10.1000/182} & \texttt{1000/182} & \texttt{10} 
+ & \texttt{$Q$.$L$} &  \acro{DOI} as specific Handle \\
+\texttt{sgn-US} & \texttt{US} & \texttt{sgn} 
+ & \texttt{$Q$-$L$} &  \acro{IANA} language with subtag\\
+\end{tabular}
+\caption{Qualified identifiers with local part ($L$) and qualifier ($Q$)}
+\label{ex:contextids}
+\end{example}
+
+For some prefixed types of namespaces, the qualifier is not fixed, but
+can be replaced by another prefix for the same namespace. For instance
+\texttt{http://dx.doi.org/} and other known resolver addresses are actually 
+used as prefix for the namespace of \Tacro{document object identifiers}{DOI}
+but one could also use the \acro{DOI} as \Tacro{Uniform Resource 
+Identifier}{URI} with prefix \texttt{info:uri/}. Another example is 
+a prefixed element name in the \term{Extensible markup language} (\acro{XML}, 
+see section~\ref{sec:xml}): some \acro{XML} applications ignore the prefix and
+respect a locally defined namespace, some ignore the prefix, and some need both
+to identify an element (see example~\ref{ex:xmlns} at page \pageref{ex:xmlns}). 
+Finally, there are
+systems in which a namespace is just an abbreviation that can be defined
+and expanded as needed (see the \texttt{@prefix} statement from 
+\term{Notation3} as described in section~\ref{sec:rdf} and 
+table~\ref{tab:n3syntax}).
+
+Qualifiers, more often than namespaces, may also encode a special meaning,
+especially when they are used for syntactic indexing in knowledge organization
+languages. For instance the identifier \texttt{Marx, Karl, 1818-1883} from 
+the Library of Congress name authority file include the qualifier 
+\texttt{1818-1883}. This qualifier specifies the years of birth and death of 
+the identified person.\footnote{The first part of the identifier
+(\texttt{Marx}) may also be seen as a namespace of all people's identifier 
+with this surname, and the local part \texttt{Karl} signifies a given personal 
+name, so in this example all parts encode some meaning if one takes person 
+names as meaningful.} In other cases the primary role of a qualifier is to 
+disambiguate, so one is more free to choose, for instance \texttt{Paris~(city)} 
+and \texttt{Paris~(mythology)}, \texttt{Paris~(place)} and \texttt{Paris~(person)},
+or just \texttt{Paris~(1)} and \texttt{Paris~(2)} for two distinct concepts. 
+A general problem of meaningful qualifiers is the limitation to one aspect. 
+For instance there are multiple early computers referred to as ``Mark~I''. 
+One can either use their location as qualifier (\texttt{Mark~I~(Harvard)} and
+\texttt{Mark~I~(Manchester)}) or their year of completion 
+(\texttt{Mark~I~(1944)} and \texttt{Mark~I~(1949)}). Combining multiple
+aspects quickly gets complicated, similar to nesting of multiple namespaces
+in one mono-hierarchical system, as described in the next part.
+
+Above all, namespaces and qualifiers do not solve the general problem of
+identification but they only shift it to another domain, level, or authority.
+Namespaces and qualifiers only draw aside avoid homonymy and provide context 
+in some known identifier system and both are identifiers in their own right. 
+To avoid an infinite chain of qualified identifiers one hasto start at some 
+authority as root context, which is also known as the global namespace.
+
+\subsection{Identifier Systems}
+\label{sec:idsystems}
+\label{sec:dns}
+
+\begin{quotation}%
+URIs don't change. People change them.\\
+\quotationsource{\Person[Tim]{Berners-Lee} (\citeyear{BernersLee1998})}
+\end{quotation}
+
+\noindent
+All identifiers are artificially created -- either explicit by naming
+or implicit by providing a mechanism that creates identifiers. An 
+\Term{identifier system} defines which identifiers exist (registry); or how
+identifiers are created and managed (assignment politics); how recorded 
+associations between identifier and referent can be looked up (resolving); 
+which syntax rules as naming conventions apply (grammar); or which relations 
+to other identifier systems exist. Popular digital identifier system covered 
+as examples in the following are: \tacro{Uniform Resource Identifier}{URI}, 
+its counterpart \tacro{Internationalized Resource Identifier}{IRI}, 
+\tacro{Uniform Resource Locator}{URL}, \tacro{Uniform Resource Name}{URN},
+\tacro{Domain Name System}{DNS}, \tacro{Internet Protocol}{IP},  
+\tacro{International Standard Book Number}{ISBN}, and
+\tacro{European Article Number}{EAN}. Relations between these systems, 
+together with their character encodings are illustrated in 
+figure~\ref{fig:idsysrel}.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[line width=0.25mm]
+\entity (URI) {URI}
+ [edge from parent/.style=subtype,nodes=entity]
+ child { node (URL) {URL} }
+ child { node (URN) {URN} };
+\entity[below=6mm of URN] (URNISBN) {URN-ISBN}; 
+\draw[subtype] (URN) to (URNISBN);
+
+\entity[below=6mm of URL] (IP) {IP};
+\entity[left=5mm of IP] (DNS) {DNS};
+\draw[dotted,->] (IP) -> (DNS);
+\draw[dotted,->] (URL) -> (DNS);
+\draw[dotted,->] (URL) -> (IP);
+\draw[<->] (DNS) to (IP);
+
+\limits ($(URI)!.65!(URL)$) to 
+ node[constraint=exclusive] {} ($(URI)!.65!(URN)$);
+
+\entity[above=6mm of URI] (IRI) {IRI};
+\entity[right=14mm of URI] (ASCII) {US-ASCII};
+\entity[above=6mm of ASCII] (UCS) {UCS};
+
+\draw[dotted,->] (IRI) to (UCS);
+\draw[dotted,->] (URI) to (ASCII);
+
+\draw[suptype] (ASCII) to (UCS);
+\entity[right=5mm of URNISBN] (ISBN) {ISBN}
+ [edge from parent/.style=subtype,nodes=entity,
+ sibling distance=19mm]
+ child { node (ISBNa) {ISBN-13} }
+ child { node (ISBNb) {ISBN-10} };
+\limits ($(ISBNa)!0.35!(ISBN)$) to 
+ node[constraint=exclusive] {} ($(ISBNb)!0.35!(ISBN)$);
+\draw[<->] (ISBNa) to (ISBNb);
+
+\entity[left=7mm of ISBNa] (EAN) {EAN};
+\draw[subtype] (EAN) to (ISBNa);
+
+\draw[<->] (ISBN) to (URNISBN);
+\draw[<->] (IRI) to (URI);
+
+%\draw[dotted,->] (ISBN) -> (ASCII);
+\begin{scope}[xshift=48mm,yshift=-12mm]
+\draw[dotted,->] (-6mm,2mm) to (-1mm,2mm);
+\node[anchor=west] at (0,2mm) {depends on};
+
+\draw[subtype,->] (-6mm,-5mm) to (-1mm,-5mm);
+\node[anchor=west] at (0,-5mm) {subset of};
+
+\node[constraint=exclusive] at (-3mm,-11mm) {};
+\node[anchor=west] at (0,-11mm) {exclusion};
+
+\draw[<->] (-6mm,-18mm) to (-1mm,-18mm);
+\node[anchor=west] at (0,-18mm) {(partial) mapping};
+\end{scope}
+\end{tikzpicture}
+\caption{Relations between several identifier systems}
+\label{fig:idsysrel}
+\end{figure}
+
+In general any sequence of bits or other digital symbols can act as 
+digital identifier. To define a possible set of sequences, an identifier system 
+includes a formal language (see~\ref{sec:formallanguages})
+as identifier syntax (see section~\ref{sec:formallanguages}). Every identifier 
+symbols must conform to this syntax, so its grammar rules help to discover and 
+use identifiers: with a well-defined syntax one does not need to resolve each 
+string to check whether it is an identifier, but one can validate possible 
+identifiers based on their shape. Often only parts of the grammar are defined in 
+a schema language (see section~\ref{sec:bnf}), and there may be additional 
+informal agreements to exclude some sets of characters and sequences. For 
+instance whitespace characters are less used in identifiers: even if allowed,
+at least multiple consecutive whitespace characters are not encountered in 
+practice. If identifier system depend or reuse each other, for instance 
+as namespaces and qualifiers (see the dotted relations in 
+figure~\ref{fig:idsysrel}), there can be difficulties to embed one identifier
+within the syntax of the other. If such an embedding may lead to 
+disallowed character sequences or to syntax ambiguities, the host identifier 
+system usually defines a method to escape the embedded identifier. A typical 
+escaping mechanism, is \Term{percent-encoding}. A character code of one byte 
+in percent encoding is replaced by the percent character ``\verb|%|'' followed
+by the two hexadecimal digits representing that byte's numeric value
+\cite[section~2.1]{BernersLee2005}. However, the question when and which parts
+of an identifier must be encoded, is a frequent source of confusion. Quite
+often an identifier reuses another identifier that already includes an 
+embedding, so one ends up with a complex hierarchy of dependencies and 
+nested encodings.
+
+If readability is no primary requirement, digital identifiers can be plain 
+numbers or sequences of bits (see part~\ref{sec:orderedids}). An example are 
+\acro{IP} addresses, which can be mapped to more readable \acro{DNS} names.
+But even a very simple identifier syntaxes such as number ranges can cause 
+problems: in 2011 the \acro{IP} system version 4 ran out of identifiers because
+it was limited to $2^{32}$ distinct numbers. The update to \acro{IP} version 6 
+takes several years, because version 4 is used in many other specifications and 
+implementations that must also be updated accordingly. A similar but less 
+extensive update of an identifier
+system was the extension of \term{International Standard Book Number}s
+from ten digits (nine plus one check digit) to thirteen (nine plus 
+bookland namespace and check digit). The assignment of ISBN identifiers
+is delegated to national agencies who then delegate it to publishers. Therefore
+the system is not always used as intended: in theory an ISBN can 
+never be reused and every edition of a title must have a new ISBN. In practice
+new editions often reuse the ISBN of the previous edition and some publishers 
+even assign existing ISBNs to totally different books.\footnote{For instance
+ISBN~3-453-52013-0 was used for two unrelated books by Heyne-Verlag
+in 1974 and 2004 and ISBN~3-257-21097-3 was assigned to every single work 
+of \Person[B.]{Traven} published by Diogenes-Verlag.} The update from 
+ISBN-10 to ISBN-13 was based on an already existing encoding  of ISBN-10 in
+the \tacro{European Article Number}{EAN}. Nevertheless, it required a lot 
+of marketing and modifications in library 
+systems \cite{vanHalm2005}. Among other things difficulties resulted 
+from different syntaxes to express equivalent ISBNs (example~\ref{ex:isbns}).
+I fact all syntaxes (except ISBN-13 with bookland namespace \texttt{979}) 
+can be mapped to each other, so it is an arbitrary decision, which form to 
+take as the `real' ISBN. Similar problems of synonymy are also present in
+other identifier systems.
+
+\begin{example}[h]
+\centering
+\begin{tabular}{l|l}
+ISBN-10 with hyphen & \texttt{0-486-22543-7} \\
+ISBN-10 with space  & \texttt{0 486 22543 7} \\
+plain ISBN-10 & \texttt{0486225437} \\
+EAN & \texttt{9780486225432} \\
+EAN barcode aligned & \texttt{9 78048 622543 2} \\
+ISBN-13 with hyphen & \texttt{978-0-486-22543-2} \\
+plain ISBN-13 & \texttt{9780486225432} \\
+URN-ISBN & \texttt{URN:ISBN:0-486-22543-7} \\ % (RFC 3187)
+\end{tabular}
+\caption{Different syntaxes that express equivalent ISBNs}
+\label{ex:isbns}
+\end{example}
+% Emma Goldman: Living my life. Dover, 1970.
+% volume one is: ISBN 0-486-22543-7, volume two is: 0-486-22544-5
+
+
+Today the most used identifier systems, apart from character encodings, are
+\Tacro{Uniform Resource Location}{URL} (referred to as web addresses in common
+speech), \Tacro{Uniform Resource Identifier}{URI}, and \Tacro{Uniform Resource
+Name}{URN}. These systems are often confused because they all evolved together 
+with the \Tacro{World Wide Web}{WWW} and the \Tacro{Hypertext Transfer 
+protocol}{HTTP}. The \acro{WWW} was introduced by \Person[Tim]{Berners-Lee} 
+in 1990. His first design includes considerations on document naming as 
+``probably the most crucial aspect of design and standardization in an open 
+hypertext system''. \textcite{BernersLee1991} discusses
+addressing, naming, and uniqueness as three different properties and 
+introduces \acro{URL} to cover the addressing as part of a global naming system. 
+\acro{HTTP} as defined by
+\textcite{BernersLee1992} allowed for use of different types of ``Universal Resource 
+Identifiers'', but only listed \acro{URL} and other addressing schemes (\acro{FTP},
+\term{gopher}, etc.) as examples.\footnote{An exception was the 
+\Tacro{Content-ID}{cid} scheme which did not include a server as 
+physical address. \acro{cid} was later specified as 
+``URL scheme'' (sic!) with RFC~2111 (1997) and RFC~2392 (1998) but it never
+got fully adopted in practice. However, it is a good example of a mapping
+between an identifier system and a key-value structure: for instance the identifier 
+\texttt{cid:foo} corresponds to the \acro{MIME} header 
+\texttt{Content-ID: <foo>} with field name \texttt{Content-ID} and 
+field value \texttt{foo}.} In 1992 an \acro{URI} working group was formed to
+define other types of ``Uniform Resource Identifiers'' \cite{Emtage1992}
+but it was difficult to come to consensus. The working group concluded in 1995 
+with several recommendations after \textcite{BernersLee1994a} had published 
+his vision of the \acro{URI} system with subtypes \acro{URL} for addresses and 
+\acro{URN} for persistent names. \textcite{BernersLee1994} first describe the aim of
+\acro{URI} as ``[encoding] the names and addresses of objects on the Internet''.
+In the same document they broaden the scope to a more universal identifier 
+system as they write: ``in order to abstract the idea of a generic object, the 
+web needs the concepts of the universal set of objects, and of the universal 
+set of names or addresses of objects.'' After several years and revisions the 
+current version of \acro{URI} is specified together with \acro{URL} by
+\textcite{BernersLee2005}. The standard defines a hierarchical namespace 
+architecture with \acro{URI} schemes on the global namespace level. This
+common identifier system is useful because it provides a common formal 
+language that other identifier systems can be embedded into with schemes as
+namespaces %(figure~\ref{fig:uriirisyntax}). 
+Embedded identifier systems, 
+however, do not need to define normalization rules, so equivalent identifiers
+such as listed in example~\ref{ex:isbns} are quite common and impossible
+to detect for general \acro{URI}s. The system neither solves the 
+conflict between addressing and lookup as one purpose of an identifier
+and persistent identification as another. Most \acro{URI}s are used 
+primarily to retrieve documents, either directly via \acro{HTTP} or by 
+embedding other \acro{URI} types in an \acro{URL}.\footnote{Originally,
+\acro{HTTP} was designed to retrieve information about resources 
+identified by any kind of \acro{URI}, possibly mediated via proxy 
+servers. This property was partly removed, beginning with dropping 
+of \acro{URI}-related header fields in the \acro{HTTP} specification 
+drafts between August 3rd and 13th, 1995.} 
+For this reason the identifiers actually identify a location, that may hold
+different objects, but not an object, that may be available at different
+locations. The example of ambiguous house numbers at page~\pageref{ex:housenum}
+shows that confusing location and located object can lead to unexpected results.
+
+Several suggestions have been made to clarify the distinction between
+access and reference as independent functions of an \acro{URI}, for
+instance by \textcite{Mealling2001}. Some of these developments even further 
+complicated the use of \acro{URI} as global identifier system. For instance the 
+\term{Resource Description Framework} (see section~\ref{sec:rdf}) claims to 
+build on \acro{URI} but instead introduces its own concept `\term{URI reference}' 
+that slightly differs from \term{URI}.\footnote{In particular, URI references 
+may contain characters that are disallowed in an \acro{URI}. For details
+see page~\ref{term:uriref}, \textcite[section 6.4]{Klyne2004},
+and \textcite[section 1.2]{Hayes2004}.} Similar problems
+exist with the \Tacro{Internationalized Resource Identifier}{IRI} system.
+Contrary to popular belief, \acro{IRI} as defined with RFC~3987 by 
+\textcite{Duerst2005} is not a superset of \acro{URI}, but a complement 
+that is defined in \acro{UCS} character sequences instead of \acro{ASCII}
+character sequences. The misleading statement ``every \acro{URI} is by 
+definition an \acro{IRI}'' that can be found in section~3.1 of RFC~3987 
+only means that if one tries to convert an \acro{URI} with the defined 
+\acro{IRI}-to-\acro{URI} mapping, the original \acro{URI} is not 
+modified. Instead there is a conversion algorithm that maps \acro{URI} 
+to \acro{IRI}. If \acro{URI} was a subset of \acro{IRI}, no such mapping
+would be needed. Both mappings use UTF-8 as intermediate format and 
+\term{percent-encoding} of special characters.
+
+% Both conversions are \term{round trip} only
+% (except for potential case differences in percent-encoding and for 
+% potential percent-encoded unreserved characters)!
+
+\ignore{
+\begin{figure}[h]
+\begin{lstlisting}[language=BNF]
+URI          = scheme ":" hierpart ( "?" query )? ( "#" fragment )?
+IRI          = scheme ":" ihierpart ( "?" iquery )? ( "#" ifragment )?
+
+scheme       = alpha ( alpha | [0-9] | "+" | "-" | "." )*
+alpha        = [a-zA-Z]
+
+URIreference = URI | relativeref
+IRIreference = IRI | irelativeref
+relativeref  =  relativepart ( "?"  query )? ( "#"  fragment )?
+irelativeref = irelativepart ( "?" iquery )? ( "#" ifragment )?
+
+query        = (  pchar | "/" | "?" )*
+iquery       = ( ipchar | "/" | "?" | iprivate )*
+fragment     = (  pchar | "/" | "?" )*
+ifragment    = ( ipchar | "/" | "?" )*
+
+pchar        =  unreserved | pctencoded | subdelims | ":" | "@"
+ipchar       = iunreserved | pctencoded | subdelims | ":" | "@"
+unreserved   = alpha | [0-9] | "-" | "." | "_" | "~"
+iunreserved  = alpha | [0-9] | "-" | "." | "_" | "~" | ucschar
+pctencoded   = "%" hexdigit hexdigit
+hexdigit     = [a-zA-Z0-9]
+subdelims    = "!" | "$" | "&" | "'" | "(" | ")" | 
+               "*" | "+" | "," | ";" | "="
+
+ucschar      = [#xA0-#xD7FF] | [#xF900-#xEFFFF] - noncharacter
+iprivate     = [#xE000-F8FF] | [#xF0000-#x10FFFF] - noncharacter
+\end{lstlisting}
+\caption{Adopted subset of a formal grammar of URI and IRI}
+\label{fig:uriirisyntax}
+\end{figure}% adopted from RFC 2396
+
+The non-terminal \format{noncharacter} is from the Unicode definition as given at page XXX.
+}
+
+
+The ongoing problems of \acro{URI} and related identifier systems have multiple
+reasons. For instance the assumption of an ``universal set of objects'' leads
+to paradoxes because real world objects and identifiers have no rank or category
+in terms of set theory. With the \texttt{data:} \acro{URI} scheme one can even
+convert any piece of data into an identifier \cite{Masinter1998}. 
+
+Above all, many goals of an identifier system cannot be
+solved on a purely technical level. The \Tacro{domain name system}{DNS} gives
+examples how politics and social power structures shape identifier systems 
+\cite{Rood2000}. Identifier systems can also be implemented and interpreted
+differently by different users. As noted by \textcite{BernersLee1998}, people 
+change identifiers, by purpose or by accident. Like all social constructs,
+identifier systems can also become outdated: for instance the \acro{URI} scheme
+\texttt{info:} was launched in 2003 but closed in 2010 in favor of \acro{URL}
+\cite{deSompel2006,OCLC2010}. Last but no least identifier systems often try
+to solve problems that cannot be solved together:
+\textcite{Zooko2001} showed that an identifier system cannot provide securely 
+unique, memorable (readable), and decentralized (distributed) identifiers at 
+the same time but only two of these properties can be combined: local identifier
+systems can generate readable and distributed identifiers but they are not globally
+unique, centralized systems such as \acro{DNS} can globally unique and readable 
+identifiers, and cryptographic hashes are distributed and unique but not
+readable. Partial solutions to ``\term{Zooko's triangle}'' \cite{Stiegler2005} 
+involve multiple layers of identifier systems, which is another example of
+the importance to study relationships in combined identifier systems such as
+depicted in figure~\ref{fig:idsysrel}.
+
+\begin{table}
+\begin{tabularx}{\linewidth}{|r|X|}
+\hline
+unambiguous   & each identifier must have only one referent \\
+unique        & each referent must be associated with only one identifier \\
+global        & identifiers should not require a specific context \\
+persistent    & associations do not change or expire \\
+readable      & identifiers are easy to read and remember \\
+structured    & identifiers are described by a formal grammar \\
+uniform       & identifiers are uniformly distributed \\
+performant    & identifiers are easy to compute and to validate \\
+descriptive   & identifiers contain information about the referent or association \\
+actionable    & identifier can be used, for instance to retrieve the referent \\
+distributed   & identifiers do not require a central institution \\
+ordered       & identifiers have a known strict and total order \\
+\hline
+\end{tabularx}
+\caption{Summary of designated identifier properties}
+\label{tab:idprops}
+\end{table}
+
+\subsection{Descriptive identifiers}
+\label{sec:descrids}
+
+In general the association between an identifier as symbol and the thing 
+it refers to is rather arbitrary unless the thing already has a natural
+identifier. \Term{Descriptive identifiers} circumvent this limitation by
+defining a general and independent association for all possible things, 
+by which one can derive an identifier from its referent. In a broader sense
+descriptive identifiers subsume so-called natural, smart, or intelligent 
+keys from database and information systems and hash codes which are described
+in part~\ref{sec:hashes}. In a narrower sense a descriptive identifier symbol
+must reveal some information about the object it references.
+
+% Meaningful names:
+% Variablennamen in programmen als identifier - was sagen sie über
+% die konzepte/objecte aus?
+% \cite{Lawrie2006}
+
+If one knows the method by which descriptive identifiers are created, an
+identifier tells something about the object it refer to. For instance
+one could define a descriptive identifier for bibliographic resources by
+concatenating the first author's surname and the year of publication, so
+one already knows this attributes by looking at the identifier. Descriptive
+identifiers are easy to remember and they do not require a central registry
+as identifier system. However two distinct objects may share the same 
+attribute values, so they accidently get the same 
+identifier. For this reason, a descriptive identifier often identifies 
+something else than originally intended -- in this example the set of all
+publications from a given year and a given surname. Another example is a
+descriptive identifier for a houses, based on its postcode, street name, 
+and house number. This decriptive identifier actually identifies one or
+more addresses as locations, but not necessarily a house: some houses have 
+multiple numbers, so one only identifies a part of a house, and some house numbers
+refer to a complex of multiple buildings. \label{ex:housenum} 
+A third example is taken from
+\textcite{Eriksson2010}: the Swedish person identification number contains 
+of ten digits where digit one to six represent a person's day of birth 
+(\texttt{YYMMDD}) and the tenth position is a check number that can be 
+calculated from the digit one to nine. This implies that one cannot derive
+the full day of birth, because the century is not included (2005 and 1905 
+both become \texttt{05}). To distinguish people born at the same day 
+(withount century), digit seven to nine of the identifier contain a 
+unique sequence number that is only partial descriptive. The ninth position
+is odd if the number identifies a man and even if it identifies a woman.
+To be more precice, the ninth position can only describe the assumed sex
+of a person at the time when the identifier was created, because for some 
+people the sex may have changed during their life. Furthermore some attributes
+may be unknown: when more and more immigrants with unknown birthdate got a 
+Swedish person identification number, the first of January or the first of
+July was recorded instead and the identifier system ran out of numbers
+\cite{Eriksson2010}. Such problems are always possible if an identifier is
+not based on inherent properties but on properties that are attributed to an
+object.\footnote{The difference between attributed and inherent is not obvious.
+For instance most people would see gender as given while others as purely 
+artificial \cite{Butler1990}. However most identifier conflicts origin from
+different interpretations what kind of object the referent actually is.}
+To summarize, descriptive identifiers are 
+problematic, if the attributes that they base on are not unique, not always
+known, or subject to changes. This reasons are arguments for ``meaningless
+identifiers'' or ``surrogate keys'' as proposed \textcite{Kimball1998}
+and \textcite{Wieringa1991} among others.
+% see also \textcite{Aleksic2010} for performance comparison
+
+\ignore{
+\subsection*{UUID}
+% Example: UUID
+\Tacro{Universally Unique Identifier}{UUID} show some difficulties in 
+implementing descriptive or non-descriptive identifiers. \acro{UUID} was
+designed to identify arbitrary objects in distributed computer systems.
+To not assign the same identifiers 
+
+RDF: \cite{Leach2005} as URN namespace
+
+... is partly descriptive as it contains information about the computer
+and time of the association
+
+\ldots
+Neither purely descriptive nor hash, but related to both:
+on content and random UUIDs that also ensure uniqueness based on probability.
+ \cite{Gladney1998} argues for UUID 
+}
+
+\subsection{Ordered identifiers}
+\label{sec:orderedids}
+
+The possibility to arrange identifier symbols in a meaningful way is seldom
+cited as important to digital identifiers, allthough the basic form of digital
+data is an ordered sequence of bits. 
+\Term[ordered identifier]{Ordered identifiers} can be defined as any 
+identifiers that have a \term[strict order]{strict} and \term{total order}. 
+Simple examples in data include memory addresses and line numbers. Ordered 
+identifiers have several usefull properties: First, one can sort objects
+by their  identifiers, so every set of objects with distinct identifiers has
+a normalized form, and second, one can specify ranges of identifiers. Sorted
+ranges further allow efficient searching based on binary search.
+The range \texttt{CA} to \texttt{CI}, for instance, specifies the range of all 
+notations from the Regensburg Classification Scheme RVK.\footnote{See 
+\url{http://rvk.uni-regensburg.de/} for more information about the classification.}
+In practice however, collation is often not simply determined by the order of 
+characters that the identifier is build from. For instance the identifier 
+\texttt{9X} could be sorted after the identifier \texttt{10Y} if the first 
+character is given most importance ($9 > 1$), but it could also be reverse if the 
+identifiers are interpreted as starting with numbers ($9 < 10$). The more
+structured identifiers are, the more complex it can be to compare them.
+Sorting rules for ordering personal names, for instance, depend on language
+and culture and on the ability to break a name into given name, surname, and 
+other parts.
+
+Ordered identifiers are easy to implement if there is a finite number of
+items or if new items are added sequentially. For instance in the 
+\Term{numerus currens} system of library shelving books get signatures 
+(and locations) in order of their acquisition. Another examples are
+bates numbers that are used to assign consecutive numbers with a stamp.
+The order implies a mapping from identifier symbols to the natural numbers
+$\mathbb{N}=\set{1,2,3,\ldots}$,\footnote{or $\mathbb{N}=\set{0,1,2,\ldots}$ 
+depending on personal preferrence.} or to a subset of $\mathbb{N}$. In many
+applications the natural numbers are directly used as identifier symbols 
+without any mapping function in between. However, for many ordered identifiers 
+no specific mapping to $\mathbb{N}$ (or to a subset 
+$\mathbb{N}_m=\set[x\in\mathbb{N}]{x \le m}$) is known. A meaningful
+mapping may also be \term{injective} instead of \term{bijective} with gaps 
+of numbers that no identifier is mapped to. A known bijective mapping without 
+gaps is useful because it adds some properties to ordered identifiers: first,
+the last identifier gives the total number if objects, and second, one 
+can always tell the number of objects in a given range of identifiers. The 
+latter is usefull especially because it allows to calculate with 
+identifiers like coordinates. 
+
+\ignore{ 
+\footnote{These recommendation include:
+A Vision of an Integrated Internet Information Service (RFC~1727),
+Using the Z39.50 Information Retrieval Protocol in the Internet Environment (RFC~1729)
+Functional Recommendations for Internet Resource Locators (RFC~1736),
+Functional Requirements for Uniform Resource Names (RFC~1737),
+and Universal Resource Locators (RFC~1738), all published in december 1994.
+}
+}
+
+\subsection{Hash codes}
+\label{sec:hashes}
+
+A \Term{hash function} is a computable function that maps arbitray large 
+sequences of bits into smaller bit sequences of fixed length
+(figure~\ref{fig:hashfunction}). The output of
+a hash function is called \Term{hash code}, hash key, digest, or just hash 
+and the input is also called message especially for cryptographic 
+hash functions. A good hash funtion should be easy to compute\footnote{
+Some hash algorithms allow the hash of a composite object to be computed 
+from the hashes of its constituent parts. For instance the Rabin fingerprint
+$f$ of a concatenation $A.B$ of two strings $A$ and $B$ can be computed via 
+the equality $f(A.B)=f(f(A).B))$ \cite{Broder1993}.} and it should map typical
+input values to uniformly distributed hash codes, so every code is 
+generated with the same probability. Distinct input values that are mapped to
+the same hash code are called a \Term{collision}. Depending on properties of a 
+hash function and its application, collisions either imply equivalent input
+values or they are so unlikely that in practice hash codes are virtually 
+unique. Thus, hash codes can be used as compact and distributed identifiers,
+either of equivalent or of unique digital objects. The main applications of 
+hash functions are storage, duplicate detection, and cryptography. Hash 
+functions for storage in hash tables or data caches utilize the uniform 
+distribution of hash codes but they may allow some collisions. This makes 
+them rather identifiers of addresses computed from data objects than 
+identifiers of data objects. Hash functions for duplicate detection neither
+directly identify digital objects but sets of objects that are assumed to be
+equivalent based on their content. In contrast to hash functions for the other
+two types of applications, hash functions for duplicate detection highly
+depend on the type of input values as they only take into account a 
+significant part of the input. For instance the bibliographic hashkey for
+bibliographic records in the social cataloging platform BibSonomy only uses
+specific parts of the fields of author, editor, title, and year 
+\cite{Voss2009}. The quality of a hash function for duplicate detection
+depends on the ability to define which object properties count as significant
+and when two objects should be treated as equal - a problem that is far
+from trivial \cite{Renear2009,Yeo2010}. If the function is not choosen
+good enough, it can better be described as heuristic or classifier with
+error rate of false positives and false negatives instead of a kind of
+identifier.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[orm]%line width=0.25mm]
+\draw[->] (-1.9,0.15) to (1.9,0.15);
+\node[anchor=south] at (0,0.15) {hash function};
+\node[anchor=north] at (0,-0.15) {impractical (one-way)};
+\draw[<-,dotted] (-1.9,-0.15) to (1.9,-0.15);
+\entity[anchor=east,minimum width=26mm] (r) at (-2,0) {referent};
+\entity[anchor=west,minimum width=22mm] (i) at (2,0) {identifier};
+\draw[|-|,dotted] (-4.6,0.6) to node[pos=0.5,fill=white] {variable width} (-2,0.6);
+\draw[|-|] (4.2,0.6) to node[pos=0.5,fill=white] {fixed width} (2,0.6);
+\end{tikzpicture}
+\caption{(Cryptographic) hash function}
+\label{fig:hashfunction}
+\end{figure}
+
+Cryptographic hash functions treat the whole input as significant part: any 
+change of an input value must result in a different hash code, so attackers 
+cannot modify messages without modifying the message digest. In addition the
+function should fullfill the following properties: First, the hash code should
+not reveal more information about the input that its own expression.%
+\footnote{In a broader sense, all hash
+functions are descriptive because their hash codes are defined based on the
+full digital content as property of the identified object. In a narrower sense
+cryptographic hash keys are not descriptive because they only describe the 
+hash code as property of the object's content.} Second, the hash function must
+be a \Term{one-way function}: given a hash code it must be very hard to find 
+a message that is mapped to this digest. This property is also needed to
+prevent creating a message as collision of another given message. Third, an 
+even more strict requirement used to evaluate the strength of cryptographic
+hash functions is the lack of a method to find any collisions. Given that the
+number of possible input values is much large than the number of possible
+hash codes, there always exist collisions, but it is very difficult to find
+them. For instance the cryptographic hash function SHA1 \cite{Eastlake2001}
+has codes of 160 bit length, so there are $2^{160}$ different SHA1 hash 
+codes. According to rules of probability the expected number of hashes that 
+can be generated before an accidental collision (``birthday paradox'') is
+$2^{80}$. The sun will expand in around 5 billion years (less than $2^{58}$
+seconds from now), making life on earth impossible. Until then one can
+generate $2^{22}$ (4 million) hashes per second and collisions are still
+unlikely. With systematic crypographic attacks the number can be 
+smaller but it is still much larger than other sources of error.
+
+% TODO: where are cryptographic identifiers used?
+% Examples! MD5, CRC, SHA1...
+% Example: use of SHA-checksums as object identifiers in git distributed
+% revision control system.
+

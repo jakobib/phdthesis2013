@@ -1,0 +1,1000 @@
+\section{Conceptual modeling languages}
+\label{sec:modelangs}
+
+\begin{quotation}%
+Essentially, all models are wrong, but some are useful.\\
+\quotationsource \Person[George]{Box} (on statistical models)
+% source: see http://en.wikiquote.org/wiki/George_Box
+\end{quotation}
+
+\index{data structure diagram|see{data model diagram}}
+
+\noindent \Term{Conceptual modeling languages} \cite{Frederiks1997} or
+\Term{semantic modeling languages} \cite{Hull1987,Peckham1988} are used to
+formally capture an \term{universe of discourse} (see
+section~\ref{sec:datamodeling} on data modeling).  They often come in a
+graphical notation, known as \term{data model diagram} or \term{data structure
+diagram}. Originally, such diagrams were introduced by \textcite{Bachman1969}
+for logical schema design of network databases. They have since evolved to
+many notations from simple labeled graphs to detailed graphical rules (see
+section~\ref{sec:diagrams}).
+
+The by far most influential conceptual modeling language, both to academia
+\cite{Chen2007} and to practitioners \cite{Simsion2007},  is the
+\Tacro{Entity-relationship model}{ERM}, presented in part~\ref{sec:erm}.
+\acro{ERM} is rarely used in its original form but in form of various variants
+and extensions. An extensive evolution of modelling languages has been
+identified by \cite{Patig2006} and the plethora of modeling languages has even
+been named `yama syndrome' (Yet Another Modeling Approach) \textcite{Oei1992}.
+The amount of academic work on conceptual modeling languages notwithstanding,
+modelers often ignore these languages and prefer to work directly in a
+\term{data description language} (see section~\ref{sec:schemas}), as pointed
+out by \textcite[p.  345]{Simsion2007}.  At the same time, modelers try to
+express not only a logical model but a model of reality that only exist in our
+minds, The reality as `territory' is easy to confuse with a conceptual model as
+`map` and the conceptual model is easy to confuse with a logical model as `map
+copy'.\footnote{The expression ``the map is not the territory'' is attributed
+to \textcite{Korzybski1933} and applied to data modeling by \cite{Kent1978}.}
+In the following the term `model' refers to a conceptual model, as symbolic
+abstraction between mind and logical schema (see
+figure~\ref{fig:simplifieddatamodeling} on page
+\pageref{fig:simplifieddatamodeling}). Examples of conceptual models from the
+cultural domain include \acro{FRBR} \cite{FRBR1998}, \acro{CIDOC-CRM}
+\cite{Crofts2011}, and \acro{CHARM} \cite{GonzalezPerez2012}.
+
+Beside \acro{ERM} (part~\ref{sec:erm}) this section presents fact-oriented
+\tacro{Object Role Modeling}{ORM} (part~\ref{sec:orm}) and the \tacro{Unified
+Modeling Language}{UML} (part~\ref{sec:uml}) as concrete examples of unique
+conceptual modeling languages. Their common conceptual properties as base of
+general modeling paradigms and patterns can further be identified by
+meta-modeling and a look at the motivation of domain specific modeling
+(part~\ref{sec:metamodeling}). Modeling languages for processes and dynamic
+systems, such as \term{Petri Nets} and \tacro{Business Process Model and
+Notation}{BPMN} are not included because of the focus on stable digital
+documents.  
+
+\subsection{Entity-relationship model}
+\label{sec:erm}
+
+The \Tacro{Entity-Relationship Model}{ERM} is known as the most influential
+conceptual modeling language. It was originally proposed by \textcite{Chen1976}
+to unify network databases and relational database views (see
+section~\ref{sec:databases}). The basic components of an \acro{ERM} model are
+\Term[entity types!in ERM]{entity types}, \Term{relationship types}, and
+\Term{attributes}, together with rules how to connect them: relationship types
+must connect at least two entity types and attributes must be connected to
+entity types or relationship types. Strictly speaking, entities and
+relationships in \acro{ERM} refer to concrete objects in the universe of
+discourse. For instance, you can think of different books and authors as
+entities and authorships as relations. Entities and relationships are then
+modeled with entity types such as `book` and `author`, and relationship types
+such as `authorship`. For simplicity the terms entity and relationship are
+often used for entity types and relationship types and concrete objects referred
+to as instances of entities or relationships.  Entity-Relationship models are
+mainly expressed and explained by graphical notations.  A graphically
+expressed model is called an \term{Entity Relationship Diagram}.
+Figure~\ref{ex:ermodel} shows an \acro{ERM} diagram in Chen's notation.
+Elements of other \acro{ERM} notation variants (\acro{IE} and \acro{Barker
+Notation} together with \acro{ORM} and \acro{UML}) are included in
+table~\ref{tab:ermnotations}. 
+
+\begin{example}
+\centering
+\begin{tikzpicture}[orm,node distance=8mm,
+  every edge/.style={line width=0.25mm,draw},
+  every node/.style={line width=0.25mm}]
+\node[draw,rectangle,minimum height=6mm] (book) {Book};
+\node[draw,ellipse,below=of book] {Title} edge (book);
+\node[draw,diamond,aspect=1.7,right=of book] (aut) {wrote} edge (book);
+\node[right=0mm of book,anchor=north west] {N};
+\node[right=0mm of book,anchor=south west] {work};
+\node[draw,rectangle,minimum height=6mm,right=10mm of aut] (author) {Person} edge (aut);
+\node[left=0mm of author,anchor=north east] {M};
+\node[left=0mm of author,anchor=south east] {creator};
+\node[draw,ellipse,below=of author] {Name} edge (author);
+\node[draw,diamond,aspect=1.7,right=of author] (death) {died} edge (author);
+\node[draw,ellipse,above right=of death] (year) {Year} edge (death);
+\node[draw,rectangle,minimum height=6mm,below right=of death] (place) {Place} edge (death);
+\node[right=0mm of author,anchor=north west] {N}; % (sic!)
+\node[below right=0mm of death,xshift=4mm] {1};
+\node[draw,ellipse,right=of place] {Name} edge (place);
+\end{tikzpicture}
+\caption{\acrostyle{ERM} diagram in Chen's notation plus attributes}
+\label{ex:ermodel}
+\end{example}
+
+Since introduction of \acro{ERM}, a large number of variants have evolved
+\cite{Patig2006}. These variants often add new features and come with different
+graphical notations.  The diversity of \acro{ERM} variants and notations
+requires to check carefully which conventions and semantics apply in a given
+application.  As shown by \textcite{Hitchman1995}, many additional constructs
+like subtypes, n-ary relationships, and naming both ends of a relationship are
+rarely used and not well understood.  In its original form, \acro{ERM} is
+rarely used in data modeling practice \cite[pp. 49, 345]{Simsion2007}. Widely
+used variants and notations include \tacro{information engineering
+notation}{IE}, also known as ``crow's foot notation''
+\cite{Martin1985,Finkelstein1989} and \term{Barker Notation} \cite{Barker1990}.
+Both add some additional constructs to \acro{ERM} but also limit relationship
+types to binary associations only \cite[pp.  318ff.]{Halpin2008}. The full
+variety of \acro{ERM} dialects between 1975 and 2003, has been analyzed in a
+study on \acro{ERM} evolution: \textcite[p. 72ff]{Patig2006} identified 33
+conceptual constructs in addition to labeled entity types, relationship types,
+attributes and the basic rules how to connect them.  These constructs can be
+grouped in constructs of the basic model structure, integrity conditions on
+model instances, and constructs that are motivated by specific applications or
+by specific domains. The following list summarizes basic some conceptual
+constructs, derived from similar collections by \textcite{Patig2006} and
+\textcite{Kent1983b}: 
+
+%\caption{conceptual constructs of \acrostyle{ERM} variants}
+%\label{tab:ermconstructs}
+
+\label{ermconceptualconstructs}
+\begin{description}
+
+\item[entity types] group sets of entities to be modeled, for
+  instance people in a {\ormtext Person} entity type.
+
+\item[relationship types] must be connected to at least two 
+  entity types.
+
+\item[attributes] can be connected to entity types and to 
+  relationship types. 
+
+\item[attribute values] may explicitly be defined with data types or lists.
+
+\item[multivalued attributes] can have multiple values 
+  For instance a person may have more than one name. In addition,
+  multiple values may be ordered or unsorted.
+
+\item[attributes of attributes] may be allowed, for instance the
+  percentage of a value or the language of a name.
+
+\item[labels] uniquely identify and describe entity types, 
+  relationship types, and attributes.
+
+\item[roles] uniquely identify and describe connections. They
+  are needed, in particular if there are multiple connections between
+  two components (recursive or circular relations). % TODO: example!
+
+\item[aggregations] treat selected relationship types as 
+  entity types, so they can be connected to other relationship types.
+  In \acro{ORM} this is known as `\term{objectification}'.
+
+\item[conditions] limit the set of possible entity instance, 
+  relationship instances, or attribute values, based on arbitrary 
+  propositions. Frequent types of conditions are often expressed by 
+  additional modeling constructs, such as the following:
+
+\item[primary keys] mark selected attributes relationship types to have
+  unique values/instances among all entity instances.
+
+\item[inference rules] can define that parts of a model instance
+  (entity types, relationships, attribute values etc.) can be inferred from 
+  other parts. For instance the current age of a person could be inferred
+  from its date of birth and the current date.
+
+\item[frequency constraints] limit the total number of concrete entities or
+  attributes of some type in a model instance.
+
+\item[cardinality constraints] limit the minimum and/or maximum
+  number of times that an entity can be connected to a relationship. In detail, 
+  you can distinguish between simple participation cardinality and look-across 
+  cardinality, which is only relevant to relationships with more than two entities.
+  For instance a library user may only loan a maximum number of books (participation
+  cardinality), but only another maximum number of books on each single day
+  (look-across cardinality).
+
+\item[optionality and mandatory constraints] define that specific
+  connections are optional or required. These constraints are often confused
+  with minimum cardinality constraints zero or one, but they can also be used
+  independently. For instance a publication does not need to have a review
+  (optionality),  but if it is reviewed, it must have at least two reviews
+  (cardinality).
+
+\item[exclusive constraints] mark connections as mutually exclusive.
+
+%\term*{inheritance} % TODO: fuer index!
+\item[inheritance] allows direct connections between a supertype 
+  entity and a subtype entity, which then shares all attributes and relationship 
+  connections with its supertype. For instance an {\ormtext Author} can be
+  a subtype of a {\ormtext Person} (see example~\ref{ex:ormdiagram}). Simple 
+  cases of subtyping can also be
+  expressed by \term{euler diagram}s. Subtypes can have their own subtypes
+  but all subtyping connections must form a \term{directed acyclic graph}.
+
+\item[identity relationships] connect two or more entity types
+  to state that their instances refer to the same objects in the 
+  universe of discourse. For instance an author entity could be 
+  identical with a translator entity.
+
+\item[specialized types] group selected entity types, relationship
+  types or attributes as being of a same kind. Specialized types can be
+  domain-specific, for instance geographic entity types or causal relationship
+  types, or more general. The most common specialized types are aggregation and
+  composition relationships, both available in \acro{IE} and in \term{Barker
+  Notation}.
+
+\item[transactions] describe possible changes of model instances.
+
+\item[temporal connections] distinguish structure and constraints of 
+ the model at different times.
+
+\item[multidimensionality] helps to highlight components of a schema
+ as dimensions and facts for aggregation in data warehouses.
+
+\item[uncertainty] can be introduced to mark selected parts of a model 
+  (entities, relationships, attributes and connections) not known exactly.
+\end{description}
+
+As found by \textcite[345]{Simsion2007} ``the impact of the very substantial
+amount of work on modeling languages appears to be minimal, with modelers
+apparently preferring to work with the \acro{DBMS} language.'' If \acro{ERM} is
+used, it is mostly used in a limited variant. The most important modification
+is a limitation to binary relationship types, which are then drawn as simple
+lines instead of diamonds. $N$-ary relationship types can be modified to entity
+types with $N$ mandatory connections, as shown in example~\ref{ex:ermtrans}.
+% TODO: figure X shows the 16 possible constraint patterns 
+% for optionality and cardinality on relationships in IE (see Halpin2008, p320 and p311)
+Together with roles, such simplification actually means removal of
+relationships from \acro{ERM} as implemented in \term{Object role modeling}
+(see part~\ref{sec:orm}). Attributes can also be replaced by entity types, as
+suggested by \textcite{Kent1983b,Kent1984} and also shown in 
+example~\ref{ex:ermtrans}, but most applications keep attributes for simplicity
+and brevity. It should be noted that such transformations are often subject to
+interpretation because they may result in different models (see 
+example~\ref{ex:contrans} in section~\ref{sec:entcon}).
+
+\begin{example}
+\centering
+\begin{tikzpicture}[orm,node distance=7mm,
+  every edge/.style={line width=0.25mm,draw},
+  every node/.style={line width=0.25mm},
+  e/.style={draw,rectangle,minimum height=6mm},
+  r/.style={draw,diamond,aspect=1.7},
+  s/.style={draw,line width=0.15mm,dotted,->}
+]
+\node[e] (person) {Person};
+\node[r,left=of person] (creator) {created} edge (person); 
+\node[e,above=of creator] (authorship) {Authorship} edge (creator); 
+\node[r,above=of authorship] (made) {made} edge (authorship); 
+\node[e,above=of made] (book) {Book} edge (made); 
+\node[below=0 of book,anchor=north west] {1};
+\node[above=0 of authorship,anchor=south west] {1};
+\node[below=0 of authorship,anchor=north west] {M};
+\node[left=0 of person,anchor=south east] {N};
+\node[above=0 of person.north east,anchor=south east] {1};
+\node[below=0 of person.south east,anchor=north east] {1};
+
+\node[r,below right=of person] (died) {died} edge (person);
+\node[e,right=of died] (death) {Death} edge (died);
+\node[r,below right=of death] (in) {in} edge (death);
+\node[r,above right=of death] (at) {at} edge (death);
+\node[e,right=of in] (year) {Year} edge (in);
+\node[e,right=of at] (place) {Place} edge (at);
+\node[left=0 of place,anchor=south east]{N};
+\node[left=0 of year,anchor=south east]{N};
+\node[left=0 of death,anchor=south east]{1};
+\node[above=0 of death.north east,anchor=south east] {1};
+\node[below=0 of death.south east,anchor=north east] {1};
+
+\node[r,above right=of person] (phas) {named} edge (person);
+\node[e,right=of phas] (pname) {PersonName} edge (phas);
+\node[left=0 of pname,anchor=south east]{N};
+
+\node[r,right=of book] (bhas) {titled} edge (book);
+\node[e,right=of bhas] (title) {Title} edge (bhas);
+\node[right=0 of book,anchor=south west]{1};
+\node[left=0 of title,anchor=south east]{N};
+
+\node[r,above=of place] (labeled) {labeled} edge (place);
+\node[e,above=of labeled] (placename) {PlaceName} edge (labeled);
+\node[below=0 of placename,anchor=north west] {N};
+\node[above=0 of place,anchor=south west] {1};
+
+\node[above right=of authorship] (s1) {relationship transformed to entity} edge[s] (authorship);
+\draw[s] (s1) to (death);
+
+\node[right=of title] (s2) {attribute transformed to entity} edge[s] (title);
+\draw[s] (s2) to (year);
+\draw[s] (s2) to (pname);
+\draw[s] (s2) to (placename);
+
+\end{tikzpicture}
+\caption{\acrostyle{ERM} model transformed from example \ref{ex:ermodel}}
+\label{ex:ermtrans}
+\end{example}
+
+Another limitation of most \acro{ERM} variants is less obvious: all entity
+types are assumed to be disjoint, unless they are connected by \term{inheritance} or
+by identity relationships.  For instance in example~\ref{ex:ermodel} and
+\ref{ex:ermtrans}, an entity is {\em either} instance of {\ormtext Book},
+{\ormtext Person}, or {\ormtext Place}. This implicit rule can cause problems with
+entity types that are less easy to separate, such as {\ormtext Title}, {\ormtext PersonName},
+and {\ormtext PlaceName} in example~\ref{ex:ermtrans}: here the disjointness
+constraint becomes an artifact of the model, that is not present in the
+universe discourse --- normally a book, a place, and a person can have the same
+name without being the same object. The disjointness assumption of \acro{ERM}
+can also be found in other conceptual modeling languages and in most schema
+languages.\footnote{An exception are \acro{RDF} schema languages 
+(section~\ref{sec:rdfschemas}), because of the
+\term{Open World Assumption}: An \acro{RDF} entity (`resource' in
+\acro{RDF} terminology) can be of multiple entity types (`classes'), unless 
+an explicit disjointness constraint is enforced by a specific
+ontology.} 
+
+
+% \term{fact-oriented modeling} see ORM
+
+\subsection{Object Role Modeling}
+\label{sec:orm}
+
+% G.M. Nijssen. Deemed NIAM, short for “Nijssen’s Information Analysis
+% The purpose is to show representations of relationships instead of showing
+% types of entities as relational table analogs.
+
+% \cite{Kent1984}: Fact based data analysis and design
+
+% NORMALIZATION: an elementary fact is an an
+% elementary fact because it cannot be split into smaller statements collectively
+% provide the same information.
+
+% Good example: diagram, semantics, logical model
+% http://www.ormfoundation.org/forums/storage/44/1476/Course01.png
+
+\Tacro{Object-Role Modeling}{ORM} is a fact-oriented modeling language that
+evolved from the \Tacro{Natural-language Information Analysis Method}{NIAM} by
+\Person[Gerardus M.]{Nijssen} and \Person[Eckhard]{Falkenberg}
+\cite{Nijssen1989,Falkenberg1976}. The current version (\acro{ORM2}) is mainly
+based on works of \Person[Terry]{Halpin} and best described by
+\textcite{Halpin2008}. Unlike \acro{ERM} and \acro{UML}, \acro{ORM} is build
+from a linguistic basis using structured sentences in natural language as a
+starting point. \acro{ORM} does not make use of the notion of attributes but
+views the universe of discourse in terms of objects playing roles.  Objects are
+classified in sets of \Term[entity types!in ORM]{entity types} and \Term[value
+type (ORM)]{value types}. Entities can be any (possibly abstract) concepts and
+they are references by values. For instance a person (entity) may be referenced
+by its name (value). Modeling starts with factual examples that are split into
+\Term[elementary fact (ORM)]{elementary facts} and translated into
+\Term[predicate (ORM)]{predicates}.  This process will be exemplified in the
+following.
+
+The sentence `Frankenstein was written by \person[Mary]{Shelley}' is an
+elementary fact because it cannot be split into smaller statements collectively
+provide the same information. With background knowledge about its meaning can
+be translated into `The book referred to by title `Frankenstein' was written by
+the person referred to by name `Mary Shelley'{}'.  You can then infer first the
+entity types {\ormtext Book} and {\ormtext Person}, second the value types
+{\ormtext BookTitle} and {\ormtext PersonName}, and third the predicate
+{\ormtext \ldots was written by\ldots}.  General prredicates in \acro{ORM} can
+be named in two directions ({\ormtext \ldots was written by\ldots /\ldots
+wrote\ldots}) and connect any positive number of objects. For instance in the
+fact `Mary Shelley is dead' the predicate {\ormtext \ldots is dead} is unary
+and in the fact `Mary Shelley died 1851 in London' the predicate
+{\ormtext\ldots died\ldots in\ldots} is ternary. Each ``{\ormtext \ldots}''
+slot of a predicate is called a \Term[role (in ORM)]{role}. Roles may be named
+and the number of roles is the predicates \Term{arity} as in \term{predicate
+logic}. 
+
+\acro{ORM2} includes a detailed graphical notation to express models with
+objects types, roles, and constraints (see figure~\ref{fig:orm2basics} for a
+very simple example).  An object type is drawn as rectangle with rounded
+corners containing its name.  Entity types use solid border lines and value
+types use dashed border lines.  Predicates are drawn as sequence of
+concatenated role boxes that are linked to object types by lines.  Role names
+can be shown in square brackets and blue color next to a role box.
+Figure~\ref{ex:ormdiagram} shows an \acro{ORM} diagram of the model derived
+from example~\ref{ex:ermodel}. Value types that uniquely identify instances of
+an entity type (in this example {\ormtext BookTitle}, {\ormtext PersonName},
+and {\ormtext PlaceName}) are shown as \Term{reference mode} below the entity's
+name. In addition the model introduces the {\ormtext Author} entity type which
+is a subtype of the {\ormtext Person} entity type, so every author is a person.
+Subtype connections are indicated by bold arrows that show the
+\term{inheritance}. The diagram also contains some \Term[constraint
+(ORM)]{constraints}, which are shown in magenta: a dot at the line connecting
+the {\ormtext Author} with the {\ormtext creator} role depicts a
+\Term{mandatory role constraint}. This kind of constraint demands that every
+author must have written at least one book.  The arrow between the first role
+of {\ormtext \ldots is dead} and of {\ormtext\ldots died\ldots in\ldots} shows
+an \Term{external constraint}, in detail a \Term{subset constraint}. It states
+that the set of people who died in a specific year and place must be a subset of
+the set of people who are dead. To create a precise conceptual model, you must
+carefully reveal such connections which may be obvious only to experts in the
+universe of discourse.  The bar below the first role of the predicate
+{\ormtext\ldots died\ldots in\ldots} is a \Term{uniqueness constraint}. It can
+be read as ``each person died at most once''. On all predicates there is an
+implicit uniqueness constraints that spans all roles combined.  For instance a
+person is only dead once: if ``Mary Shelley died 1851 in London'' is an
+elementary fact, it does not make sense to include it twice in the same model
+population. This is also due to the interpretation of \acro{ORM} predicates as
+factual statements in \term{predicate logic}.
+
+A \Term{model population} (or \Term{model instance}) is a set of objects and
+roles played by them, that fulfills all model's constraints. In terms of
+ontology languages, a model is a \term{TBox} and a model population is a
+\term{ABox}.  \acro{ORM} offers practical means of communicating via
+unambiguous, controlled natural language language and examples of data by
+\Term{verbalization} \cite{Halpin2004}. Given some basic language templates you
+can even provide verbalizations in multiple languages, as implemented by
+\cite{Jarrar2006}. This verbalization is similar to standardized verbalization
+forms of fact-oriented \term{business rule} such as those based on the
+\tacro{Semantics of Business Vocabulary and Business Rules}{SBVR}.\footnote{See
+\url{http://www.rulespeak.com/} for an example. In brief, \acro{SBVR} was
+influenced by fact-oriented modeling, but it lacks a graphical notation.}
+
+\begin{example}
+\centering
+\begin{tikzpicture}[orm]
+% entity type (one with reference mode, one without)
+\entity (person) {Person\\(.name)};
+\entity (author) [left=6mm of person] {Author};
+
+% unary relationship with label
+\unary (dead) [right=of person,yshift=7mm,label=\ldots is dead] {};
+
+% binary relationship with labels in both directions
+\binary (wrote) [left=13mm of author,
+  label=\ldots is written by\ldots,
+  label=below:\ormleft{\ldots wrote\ldots}] {};
+
+% role names
+\node[role name,anchor=north east] at (wrote.west) {[work]};
+\node[role name,anchor=north west] at (wrote.east) {[creator]};
+\plays (person) to (dead.west);
+
+% mandatory role constraint
+\entity (book) [left=10mm of wrote] {Book\\(.title)};
+\plays[mandatory] (author) to (wrote);
+\plays (wrote) to (book);
+
+% ternary relationship with uniqueness constraint
+\ternary (died) [right=of person,yshift=-7mm,unique=-1,
+                 label=below:{\ldots died\ldots in\ldots}] {};
+\plays (person) to (died.west)
+   (died.east) to +(4mm,0) node[entity,anchor=west] (place) {Place\\(.name)};
+
+% value type
+\value (year) [above=of place.north west,anchor=south west] {Year};
+\plays (died.north) to (year.west);
+
+% subtyping 
+\draw[subtype] (person) to (author);
+
+% subset constraint
+\draw[limits to] (died.one north) to (dead.south);
+\node[constraint=subset] at ($(died.one north)!0.4!(dead.south)$) {};
+
+\end{tikzpicture}
+\caption{ORM diagram expressing a conceptual model}
+\label{ex:ormdiagram}
+\end{example}
+
+Among the special \acro{ORM} features not included in
+example~\ref{ex:ormdiagram}, there are ring constraints, frequency and value
+constraints on entity types and roles, deontic rules, and
+\term{objectification}.  Ring constraints can be applied to pairs of roles that
+may be populated by the same entities. The simplest case if a binary
+relationship with both roles played by the same entity type, but rings can also
+occur on longer predicates and indirectly because of subtypes. There are 10
+ring constraints (reflexive, irreflexive, purely reflexive, symmetric,
+asymmetric, antisymmetric, transitive, intransitive, strongly Intransitive,
+acyclic) with 26 legal combinations. Example~\ref{ex:ormore} {\ormtext a)}
+shows a model in which a {\ormtext Person} can be {\ormtext child of} a
+{\ormtext Person}.  The predicate is constraint as acyclic (left), because no
+one can be its own child or ancestor. A frequency constraint (`$\le 2$') is
+added to the {\ormtext parent} role to state that a person is child of at most
+two people. An additional strongly intransitive ring constraint is given as
+deontic (right, in blue). This means, if one person is child of another, there
+should be no other chain of child-of-relationships between the two. By this
+deontic rule, incest is forbidden, but still possible, while circular
+ancestorship or more than two parents of one person are impossible.
+
+A special feature of \acro{ORM} that is rarely found in other conceptual
+modeling languages is \Term{objectification} or `nesting'. Objectification
+allows instances of relationships to be treated as entities in their own right
+\cite[ch. 10.5.]{Halpin2008}. In contrast to transformations of relationships
+to entities in example~\ref{ex:ermtrans}, an objectified relationship may still
+be used as relationship. In example~\ref{ex:ormore} {\ormtext b)} the
+relationship {\ormtext wrote} is objectified as {\ormtext Writing}. In natural
+language objectification is related to the activity of nominalization. For
+instance the statement `\person[Mary]{Shelley} wrote Frankenstein' may be
+nominalized as `\person[Mary]{Shelley}'s writing of Frankenstein'. The
+interpretation of objectified facts, bears some difficulties: relationships one
+the one hand represent possible propositions, which can either be true or
+false: Shelley either has written Frankenstein or not.  Entities on the other
+hand are states of affairs. It makes no sense to say that Shelley's writing of
+Frankenstein is true or false, but you can make statements about this event,
+for instance it started in summer 1816 in Geneva, it was not known when the
+novel was first published anonymously in 1818, and it is described in other
+books. For this reason a relationship and its objectification should be seen
+as distinct objects connected by a 1:1 relationship. If you further analyze 
+nominalization, different ontological types of objectification may be 
+distinguished \cite{Moltmann2007}, for instance to differentiate statements
+like `I know that Shelley wrote Frankenstein' and `I know the particular 
+circumstances of Shelley's writing of Frankenstein'. General problems of
+mapping between relationships and entities will be dealt with in 
+section~\ref{sec:entcon}. 
+
+% Reification in RDF or \term{objectification} in \acro{ORM}
+
+\begin{example}
+\centering
+\begin{tikzpicture}[orm]
+
+\entity (P) {Person};
+\node[left=8mm of P] {a)};
+\binary[below=of P] (r) {};
+\node[below=4mm of r] {child of};
+\plays (P) to (r.one north) (P) to (r.two north);
+\node[constraint,below=0 of r.two south] {$\le$2};
+\node[role name,right=0 of r]{[parent]};
+\limits (r.north) to +(-1,0.4) node [constraint=acyclic]{};
+\begin{scope}[deontic]
+\limits (r.north) to +(1,0.4) node [constraint=strongly intransitive] (c) {};
+\end{scope}
+
+\begin{scope}[xshift=45mm,yshift=-2mm]
+\entity (person) {Person};
+\node[left=5mm of person,yshift=2mm] {b)};
+\binary (wrote) [right=8mm of person, label=``Writing !''] {};
+\entity (book) [right=8mm of wrote] {Book};
+\plays (person) to (wrote);
+\plays (wrote) to (book);
+\entity at (wrote) (a) [minimum size=8mm,minimum width=11mm,fill=none,yshift=-1.5mm] {};
+\node [below=0mm of wrote]{wrote};
+
+\binary[below left=of a,label=below:\ormleft{took place in}] (d) {};
+\plays (d.east) to (a);
+\value[left=of d] {Year} edge[plays] (d); 
+
+\binary[below right=of a,xshift=2.2mm,label=below:described in] (d) {};
+\plays (d.west) to (a);
+\plays (d.two north) to (book);
+
+\end{scope}
+
+\end{tikzpicture}
+\caption{Additional constraints and features in \acrostyle{ORM}}
+\label{ex:ormore}
+\end{example}
+
+% It should be noted that the model does only specify what is known
+% if names are not unique than either the model or the information 
+% to be modeled is wrong.
+% the model cannot hold information about a person that died in a
+% unknown place but known year
+
+% information resource: ORM valuee type, non-information resources: ORM entity types.
+
+
+\subsection{Unified Modeling language}
+\label{sec:uml}
+
+The \Tacro{Unified Modeling language}{UML} was developed in the 1990s as
+modeling language for \term{object-oriented} software systems. It was
+standardized by the \tacro{Object Management Group}{OMG}, published as
+\acro{ISO} specification in 2005, and since extended to UML 2.4.1
+\cite{OMG2011}.  Similar to \acro{CORBA}, \acro{ORM}'s other popular standard,
+\acro{UML} at large is fairly complex and expressive.\footnote{Complexity and
+standardization without reference implementation has been identified by
+\textcite{Henning2006} as reasons why \acro{CORBA}'s failed. \acro{UML} in
+contrast is quite popular, but its broad coverage maked it difficult to know,
+to what in particular applications refer to with \acro{UML}.} \acro{UML}
+provides graphical notations for several types of diagrams, that can also be
+combined.  The major kinds of \acro{UML} diagrams are structure diagrams and
+behavior diagrams. Behavior diagrams are not relevant to this thesis because of
+the static nature of digital documents. Structure diagrams show the static
+structure of a software system and its parts, so they can also be used to
+depict data structures. Relevant structure diagram types for modeling in
+\acro{UML} are:
+
+\begin{description}
+\item[class diagrams] describe the structure of a system in terms of
+  \term{object orientation}: \Term[class!in UML]{classes} correspond to
+  \acro{ERM} \term{entity type}s and \Term{objects} correspond to entities. 
+  \acro{UML} classes can have attributes, which may have datatypes, and 
+  cardinality constraints, among other properties.
+  Classes may further be connected by 
+  \term{inheritance}, dependency, composition, aggregation, and general binary
+  relationships (called \term[associations!in UML]{associations}).
+  \acro{UML} objects can either be simple class instances or so called 
+  (static) \term[classifier!UML]{classifiers}, which are shared among all 
+  class instances. An instance of a model, which is depicted by an \acro{UML}
+  class diagram, can have multiple instances per class 
+  but only one classifier.
+
+\item[object diagrams] show (partial) model instances by depicting concrete 
+  objects with their class memberships and attribute values.
+
+\item[component diagrams] and \textbf{package diagrams} group parts of an 
+ \acro{UML} diagram, to better abstract from distinct parts and layers.
+
+\item[deployment diagrams] show how parts of a software system are located
+  on different computers and other resources, including storage.
+
+\item[profile diagrams] can define extensions of \acro{UML} in form of 
+  specialized classes or other constructs. These extensions are called 
+  stereotypes and they may introduce their own graphical notation. Most
+  applications of \acro{UML} stereotypes can also be replaced by 
+  \term{inheritance} between normal classes. To some degree profile diagrams 
+  allow \term{metamodeling}, because they specify the way that other models
+  can be expressed.
+
+\item[composite structure diagrams] show the internal structure of a class or
+  another component. The internal structure may imply the existence of other
+  classes and relationships, but the meaning of this diagram type is not
+  well understood among engineers \cite{Oliver2006}.
+
+\end{description}
+
+With class diagrams, \acro{UML} can be seen as a variant of \acro{ERM},
+enriched with other diagram types and metamodeling. As suggested by the
+attribute `unified', \acro{UML} in theory subsumes other modeling languages and
+provides a tool to exchange conceptual models. In practice, however, support
+and interpretation of \acro{UML}`s exchange format \tacro{XML Metadata
+Interchange}{XMI} varies among tools. In addition, the semantics of \acro{UML}
+constructs differs among users, as described by \textcite{Oliver2006} for
+composite structure diagrams. Typical misues and wrong expectations of
+\acro{UML} have been collected by \textcite{Bell2004}. A general problem is the
+primary use of \acro{UML} for describing logical and physical data models which
+can directly be transformed to software. Conceptual concepts in contrast, must
+rather match a specific domain, independent from its technical implementation.
+
+Example~\ref{ex:uml} shows an \acro{UML} class diagram that depicts a
+conceptual model similar to the \acro{ERM} and \acro{UML} models above. The
+ternary relationship between {\ormtext Person}, {\ormtext Year}, and {\ormtext
+Place} has been replaced by a {\ormtext DeathEvent} entity. The model makes use
+of attributes and data types ({\ormtext string} and {\ormtext year}). n-ary
+relationships and additional entities connected to binary relationships are
+also supported by \acro{UML} but not shown in example~\ref{ex:uml}.
+
+\begin{example}
+\centering
+\begin{tikzpicture}[orm,
+  every entity/.style={rectangle split,rectangle split parts=2,rounded corners=0},
+  every edge/.style={line width=0.25mm,draw},
+  every node/.style={line width=0.25mm}]
+  
+  \entity (person)
+    {Person\nodepart{second}Name: string};
+
+  \entity[right=30mm of person] (book)
+    {Book\nodepart{second}Title: string} edge (person);
+ 
+  \draw (person) to node[yshift=2mm] (x) {wrote} (book);
+
+  \node[right=0 of person,yshift=2mm,anchor=west] {1..*};
+  \node[left=0 of book,yshift=2mm,anchor=east] {0..*};
+
+  \entity[below=10mm of person] (event)
+    {DeathEvent\nodepart{second}Year: year} edge (person);
+
+  \node[below=0 of person,anchor=north west] {1};
+  \node[above=0 of event,anchor=south west] {0..1};
+
+  \draw (person) to node[anchor=east] {died} (event);
+
+  \entity[right=31mm of event] (place)
+    {Place\nodepart{second}Name: string} edge (event);
+
+  \draw (event) to node[yshift=2mm] {occurred in} (place);
+
+  \node[right=0 of event,yshift=2mm,anchor=west] {0..*};
+  \node[left=0 of place,yshift=2mm,anchor=east] {1};
+
+\end{tikzpicture}
+\caption{\acrostyle{UML} diagram with a model similar to example
+\ref{ex:ermodel} and \ref{ex:ormdiagram}}
+\label{ex:uml}
+\end{example}
+
+
+\subsection{Domain specific modeling and metamodeling}
+\label{sec:metamodeling}
+
+In addition to generalized conceptual modeling languages, such as \acro{ERM},
+\acro{ORM}, and \acro{UML}, the idea of \Tacro{Domain Specific Modeling}{DSM}
+and \Tacro{Domain Specific Languages}{DSL} have recently gained popularity
+\cite{Kelly2008}. In short, a domain-specific modeling language is a custom
+formalism for a specific domain, for instance the domain of mobile applications
+or the automotive industry. Each language is designed to model an universe of
+discourse within the specific domain. A \acro{DSL} consist of a set of language
+concepts and their rules, together with a graphical notation. For instance a
+business modeling language could consist of customer types, contract types and
+service types, instead of general \term{entity type}s and \term{relationship
+type}s. \acro{DSM} and \acro{DSL} have been proven useful in software
+engineering especially to bridge the gap between domain experts and software
+architects and to maintain changing models \cite{Cao2009}. In addition to
+conceptual modeling, specialized modeling languages are also used for automatic
+generation of software systems. For this reason the boundaries between domain
+specific modeling languages, domain specific \term{schema language}s, and
+domain specific programming languages are fluid. The lack of a clear separation
+increases the existing danger of confusing real world models and software
+models \cite{Genova2005}.
+
+Domain specific modeling languages have a history in \tacro{Computer-aided
+software engineering}{CASE} tools with the \tacro{Problem Statement
+Language/Problem Statement Analyzer}{PSL/PSA} by \textcite{Teichroew1977} as
+first instance. To some degree you can also use generalized modeling languages
+that allow some customization, for for instance \acro{UML} with its
+\term{profile diagram}s. Most \acro{DSL}, however, are created with specialized
+\acro{DSM} tools such as \term{MetaEdit+} \cite{Kelly2008} and 
+\acro{DSL} tools of \acro{Microsoft Visual Studio} \cite{Cook2007}.
+The former has its origin in a research project at University of Jyv\"askyl\"a
+which laid the theoretical and practical foundation of \Term{metamodeling}.
+
+The term \Term{metamodel} first refers to any specialized \acro{DSL} which can
+be used to create concrete models in its domain. The task of creating
+specialized modeling languages, is then called metamodeling. Each \acro{DSM}
+tool provides its own (graphical) language for metamodeling; this metamodeling
+language is based on a meta-metamodel which defines how metamodels can be
+expressed. Several meta-metamodels are compared by \textcite{Kern2011}, among
+them \term{GOPRR} from MetaEdit \cite{Kelly2008}, the metamodel from Microsoft
+DSL tools \cite{Cook2007}, and \term{Ecore} from Eclipse Modeling Framework
+\cite{Steinberg2009}. The list of metamodeling concepts from this comparison
+is similar to the list of conceptual \acro{ERM} constructs in
+part~\ref{sec:erm}. There are \term{entity type}s (also refered to as
+\term[object type|see{entity type}]{object type}s) and \term{relationship
+type}s (possibly limited to binary relationships), \term{attribute}s,
+\term{role}s, and \term{inheritance}, which each can be subject to several
+constraints and extensions. Additional concept in meta-modeling include
+entity-sets and composition, \term{port types}s that further define how
+entities can be connected by relationships, grouping of metamodel elements, and
+model types to group and refer to models with common properties.  An example of
+a modeling language specified by a metamodeling is \acro{ConML}
+\cite{GonzalezPerez2012c}, which was specified using \acro{UML}. \acro{ConML}
+on its part supports creation of conceptual models such as \acro{CHARM} for
+cultural heritage, including aspects such as subjectivity and temporality.
+%(see figure~\ref{fig:conml} at page~\pageref{fig:conml} for an illustration).
+
+Several independent attempts have been made to unify conceptual modeling
+languages by mathematical descriptions, for instance with \term{category
+theory} \textcite{Frederiks1997} and with \term{description logics}
+\cite{Keet2008b}. The practical outcome of this (meta)-metamodeling, however,
+is questionable as it comes with more complexity and less readability.  This
+contradicts the original purpose of conceptual modeling as translating between
+domain experts and programmers. Alternative uses of modeling languages for
+\term{knowledge representation} and \term{schema} design may better benefit
+from mathematical metamodels, but both veers away from the `territory' of
+reality, which is not build from entities, relationships, attributes, and
+roles, but from experience and assumptions.  A general limitation of conceptual
+data modeling is its foundation on crisp set theory, in contrast to the fuzzy
+nature of natural language. Even if conceptual language is based on language
+(like \acro{ORM}), it only uses traditional logic statements with sets of
+disjoint objects. And even an exact metamodel with clearly defined semantics
+does not ensure that the meaning of a model is equal to all participants: As
+shown for both \acro{ERM} \textcite{Hitchman1995} and \acro{UML}
+\cite{Oliver2006} the ``semantics [of UML constructs] are often based on the
+engineer’s expectations and {\em perceived meaning} rather than on the actual,
+intended semantics''.  Nevertheless conceptual modeling is practiced, either
+explicit with conceptual modeling languages or implicit by directly creating
+logical schemas. The analysis of important modeling languages and metamodeling
+principles in this section has revealed some common constructs which lead to
+more concrete patterns in chapter~\ref{ch:patterns}.
+
+% Not included: inverse
+% GOPRR: properties with data types with properties
+% \cite{Parr2010}: parsing, patterns
+
+\begin{table}
+\centering
+\begin{tabular}{lllll}
+\textbf{Notation} & \textbf{IE} & \textbf{Barker} & \textbf{ORM} & \textbf{UML} \\
+\hline
+zero or more 
+& % IE
+\begin{tikzpicture}[erm]
+\node[ermnode] (p) at (0,-10mm) {E};
+\draw (p.east) to +(6mm,0) +(0mm,1mm) to +(2mm,0mm) to +(0mm,-1mm);
+\draw[fill=white] (p.east) +(3mm,0) circle (1mm);
+\end{tikzpicture}
+& % Barker
+\begin{tikzpicture}[erm]
+\node[ermnode] (p) {E}; \draw[dotted] (p.east) to +(6mm,0);
+\draw (p.east) +(0mm,1mm) to +(2mm,0mm) to +(0mm,-1mm);
+\draw (p.east) to +(2mm,0);
+\end{tikzpicture}
+& % ORM 
+\begin{tikzpicture}[orm]
+\entity (p) {E}; \plays (p.west) to +(-5mm,0) node[role] {};
+\end{tikzpicture}
+& % UML
+\begin{tikzpicture}[erm]
+\node[ermnode] (p) {E}; \draw (p.east) to +(6mm,0); \node[anchor=south west] at (p.east) {0..*};
+\end{tikzpicture}
+
+\\ \hline
+one or more 
+& % IE 
+\begin{tikzpicture}[erm]
+\node[ermnode] (p) {E};
+\draw (p.east) to +(6mm,0) +(0mm,1mm) to +(2mm,0mm) to +(0mm,-1mm) +(2mm,1mm) to +(2mm,-1mm);
+\end{tikzpicture}
+& % Barker
+\begin{tikzpicture}[erm]
+\node[ermnode] (p) {E}; \draw (p.east) to +(6mm,0);
+\draw (p.east) +(0mm,1mm) to +(2mm,0mm) to +(0mm,-1mm);
+\end{tikzpicture}
+& % ORM
+\begin{tikzpicture}[orm]
+\entity (p) {E}; \plays[mandatory] (p.west) to +(-5mm,0) node[role] {};
+\end{tikzpicture}
+& % UML
+\begin{tikzpicture}[erm]
+\node[ermnode] (p) {E}; \draw (p.east) to +(6mm,0); \node[anchor=south west] at (p.east) {1..*};
+\end{tikzpicture}
+
+\\ \hline
+zero or one 
+& % IE 
+\begin{tikzpicture}[erm]
+\node[ermnode] (p) {E};
+\draw[fill=white] (p.east) to +(6mm,0) +(4mm,1mm) to +(4mm,-1mm);
+\draw[fill=white] (p.east) +(2mm,0) circle (1mm);
+\end{tikzpicture}
+& % Barker
+\begin{tikzpicture}[erm]
+\node[ermnode] (p) {E}; \draw[dotted] (p.east) to +(6mm,0);
+\end{tikzpicture}
+& % ORM
+\begin{tikzpicture}[orm]
+\entity (p) {E}; \plays (p.west) to +(-5mm,0) node[role,unique=1] {};
+\end{tikzpicture}
+& % UML
+\begin{tikzpicture}[erm]
+\node[ermnode] (p) {E}; \draw (p.east) to +(6mm,0); \node[anchor=south west] at (p.east) {0..1};
+\end{tikzpicture}
+
+\\ \hline
+one 
+& % IE 
+\begin{tikzpicture}[erm]
+\node[ermnode] (p) {E};
+\draw[fill=white] (p.east) to +(6mm,0) +(1mm,1mm) to +(1mm,-1mm) +(2mm,1mm) to +(2mm,-1mm);
+\end{tikzpicture}
+& % Barker
+\begin{tikzpicture}[erm]
+\node[ermnode] (p) {E}; \draw (p.east) to +(6mm,0);
+\end{tikzpicture}
+& % ORM
+\begin{tikzpicture}[orm]
+\entity (p) {E}; \plays[mandatory] (p.west) to +(-5mm,0) node[role,unique=1] {};
+\end{tikzpicture}
+& % UML
+\begin{tikzpicture}[erm]
+\node[ermnode] (p) {E}; \draw (p.east) to +(6mm,0); \node[anchor=south west] at (p.east) {1};
+\end{tikzpicture}
+
+\\ \hline
+roles and ranges
+& % IE 
+%\tikz\node{n/a};
+& % Barker
+%\tikz\node{n/a};
+& % ORM
+\begin{tikzpicture}[orm]
+\entity (p) {E}; \plays (p.west) to +(-8mm,0);
+\node[anchor=south east,constraint] at (p.west) {n..m};
+\node[anchor=north east,role name] at (p.west) {[role]};
+\end{tikzpicture}
+& % UML
+\begin{tikzpicture}[erm]
+\node[ermnode] (p) {E}; \draw (p.east) to +(6mm,0); 
+\node[anchor=south west] at (p.east) {n..m};
+\node[anchor=north west] at (p.east) {role};
+\end{tikzpicture}
+
+\\ \hline
+attribute 
+& % IE 
+%\tikz\node{n/a};
+& % Barker
+\tikz[orm]\node{Name: Type};
+& % ORM
+%\tikz\node{n/a};
+& % UML
+\tikz[orm]\node{Name: Type};
+
+\\ \hline
+primary key 
+& % IE 
+%\tikz\node{n/a};
+& % Barker
+\tikz\node[orm]{\# Name};
+& % ORM
+\tikz[orm]\node{(Name)};
+& % UML
+\tikz[orm]\node{Name \textless\textless{}PK\textgreater\textgreater};
+
+\\ \hline
+inheritance 
+& % IE
+\begin{tikzpicture}[erm]
+\path[use as bounding box] (3mm,5mm) rectangle (16mm,-4mm);
+\node[ermnode,minimum width=13mm,minimum height=8mm] at (4mm,0) {}; 
+\node[ermnode] at (6.5mm,0) {F}; \node{E};
+\end{tikzpicture}
+& % Barker
+\begin{tikzpicture}[erm]
+\path[use as bounding box] (3mm,5mm) rectangle (16mm,-4mm);
+\node[ermnode,minimum width=13mm,minimum height=8mm] at (4mm,0) {}; 
+\node[ermnode] at (6.5mm,0) {F}; \node{E};
+\end{tikzpicture}
+& % ORM
+\begin{tikzpicture}[orm]
+\entity (p) {E};
+\draw[subtype] (p.east) to +(8mm,0);
+\end{tikzpicture}
+& % UML
+\begin{tikzpicture}[erm]
+\node[ermnode] (p) {E};
+\draw (p.east) to +(8mm,0); 
+\draw [fill=white] (p.east) to +(3mm,1mm) to +(3mm,-1mm) to (p.east);
+\end{tikzpicture}
+
+\\ \hline
+or 
+& % IE 
+\begin{tikzpicture}[erm]
+\path[use as bounding box] (0mm,-5mm) rectangle (12mm,-5mm);
+\draw (0,0) to (4mm,0);
+\draw (4mm,0) |- (12mm,4mm) (4mm,0) |- (12mm,-4mm);
+\draw[fill=white] (4mm,0) circle (1mm);
+\end{tikzpicture}
+& % Barker
+%\tikz\node{n/a};
+& % ORM
+\begin{tikzpicture}[orm]
+\path[use as bounding box] (0mm,-1mm) rectangle (14mm,9mm);
+\plays (0,0) to (14mm,0) (0,8mm) to (14mm,8mm);
+\limits (7mm,0) to node[constraint=mandatory] {} (7mm,8mm);
+\end{tikzpicture}
+& % UML
+\begin{tikzpicture}[erm]
+\path[use as bounding box] (0mm,-5mm) rectangle (14mm,-5mm);
+\draw (0,0) to (4mm,0);
+\draw (4mm,0) |- (14mm,4mm) (4mm,0) |- (14mm,-4mm);
+\draw[dotted] (6mm,4mm) to node[anchor=west] {\{or\}} (6mm,-4mm);
+\end{tikzpicture}
+
+\\ \hline
+xor 
+& % IE 
+\begin{tikzpicture}[erm]
+\path[use as bounding box] (0mm,-5mm) rectangle (12mm,-5mm);
+\draw (0,0) to (4mm,0);
+\draw (4mm,0) |- (12mm,4mm) (4mm,0) |- (12mm,-4mm);
+\fill (4mm,0) circle (1mm);
+\end{tikzpicture}
+& % Barker
+\begin{tikzpicture}[erm]
+\path[use as bounding box] (0mm,-5mm) rectangle (14mm,-5mm);
+\draw (0,0) to (4mm,0);
+\draw (4mm,0) |- (14mm,3mm) (4mm,0) |- (14mm,-3mm);
+\draw (8mm,-4mm) to[out=110,in=-110] (8mm,4mm);
+\end{tikzpicture}
+& % ORM
+\begin{tikzpicture}[orm]
+\path[use as bounding box] (0mm,-1mm) rectangle (14mm,9mm);
+\plays (0,0) to (14mm,0) (0,8mm) to (14mm,8mm);
+\limits (7mm,0) to node[constraint=xor] {} (7mm,8mm);
+\end{tikzpicture}
+& % UML
+\begin{tikzpicture}[erm]
+\path[use as bounding box] (0mm,-5mm) rectangle (14mm,-5mm);
+\draw (0,0) to (4mm,0);
+\draw (4mm,0) |- (14mm,4mm) (4mm,0) |- (14mm,-4mm);
+\draw[dotted] (6mm,4mm) to node[anchor=west] {\{xor\}} (6mm,-4mm);
+\end{tikzpicture}
+\\
+\hline
+\end{tabular}
+\caption{Some conceptual modeling notation variants}
+\label{tab:ermnotations}
+\end{table}
+% see also http://www.agiledata.org/essays/dataModeling101.html
+% Not included here:
+%   association labels  (both directions)
+%   aggregation, composition
+
+

@@ -1,0 +1,51 @@
+%% Title as required by Humboldt University
+
+% enable roman page numbers
+\renewcommand{\thepage}{\roman{page}}
+
+\makeatletter
+
+% title page
+\begin{titlepage}
+
+\begin{center}
+\vfill
+
+{\bfseries
+  {\huge\strut\ignorespaces\@title\par}
+  {\large\strut\ignorespaces\@subtitle\par}
+}\vfill
+
+%\begin{otherlanguage}{ngerman}
+{\huge\textsc{Dissertation}}\par
+{\large zur Erlangung des akademischen Grades\par
+\vskip 1.5\baselineskip  
+{\it Doctor philosophiae\\(Dr. phil.)} \par
+\vskip 1.5\baselineskip
+eingereicht\par
+\vskip 1\baselineskip
+an der Philosophischen Fakult\"at I\\
+der Humboldt-Universität zu Berlin\\
+Institut f\"ur Bibliotheks- und Informationswissenschaften\par
+\vskip 1\baselineskip
+von \@author,\par
+geboren am 12. April 1979 in G\"ottingen
+}
+%\end{otherlanguage}
+\end{center}
+
+\pagebreak
+
+% back of the title page
+\thispagestyle{empty}
+%\begin{otherlanguage}{ngerman}
+  \setlength{\parindent}{0pt}
+  \setlength{\parskip}{10mm}
+  %% \begin{onehalfspace}
+  \@uppertitleback
+  %% \end{onehalfspace}
+%\end{otherlanguage}
+
+\end{titlepage}
+
+\makeatother

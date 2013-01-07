@@ -1,0 +1,981 @@
+\section{Computer science}
+\label{sec:informatics}
+
+\begin{quotation}%
+Any sufficiently advanced technology is indistinguishable from magic.
+\\ \quotationsource \Person[Arthur C.]{Clarke}
+\end{quotation}
+
+\noindent
+The following sections introduce three topics from computer science that 
+are relevant to this thesis: \emph{formal languages} and computation are 
+fundamental computer science concepts to reason about sets of data 
+(section~\ref{sec:formallanguages}). \emph{Data types} are important to 
+manage data structures in programming languages and in databases 
+(section~\ref{sec:datatypes}). Finally, \emph{data modeling} tries to bridge 
+the gap between  some reality and its description in form of data in some 
+information system (section~\ref{sec:datamodeling}). First the discipline
+should be put in context by a short overview.
+
+In general, computer science deals with the theoretical and practical 
+automatic processing of data or information. The first scientific computing 
+organization was founded in 1947 with the \tacro{Association for Computing 
+Machinery}{ACM}. Computer science as an independent academic field was 
+established until the 1960s. The history of the discipline, which can be 
+located somewhere between applied mathematics and engineering, is 
+directly connected to the development and application of computer systems. 
+The first computers as programmable, general purpose machines were created in 
+the 1940s for military calculations.%
+\footnote{The first computers include: Zuse Z3 (1941) and Z4 (1945) 
+that were created for calculations in military aviation, as
+well as other early German calculating machines from this time 
+\cite[p. 202ff.]{Lange2006};
+Collosus (1944) that helped to decipher encrypted messages by British 
+codebreakers; Harvard Mark~I/ASCC (1944) and its successors that were 
+used by the US Navy; ENIAC (1946) and EDVAC (1949) that were used by 
+the US Army. Only the IBM SSEC (1948) also served non-military purposes 
+until in 1949 three computers were completed at research institutions, partly
+with commerical support: EDSAC in Cambridge, Manchester Mark~1 in Manchester,
+and CSIRAC in Sydney.
+% More limted systems to solve equations existed before:
+% Only the limited Atanasoff-Berry-Computer (1942) had no military application.
+% but it was limited to solve equations like other equation solvers
+% e.g. Differential analysers (Bush etc.)
+% Rockefeller Differential Analyzer (1942, invented 1931 by Vannevar Bush)
+More about early computers can be found in the collection by
+\textcite{Rojas2000}.}
+Meanwhile, computers are used in almost any aspect of daily live with an
+impact comparable to the industrial revolution or with the invention of 
+the printing press. The economic weight of the so called information industry
+is another factor that must be beard in mind when thinking about promises 
+and motivations of (applied) computer science.
+
+From the beginning of computer science, there has been a tendency to 
+describe computers not only as tools for automatic data processing, but to 
+attribute them with human terms like `intelligent', `thinking', `knowledge', 
+`brain`, and `semantic'.\footnote{See for instance \textcite{Berkeley1949} 
+and the whole terminology of artificial intelligence. Even the term `language'
+is misleading because programming languages and other formal languages,
+unlike human languages, are based on precise formalization but not on speech
+and communication \cite{Naur1992}.} % TODO: pagenum of Naur 1992!
+The comparision of automatic systems with brain power is also drawn, if 
+computing is viewed as a natural phenomenon, with mental activity as
+instances of information processing, similar to computer systems 
+\cite{Denning2007}.
+
+The traditional, rationalistic paradigm of computer science is contrasted
+by constructivist views that stress the relativity of automatic systems
+as social artifacts. For Turing Award winner\footnote{The Turing Award, 
+annually awarded by the \acro{ACM} is the highest distinction in computer
+science.} \Person[Peter]{Naur}, pioneer in \term{software engineering} who 
+suggested the term \term{datalogy} in favour of computer science, programming
+is not comparable to industrial production, but an act of theory building 
+\cite{Naur1985}, and ``the core of programming is the programmer's developing
+a certain kind of understanding of the matters of concern.'' \cite{Naur2007}.%
+\footnote{See \textcite{Wyssusek2007} for a more detailed discussion of Naur's
+position.} Despite the predominant practice in computer science, computing 
+artifacts are neither objective description of reality \cite{Kent1978} nor
+an optimal solution of a given problem. Instead ``we construct the problem 
+as well as the solution'' \cite{Floyd1996} and must therefore take 
+responsibility for the thus constructed reality \cite{Weizenbaum1976}.
+Having said this, computer science provides powerful theories and tools
+to describe and process data.
+
+\subsection{Formal languages and computation}
+\label{sec:formallanguages}
+\index{language!formal languages}
+
+The study of formal languages emerged independently during the 1950s in
+linguistics and in computer science: \Person[Noam]{Chomsky} applied it to human
+languages, and \Person[John]{Backus} to programming languages
+\cite{Greibach1981}. The basic properties of formal grammars, languages, and
+computation are explained by \textcite{Hopcroft1979}.  A \Term{formal language}
+is a defined set of sequences of symbols. The symbols are also called the
+\Term{alphabet} of the language, and the sequences are also called
+\term[string]{strings} or \Term[word]{words}. Examples of formal languages
+include: the set of words that can be build as sequences of the letters A to Z;
+the set of roman numerals with symbols I,V,X,L,C,D,M; and the set of
+genome sequences with adenine, cytosine, guanine, thymine as symbols.  A
+formal language can be defined by either listing all of its words, if the
+language is finite, or by specifying a membership property that all of its
+words must satisfy. In computer science formal languages are studied in form of
+their membership properties, as automata or formal grammars, which will both be
+described in the following.
+
+An \Term{automaton} is an mathematically defined method (a process or
+algorithm) to compute whether a string belongs to a given formal language. The
+automaton is said to \Term[decidability]{decide} whether a string belongs to
+the language, if the method is guaranteed to halt with positive or negative
+result after a finite amount of time. As shown first by \textcite{Turing1936}
+and \textcite{Church1936}, there exist formal languages which are
+\Term[decidability]{undecidable}: that means no automatic process can compute
+whether a string belongs to the language or not: any algorithm at least for
+some strings will not halt computation in finite time.\footnote{The proof
+provided by \textcite{Turing1936} is known as `halting problem': in particular
+the formal language of `all programs that will halt' is not decidable.} The
+concept of decidability is based on the concept of \Term{computation}, which is
+a core concept of the whole discipline of computer science. Crucial for the
+concept of computation is the idea of a process where all steps are precisely
+defined. There are several models of computation which can be grouped in
+classes of equivalent computational power. A model of computation that belongs
+to the most powerful class is said to be \Term{Turing-complete}, and it can be
+used to compute all computable problems, as stated by the Church-Turing-thesis.
+The terms `computable' and `decidable' can be used interchangeably, as all
+functions with enumerable \term{domain} can be expressed as formal languages
+with tuples as words.
+
+A \Term{formal grammar} is a set of rules that describe how to form words of a
+formal language. It consists of the alphabet of symbols $A$, one selected
+\Term{starting symbol} $S\in A$, and a set of \Term{production rules}, each
+rule of the form $\alpha \rightarrow \beta$, where $\alpha$ and $\beta$ are
+sequences of symbols. The empty sequence $\epsilon$ can also be allowed, for
+instance to express removal of a sequence  ($\alpha \rightarrow \epsilon$).  To
+better analyze formal grammars, the alphabet is partitioned in two sets:
+\Term{terminal symbols} may occur in words and \Term{non-terminal symbols}
+occur only as variables, that are replaced by other sequences during the
+production process.  Example~\ref{ex:romannum} shows a formal grammar that can
+produce all roman numerals up to 4999, or the empty sequence. The grammar can
+also be written in more concise form as regular expression.\footnote{% The
+grammar has been adopted from a \term{regular expression} that was kindly
+provided and explained by user `paxdiablo' at
+\url{http://stackoverflow.com/questions/267399/\#267405}.} Regular expressions
+and other methods to express formal grammars will be described in
+section~\ref{sec:bnf}.
+
+\begin{example}[h]
+\begin{centering}
+\begin{tabular}{ |l|p{0.7\linewidth}| }
+\hline
+starting symbol & $S$ \\
+\hline
+terminal symbols & I, V, X, L, C, D, M, $\epsilon$ \\
+\hline
+non-terminals &
+$T$ for thousands, 
+$H$ for hundreds,
+$E$ for hundreds from $\epsilon$ to CCC,
+$Z$ for tens,
+$Y$ for tens from $\epsilon$ to XXX,
+$U$ for units,
+$O$ for units from $\epsilon$ to III
+\\
+\hline
+production rules &
+$S \rightarrow THEU $
+
+$T \rightarrow \epsilon \ ,\  
+ T \rightarrow \textrm{M} \ ,\  
+ T \rightarrow \textrm{MM} \ ,\ 
+ T \rightarrow \textrm{MMM} \ ,\ 
+ T \rightarrow \textrm{MMMM}$
+
+$H \rightarrow E \ ,\ 
+ H \rightarrow \textrm{CM} \ ,\ 
+ H \rightarrow \textrm{CD} \ ,\ 
+ H \rightarrow \textrm{D}E $
+
+$E \rightarrow \epsilon \ ,\ 
+ E \rightarrow \textrm{C} \ ,\  
+ E \rightarrow \textrm{CC} \ ,\  
+ E \rightarrow \textrm{CCC}$
+
+$Z \rightarrow Y \ ,\ 
+ Z \rightarrow \textrm{XC} \ ,\
+ Z \rightarrow \textrm{XL} \ ,\    
+ Z \rightarrow \textrm{L}Y $
+
+$Y \rightarrow \epsilon \ ,\ 
+ Y \rightarrow \textrm{X} \ ,\  
+ Y \rightarrow \textrm{XX} \ ,\  
+ Y \rightarrow \textrm{XXX} $
+
+$U \rightarrow O \ ,\  
+ U \rightarrow \textrm{IX} \ ,\  
+ U \rightarrow \textrm{IV} \ ,\  
+ U \rightarrow \textrm{V}O$
+
+$O \rightarrow \epsilon \ ,\ 
+ O \rightarrow \textrm{I} \ ,\  
+ O \rightarrow \textrm{II} \ ,\  
+ O \rightarrow \textrm{III} $
+\\
+\hline
+\end{tabular}
+\end{centering}
+%\\
+The language could also be expressed by the 
+following regular expression:\\
+~\verb!^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})!
+\caption{Formal grammar of roman numerals up to 4999}
+\label{ex:romannum}
+\end{example}
+
+Unrestricted formal grammars are Turing-complete, so any computable process can
+also be encoded as a formal grammar. For instance \term[functional
+programming]{Functional programming} languages like \term{Haskell} make use of
+\term{rewriting system}s, as shown below. By putting restrictions on the
+general form of production rules and/or on the process of replacing sequences
+by applying rules, one can define subclasses of formal languages with less
+complexity. The most known classification is the \Term{Chomsky hierarchy} with
+the following languages:
+
+\begin{itemize}
+\item Type-0: \Tacro{recursively enumerable languages}{RE} include all 
+ languages that can be defined by any formal grammar. Rules have the form
+ $\alpha \rightarrow \beta$ where $\alpha$ and $\beta$ are unrestricted
+ sequences of symbols.
+\item Type-1: \Tacro{context-sensitive languages}{CSL} have production
+ rules of the form $\alpha X\beta \rightarrow \alpha\gamma\beta$
+ where $X$ is a non-terminal symbol; $\alpha$, $\beta$, $\gamma$ are
+ sequences of symbols; and only $\alpha$ and $\beta$ can be empty.
+ In addition, a rule of the form $X \rightarrow \epsilon$ is allowed, if 
+ $X$ does not occur at the right side of any rule. The sequences
+ $\alpha$ and $\beta$ specify the context in which $X$ is replaced by 
+ another sequence.
+\item Type-2: \Tacro{context-free languages}{CFL} have only production 
+ rules with one single non-terminal symbol at the left side 
+ ($X \rightarrow \alpha$). The context of $X$ is not taken into 
+ consideration when it is replaced.
+\item Type-3: \Tacro{regular languages}{REG} limit production rules to
+ rules of the form $X \rightarrow \text{A}$, $X \rightarrow \epsilon$,
+ and either only $X \rightarrow \text{A}Y$ (right regular) or
+ $X \rightarrow Y\text{A}$ (left regular), where $X$ and $Y$ are 
+ non-terminal symbols and $A$ is a terminal symbol.
+\end{itemize}
+
+\noindent
+Each type is a proper subset of the former, and each corresponds to a class 
+of computational power, with type-0 being the class of Turing-complete 
+languages. Most programming languages are Turing-complete, that means the set
+of valid programs can only be defined by a grammar in $RE$. In practice, 
+many computable problems are also decidable so they could be expressed in 
+a less powerful language type. The corresponding class of \Tacro{recursive 
+languages}{R}, which can always be decided, is between $RE$ and $CSL$. However,
+such sub-Turing programming languages are not widely used, apart from theorem 
+provers and tools for formal software verification. 
+% Examples: http://www.e-pig.org/ Agda, Epigram, and 
+
+To make use of formal languages, there are two general problems: first the
+problem to specify a formal grammar, and second the problem to determine
+whether and how a word can be produced by a given grammar (\Term{parsing}). The
+specification problem is related to the application of schema languages for
+writing down grammars (section~\ref{sec:schemas}). The most difficult part is
+to formalize a possibly infinite set of words from a finite set of examples and
+assumptions.  Unfortunately there can be many grammars that define the same
+language and even for $CFL$ it is not computable whether an arbitrary grammar
+is equivalent to or is a subset of another grammar. The second problem is
+computable at least for recursive languages, but the computation may be very
+complex (time-intensive),\footnote{The task of determining whether a given word
+belongs to a given context-sensitive language may take more than
+\Tacro{polynomial time}{P}: that means there is no upper bound $k$ so that it
+takes less than $n^k$ steps to check any sufficiently large word of $n$ symbols
+length. For many problems $P$ is a limit of practical computability.} and a
+word may be producible by multiple paths of rule application. A specific list
+of rule applications and intermediate symbol sequences that transform the
+starting symbol into some word is also called the word's \Term{parse tree} or
+syntax tree. If a grammar covers words with
+multiple parse trees, the grammar is called \Term[ambiguous
+grammar]{ambiguous}. 
+ % syntax tree!see parse tree
+
+Ambiguous grammars, complexity of parsing, and other limitations of
+formal language types have motivated the creation of additional language 
+classes and computation models between $REG$, $CFL$, a and $CSL$. 
+Some relevant classes are:
+
+\begin{itemize}
+\item \Tacro{deterministic context free language}{DCFL} 
+  include all non-ambiguous \acro{CFL}.
+\item \Tacro{linear languages}{LINL} and 
+  \Tacro{deterministic linear languages}{DLINL} are \acro{CFL} with 
+  at most one non-terminal symbol at the right side of a grammar rule.
+  %\cite{Holzer1993}.
+\item \Tacro{indexed languages}{IND} enrich each non-terminal in
+  \acro{CFL} rules with a stack of index symbols to remember what 
+  rules were applied and in which order.
+\item \Tacro{growing context-sensitive languages}{GCSL} have rules of the 
+  form $\alpha \to \beta$ where $|\alpha| < |\beta|$ 
+  \cite{McNaughton1999}.
+\item \Tacro{Tree-adjoining grammars}{TAG} use ordered trees instead
+  of sequences in its production rules. \textcite{VijayShanker1994} showed 
+  that \acro{TAG} express the same language types as several other formalisms 
+  for so called mildly context-sensitive languages (linear indexed grammars, 
+  head grammars, etc.).
+\item \Tacro{conjunctive grammars}{CG} extend rules of \acro{CFL} with 
+  conjunction operators. \Tacro{boolean grammars}{BG} also add
+  negation operators \cite{Okhotin2010}. The rules of a $BG$ have the form
+$X \to \alpha_1 \& \ldots \& \alpha_m \&
+\lnot\beta_1 \& \ldots \& \lnot\beta_n $
+ (without $\beta_i$ for $CG$). A
+  sequence that replaces $X$ must satisfy all sequences $\alpha_i$ and none
+  of the sequences $\beta_i$. Parsed words of a $CG$ or $BG$ have acyclic 
+  graphs instead of parse trees.% and parsing is computable in $P$. 
+\item \Tacro{visibly pushdown languages}{VPL} or \Term{nested words}
+  capture linear and hierarchical structures by adding symbols for 
+  tagged \emph{calls} and \emph{returns} \cite{Alur2009}. Equally
+  tagged call and return symbols hierarchically connect to nested edges
+  that must not overlap, but may be pending. Figure \ref{fig:nestedwords}
+  contains two examples of nested words with call symbols \nwc{a}, \nwc{b},
+  return symbols \nwr{a}, \nwr{b}, and normal symbols $c,d$.
+%\Term{Nested words} or \Tacro{Visibly pushdown languages}{VPL} 
+%precisely correspond to \Term{regular tree languages} which capture
+%both linear and hierarchical structures \cite{Alur2009}. In addition
+%to regular grammars, nested word grammars can contain two special
+%symbols for tagged \emph{calls} and \emph{returns}. Equally
+%tagged call and return symbols hierarchically connect to nested edges
+%that must not overlap, but may be pending. Figure \ref{fig:nestedwords}
+%contains two examples of nested words with call symbols \nwc{a}, \nwc{b},
+%return symbols \nwc{a}, \nwc{b}, and normal symbols $c,d$. 
+  Ordered trees are a special case of nested words that start with a
+  call, end with a corresponding return, and contain no pending edges.
+\end{itemize}
+
+% all type 0 to 3 are closed by union, concatenation, star, reflection
+% and intersection with a regular language.
+
+The relations between the language classes mentioned above are summarized
+in figure~\ref{fig:complexityzoo} with arrows depicting the proper subset
+relationship. \acro{P} and \acro{NP} denote no grammar types, but important 
+complexity classes from the theory of computation.
+
+\begin{figure}[h]
+\begin{tikzpicture}[node distance=3mm]
+\node(REG){REG};
+\node[right=of REG,yshift=+7mm] (VPL) {VPL} edge[<-] (REG);
+\node[right=of VPL] (DCFL) {DCFL} edge[<-] (VPL);
+\node[right=2mm of REG,yshift=-7mm] (DLING) {DLING} edge[<-] (REG);
+\node[right=of DLING] (LING) {LING} edge[<-] (DLING);
+\node[right=2mm of LING,yshift=+7mm] (CFL){CFL} edge[<-] (LING); 
+\draw[->] (DLING) -> (DCFL);
+\draw[->] (DCFL) -> (CFL);
+\node[right=6mm of CFL] (GCSL) {GCSL} edge[<-] (CFL);
+\node[right=6mm of CFL,yshift=+7mm] (TAG) {TAG} edge[<-] (CFL);
+\node[right=of CFL,yshift=-7mm] (CG) {CG} edge[<-] (CFL);
+\node[right=of CG] (BG) {BG} edge[<-] (CG);
+\node[right=of BG,yshift=+7mm] (P) {P} edge[<-] (BG);
+\draw[dotted,->] (GCSL) to (P); % in P but unknown whether strictly in P
+\node[right=2mm of P,yshift=+7mm] (IND) {IND=NP} edge[<-] (TAG);
+\draw[dotted,->] (P) -> (IND);
+\node[right=of IND,yshift=-7mm] (CSL) {CSL} edge[dotted,<-] (IND); \draw[dotted,->] (P) -> (CSL);
+\node[right=of CSL] (R) {R} edge[<-] (CSL);
+\node[right=of R] (RE) {RE} edge[<-] (R);
+\end{tikzpicture}
+%TODO
+% ---> properly contained 
+% ...> containted, not know whether properly
+\caption{Relations (proper containments) between classes of formal language}
+\label{fig:complexityzoo}
+\end{figure}
+
+% (Ohlebusch, 2002, pp.67). Advanced Topics in Term Rewriting.
+
+\label{p:rewritingsystem} Formal grammars can be generalized to \Term{rewriting
+systems}.  A rewriting system is \term{digraph} in which nodes represent
+objects and edges represent a rewriting relation `$\rightarrow$'. The rewriting
+relation can be used as rules to replace one object by another. Suppose for
+instance the set \set{a,b,c} and the rewriting relation \set{(a\rightarrow
+b),(a\rightarrow c), (c\rightarrow a),(c\rightarrow b)}: the system is
+non-ambiguous as there are several pathes from $a$ to $b$, either by direct
+replacement or by first replacing a with $c$ and then $c$ with $b$. Objects
+with outdegree zero act as terminal symbols (in this example $b$) and there may
+exist paths that can be followed infinitely (in this example $a\rightarrow
+c\rightarrow a \rightarrow c \rightarrow \cdots$).
+
+To illustrate the general concept example~\ref{ex:rewritetri} shows a rewriting
+system in which objects are build of geometric figures (\term{visual symbol}s).
+The system consists of two rules that can be used to replace a simple triangle
+by a structure of two or three triangles. Starting with a simple triangle ({\sf
+start}) one can create an infinite number of different figures by applying {\sf
+rule 1} or {\sf rule 2} to selected parts of the figure. However, the set of
+figures that can be reached from a given start symbol, is strictly defined. For
+instance the figure in the bottom right of example~\ref{ex:rewritetri} is no
+valid figure in the given rewriting system.
+
+Rewriting systems are of special interest, if the objects to be rewritten 
+have some internal structure. Common types of such systems are: formal grammars
+as string rewriting systems, that operate on sequences of symbols; term or tree
+rewriting systems with applications for instance in symbolic computation,
+automatic theorem proving, and code optimization; and graph rewriting systems.
+
+\begin{example}[h]
+\centering
+\begin{tikzpicture}[orm,tri/.style args={#1}{%
+  regular polygon,regular polygon sides=3,
+  draw=black,shape border rotate=#1,minimum size=10mm
+},trione/.style args={#1}{append after command={
+  \bgroup[current point is local=true]
+    let \n1 = {#1*5.5mm} in (\tikzlastnode)
+    node[tri=0,scale=#1] at +(90:\n1) {}
+    node[tri=0,scale=#1] at +(330:\n1) {}
+    node[tri=0,scale=#1] at +(210:\n1) {}
+  \egroup
+}}]
+
+\draw[dotted] (0.5,-1) to (0.5,3.5);
+
+\node at (-3.1,2.5) {\textbf{start:}};
+\node[tri=0,scale=1.2] at (-2.1,2.4) {};
+
+\begin{scope}[xshift=-2.1cm,yshift=1.2cm]
+\node at (-1.1,0.1) {\textbf{rule 1:}};
+\draw[->] (.5,0.2) to (.9,0.2);
+\node[tri=0,scale=1.2] at (0,0) {};
+\node[trione=0.5] at (1.4,0) {};
+\end{scope}
+
+\begin{scope}[xshift=-2.1cm,yshift=-1mm]
+\node at (-1.1,0.1) {\textbf{rule 2:}};
+\draw[->] (.5,0.2) to (.9,0.2);
+\node[tri=0,scale=1.2] at (0,0) {};
+\begin{scope}[xshift=1.4cm]
+\node[tri=0,scale=1.2] at (0,0) {};
+\node[tri=180,scale=0.5] at (0,0) {};
+\end{scope}
+\end{scope}
+
+\draw[->] (2.75,2.5) to node[above,draw=none] {rule 1} (3.75,2.5);
+\draw[->] (1.5,1)    to node[pos=0.2,right,draw=none] {rule 2} (2,0);
+\draw[->] (5.25,2.5) to node[above,draw=none] {rule 1, 2, 1} (7.25,2.5);
+\draw[->] (3.75,0.5) to node[above,draw=none] {rule 1} (4.75,0.5);
+
+\begin{scope}[xshift=2cm,yshift=2cm]
+\node[tri=0,scale=2.2] at (0,0) {};
+\end{scope}
+
+\begin{scope}[xshift=3cm]
+\node[tri=0,scale=2.2] at (0,0) {};
+\node[tri=180] at (0,0) {};
+\end{scope}
+
+\node[trione=1] at (4.5,2) {};
+
+\begin{scope}[xshift=5.5cm]
+\node[trione=1] at (0,0) {};
+\node[tri=180] at (0,0) {};
+\end{scope}
+
+\begin{scope}[xshift=8cm,yshift=2cm]
+\node[tri=0] at (90:5.5mm) {};
+\node[trione=0.45] at (210:5.5mm) {};
+\node[tri=0] at (-30:5.5mm) {};
+\node[tri=180,scale=0.45] at (-30:5.5mm) {};
+\end{scope}
+
+\node at (8,-0.75) {invalid};
+
+\begin{scope}[xshift=8cm]
+\node[trione=1] at (0,0) {};
+\node[tri=180,scale=.45] at (-90:2.5mm) {};
+\node[tri=180,scale=.45] at (30:2.5mm) {};
+\node[tri=180,scale=.45] at (150:2.5mm) {};
+\end{scope}
+
+\end{tikzpicture}
+\caption{Rewriting system on geometric figures}
+\label{ex:rewritetri}
+\end{example}
+
+\begin{example}[h]
+\centering
+
+\begin{tabular}{cc}
+\begin{tikzpicture}[e/.style={->}]
+\matrix(m)[matrix of nodes]{
+  \nwc{a} & \nwc{b} & $c$ & $d$ & \nwr{b} & $c$ & \nwc{b} 
+& \nwc{a} & $d$ & \nwr{a} & \nwr{b} & \nwr{a} \\};
+\draw[e,out=55,in=125] (m-1-1.north) to (m-1-12.north);
+\draw[e,out=60,in=120] (m-1-2.north) to (m-1-5.north);
+\draw[e,out=65,in=115] (m-1-7.north) to (m-1-11.north);
+\draw[e,out=60,in=120] (m-1-8.north) to (m-1-10.north);
+\end{tikzpicture}
+
+&
+
+\begin{tikzpicture}[e/.style={->}]
+\matrix(m)[matrix of nodes]{ $c$ & \nwr{a} & \nwc{b} & $d$ 
+  & \nwr{b} & \nwr{b} & \nwc{a} & $d$ \\};
+
+\draw[e,out=60,in=120] (m-1-3.north) to (m-1-5.north);
+
+\path (m-1-1.north) ++(0,0.3) coordinate (x1)
+                    ++(0,0.4) coordinate (x2);
+\draw[e,out=0,in=120] (x1) to (m-1-2.north);
+\draw[e,out=0,in=125] (x2) to (m-1-6.north);
+
+\path (m-1-8.north) ++(0,0.2) coordinate (x3);
+\draw[e,out=60,in=180] (m-1-7.north) to (x3);
+\end{tikzpicture}
+
+\\
+
+\begin{tikzpicture}
+[level distance=10mm,sibling distance=10mm,
+    every child/.style={garc}]
+  \node[gnode,label=above:a] {}
+    child { node[gnode,label=left:b] (b1) {} 
+      child { node[gnode,label=below:c] (c1) {} }
+      child { node[gnode,label=below:d] (d1) {} }
+    }
+    child { node[gnode,label=below:c] (c2) {} }
+    child { node[gnode,label=right:b] (b2) {} 
+      child { node[gnode,label=right:a] {}
+	child { node[gnode,label=below:d] {} }  
+      }
+    };
+  \draw[glink] (b1) edge (c2) (c2) edge (b2) (c1) edge (d1);
+\end{tikzpicture}
+
+&
+
+\begin{tikzpicture}
+[opt/.style={dotted,thick,-},level distance=10mm,
+  level 1/.style={sibling distance=16mm},
+  level 2/.style={sibling distance=8mm},
+  level 3/.style={sibling distance=8mm}
+]
+  \node {}
+    child[opt] { node[] {} } 
+    child[garc,dotted] { node[gnode,label=left:b] (b1) {}
+      child[garc] { node[gnode,label=left:a] (a2) {} 
+       child[opt] { node[] {} } 
+       child[garc] { node[gnode,label=below:c] {} }
+      }
+      child[garc] { node[gnode,label=right:b] (b2) {} 
+        child[white] { node[] {} }
+        child[garc] {node[gnode,label=below:d] {} }
+      }
+    }
+    child[garc,dotted] { node[gnode,label=right:a] (a1) {}
+       child[garc] { node[gnode,label=below:d] {} }
+       child[opt] { node {} }
+    }
+    child[opt] { node[] {} };
+  \draw[glink] (b1) edge (a1) (a2) edge (b2);
+  \draw[dotted,thick] (b1) to +(-1.4,-.8);
+\end{tikzpicture}
+
+\\
+\end{tabular}
+\caption{Nested words (the left also being an ordered tree)}
+\label{fig:nestedwords}
+\end{example}
+
+In summary, formal languages and rewriting systems describe structures of
+sequences, trees, or graphs; and how these structures can be parsed. This
+requires the identification of symbols or objects of same kind: for instance
+the size of two triangles in example~\ref{ex:rewritetri} does not matter, but
+their orientation. Another often overlooked property of formal languages and
+rewriting systems is that they only deal with syntax although they are often
+used to described some semantics. If one compares example~\ref{ex:romannum} 
+and example~\ref{ex:rewritetri}, only the first has some known meaning. An
+intelligent reader can give meaning to some of the non-terminal symbols, but 
+other symbols may be irrelevant artifacts, only introduced because of formal
+grammar limitations. To give another example, the production rule
+$C \to \mathrm{I}B\mathrm{T}C\mathrm{E}C\mathrm{F}$ with terminals I, T, E, F 
+and non-terminals $B$ and $C$ has special meaning but being a production rule. We
+can change the names of symbols to get the following rule in \term{Backus-Naur-Form}
+(see section~\ref{sec:bnf} and table~\ref{tab:bnfsummary} for details about 
+this syntax):
+
+\begin{lstlisting}[language=BNF]
+  command = "if" boolean "then" command "else" command "end"
+\end{lstlisting}
+
+\noindent
+The meaning of this rule, however, is only added by telling that this rule
+is used for a construct from a programming language created for some 
+purpose, and that it will trigger a specific action when given as input
+to an interpreter. Especially the name of non-terminal symbols is irrelevant
+as they never show up in final words of a languages. For instance the rule above
+could also be written as:
+
+\begin{lstlisting}[language=BNF]
+  x = "if" y "then" x "else" x "end"
+\end{lstlisting}
+
+\noindent
+In summary, rules from formal languages can be used as base for meaningful
+constructs, but they do not hold meaning in its structure alone.
+
+% http://rewriting.loria.fr/
+%Syntax Definition Formalism
+%SLPS (contains...)
+
+%in which whose objects are sequences of 
+%terminal and non-terminal symbols and which have one non-terminal symbol
+%as start-symbol. % AND WHAT ABPUT VARIABLES?
+
+\subsection{Data types}
+\label{sec:datatypes}
+
+\begin{quotation}%
+Algorithms + Data Structures = Programs
+\\ \quotationsource \Person[Niklaus]{Wirth} (\citeyear{Wirth1976})
+\end{quotation}
+
+% Introductions to data types in programming languages: \cite{Pierce2002}
+
+\noindent Until the 1960s, programming languages only provided a limited set of
+predefined \term{data type}s and programmers had to choose data representation
+close to the internal structure of memory. The influential programming language
+\term{ALGOL 60} \cite{Naur1963} with fixed data types for integers, decimal
+numbers, boolean values, and arrays, introduced lexical scoping, so parts of a
+program could have their own private \term{variable}s. Grouping data was
+further improved by records and other types in \term{Pascal}'s precursor
+\term{ALGOL W} \cite{Wirth1966}, by \term{object-orientation} in \term{SIMULA}
+\cite{Dahl1966}, and by \Term{abstract data type}s \cite{Liskov1974}. The basic
+idea of abstract data types is to define data objects based on how they can be
+used and modified by operations specific to each data type. Operations hide the
+representation of an object's state and only show the `what' instead the `how'
+of computing with data objects. 
+
+Programming languages and some other methods of data structuring such as
+\term{schema language}s (section~\ref{sec:schemas}) provide a basic set of
+\Term{primitive data types} and mechanisms to create new types based on
+existing types. Typical primitive data types include the boolean type,
+character and character string types, and numeric types (see
+section~\ref{sec:numberencodings}) but domain-specific types such as date and
+time may also be primitive, depending on the language. A special primitive type
+in some languages is the \Term{unit type}, which can hold no information
+because all unit type variables have the same value. General mechanisms to
+derive new data types include referencing (pointer types), aggregation, choice,
+and subtyping, which will be described below. Both the set of primitive data
+types and mechanisms to define new types differ among programming languages, so
+one cannot simply exchange typed data from one language to another. As most
+programming language features, data types are only a tool but no requirement.
+Some languages have no data types at all or types are not explicitly defined
+but only used by convention.
+
+The main purpose of explicit typing in programming languages is to check that
+data object (variables) are used in a predictable way, so programmers can work
+with abstract data values instead of stored representations of values. Type
+checking can either be performed before execution of the program (\term{static
+typing}) or on execution (\term{dynamic typing}). Some languages also allow to
+infer a type from the object's properties (\term{duck typing}).  Systems of
+primitive types together with possible rules of type derivation are studied as
+\Term[type system]{type systems} in programming language theory. An important
+theoretical method for describing type systems are \Term[algebraic data
+type]{algebraic data types}, which were introduced in \term{functional
+programming} languages with \term{Hope} as first \cite{Burstall1980} and
+\term{Haskell} as currently most popular instance.  The theory of algebraic
+data types is based on mathematical type theory and category theory, which
+advanced in the 1990s \cite{Pierce2002}.  Extensible programming languages were
+another approach to better separate data structures from implementation and to
+facilitate definition of new data types
+\cite{Balzer1967,Schuman1970,Solntseff1974}. Incidentally the term `metadata'
+was coined by \textcite{Bagley1968} in this context. Extensible programming
+languages received less adoption because they made difficult code sharing, but
+they now receive a revival as host systems for \term{domain specific
+language}s. 
+
+To find common patterns in data types, it is wise not to look only at theoretic
+type theory but also at the actual diversity of data types and existing
+approaches to create mappings between type systems from different programming
+languages. As described by \textcite{Meek1994a,Meek1994b}, a working group on
+language independent data types created ISO~11404, which was last revised in
+2007 (ISO~11404:\citeyear{ISO11404}). ISO~14404 influenced some type systems of
+\term{data binding} languages (section~\ref{sec:databinding}) and \term{schema
+language}s (section~\ref{sec:schemas}), such as the \term{XML Schema} datatypes
+\cite{Biron2004} described in section~\ref{sec:schemas}~\ref{sec:xmlschema}.
+The standard defines a data type as ``a set of distinct values, characterized
+by properties of those values and by operations on those values'' and
+distinguishes three notions:
+
+\begin{itemize}
+\item the \Term{value space} is the set of possible values of a given data type
+  independent from its realization in data. The value space can be finite (for
+  instance the Boolean values `true' and `false') or infinite (for instance the 
+  set $\mathbb{R}$).
+\item the \Term{computational model} defines a set of representable values of a
+  given data type with some properties and operations. For instance Boolean
+  values are not ordered but one can apply \term{Boolean algebra}. Infinite
+  value spaces have no exact mapping from value space to computational
+  model, as explained in section~\ref{sec:numberencodings} on \term{number encoding}s.
+\item the \Term{value representation} in a given environment, for instance the
+  two bits \verb|0| and \verb|1| for the values `true' and `false'. The value 
+  representation is also known as \term{lexical space}.
+\end{itemize}
+
+\begin{table}
+\centering
+\begin{tabular}{|l|l|}
+\hline
+ Boolean    & a Boolean logic value \\
+ State      & a value from an unordered list of possible values \\
+ Enumerated & a value from an ordered list of possible values \\
+ Character  & a value from a set of possible characters (see section~\ref{sec:characters}) \\
+ Ordinal    & an ordinal number (1st, 2nd, 3rd...) \\
+ Date-and-Time & a value from all points in time \\
+ Integer    & a number from $\mathbb{Z}$ \\
+ Scaled     & a fixed point number from a subset of $\mathbb{R}$ \\
+ Real       & a number from $\mathbb{R}$ \\
+ Complex    & a complex number from $\mathbb{C}$ \\
+ Void       & the unit type \\
+\hline
+\end{tabular}
+\caption{Primitive data types defined in ISO~11404 (\citeyear{ISO11404})}
+\label{iso11404primitives}
+\end{table}
+
+The standard further defines some primitives data types 
+(table~\ref{iso11404primitives}), general properties (types can be 
+ordered or unordered, and ordered types may have upper and lower bounds),
+and methods to derive new data types with defined value spaces and
+computational model. The derivation methods can be classified as following:
+
+\begin{itemize}
+  
+\item the value of a \Term[pointer]{pointer type} or \term{reference} refers to
+  another typed variable. For instance an integer reference always points to an
+  integer variable. Two pointers are equal only if they point to the same
+  variable but not if they point to distinct variables with same value. Most
+  pointer types allow the special value \term{NULL} to indicate that the pointer
+  does refers to any variable. This feature can also be implemented by a choice
+  type of a simple type and the unit type.
+
+\item a \Term[choice type]{choice types}, also known as tagged union,
+  defines a set of possible types that each variable can choose from. For instance
+  a variable of choice type created from integer and string could either store an 
+  integer or a string value. The particular selection of type is also called the 
+  variable's tag.
+
+\item \Term{aggregation types} hold multiple values as members. An aggregate type
+  can be homogeneous, if all members must belong to a single datatypes, or 
+  heterogeneous. Typical aggregation types include sets, sequences, bags, and tables,
+  which can be defined both homogeneous and heterogeneous. Record types correspond
+  to \term{tuple}s and \term{associative array}s (also called maps or dictionaries) 
+  correspond to finite \term{function}s. Maps store a set of key-value pairs with
+  unique, usually homogeneous keys and homogeneous or heterogeneous values.
+
+\item \Term[subtype]{subtypes} can be defined by limiting or extending other
+  types.  Examples include simple (untagged) unions of types, upper/lower bounds
+  on value spaces, and selections/exclusions of specific values. Beside these
+  simple \term{set} operations one can define more complex constraints and also
+  extend choice types and aggregation types. An important kind of subtyping in
+  \term{object-oriented} languages is based on heterogeneous record types which
+  are then called \term{class}es. In most type systems a derived subtype keeps
+  most properties of its \term{base type}s (\term{inheritance}) and in most context
+  the subtype can be used as if it was the base type. If the subtype was derived
+  from multiple base types, this feature is called \term{polymorphism}. Polymorphism
+  is a powerful feature because it allows one thing to have different kinds at the
+  same time, but in practice it is difficult to determine which specific base time
+  to refer to in which context. For this reason most type systems restrict
+  subtyping at least to some degree.
+
+\end{itemize}
+
+% -collection types (array, list, fifo, trees, sets, associated array/hash/map...)
+
+Type constructors can be combined, even recursively. For instance a \term{tree}
+type with labeled \term{leaf} nodes can be defined as homogeneous aggregation
+type with a choice type of either an element (a leaf) or a sequence of trees
+(\term{child node}s). ISO~14404 further defines provisions to mark (parts of)
+types as mandatory, optional, recommended etc. Optional parts can also be viewed
+as \term{choice type}s with a base type as one option (element given) and the 
+\term{unit type} as the other (element not given). Similar derivation methods as
+described above exist with differing main focus in programming languages and other
+type systems.
+
+% semi-structured: only access method defined, but not the internal structure (6.8.8),
+% ISO 11179: Metadata registries: <value,meaning> tuples
+
+%\begin{lstlisting}[language=ML]
+%data Bool = False | True -- define a enumerated type with two values
+%data Tree x = Empty | Node x (Tree x) (Tree x)
+%data Maybe x = Empty | x
+%\end{lstlisting}
+
+% TODO: What does 0x... mean (needs to be descibed here)
+% TODO: base64, percent-encoding, hex-encoding...
+
+\subsection{Data modeling}
+\label{sec:datamodeling}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[orm,box/.style={draw,inner sep=3mm,align=center},
+    to/.style={->,shorten >=2pt,shorten <=2pt},lab/.style={fill=white}]
+ \node[ellipse,minimum height=2.5cm,minimum width=4cm,draw] (mm) at (0,0)
+    {};
+ \node[below=3mm of mm.north] {mental models};
+
+ \node[draw,cloud,cloud puffs=14,cloud ignores aspect,cloud puff arc=90,
+    minimum width=4cm,minimum height=1.5cm,above=1.25cm of mm] (reality)
+  {real world};
+ \node[align=left] at (-3,2.5) {reality\\realm};
+
+ \node[ellipse,minimum height=1.2cm,draw] (limod) at (0,-0.2) {limited model};
+
+ \draw[dotted] (-4,1.9) to (4.25,1.9);
+ \draw[dotted] (-4,-3.75) to (4.25,-3.75);
+ \node[align=left] at (-3,1.2) {conceptual\\realm};
+ \node[align=left,anchor=east] at (-2.8,-4.5) {data\\realm};
+ \node[align=center] at (3.25,0) {universe of\\discourse};
+ 
+ \node[box,below=1cm of mm] (conceptual) {conceptual model};
+
+ \draw[to] (reality) to node[lab]{\textit{perception}} (mm);
+
+ \draw[draw=white,double=white,very thick] (limod) to (conceptual);
+ \draw[to] (limod) to node[lab,pos=0.6]
+    {\textit{symbolic abstraction}} (conceptual);
+
+ \node[box,minimum width=1.5cm,below=1.25cm of conceptual.south west,
+xshift=0.25mm] (logical)
+    {logical\\schema};
+ \node[box,minimum width=1.5cm,below=1.25cm of logical] (physical)
+    {physical\\schema};
+ \node[box,minimum width=1.5cm,below=1.25cm of conceptual.south east,
+xshift=0.25mm] (external) {external\\schema};
+ \draw[to,->] (conceptual) to (logical);
+ \draw[to,->] (conceptual) to (external);
+ \draw[to,->] (logical) to node[fill=white] {\textit{implementation}}
+(physical);
+\end{tikzpicture}
+\caption{Summarized view of the data modeling process}
+\label{fig:datamodeling}
+\end{figure}
+
+In general \Term{data modeling} is a set of activities required to design a
+database or data format. The basic terms of this process have been introduced
+by \cite{CODASYL1971,Steel1975b} and standardized in \cite{ISO9007}. As surveyed
+by \textcite[p.~34ff.]{Simsion2007} the data modeling terminology differs,
+especially between academic and practitioners, but also within communities.
+Nevertheless there is a rough consensus to differentiate \emph{i)} three
+``realms of interest'' which are the real world; ideas about the real world
+existing in the minds of men; and symbols on some storage medium representing
+these ideas \cite[p. II-1]{Steel1975b} \emph{ii)} several stages in database
+design process from one realm of interest to the next, possibly with sub-steps
+\cite[ch. 3.1]{Simsion2007} \emph{iii)} several levels of description for
+different stages and applications \cite[ch. 2.2.2]{Kent1978}.
+Figure~\ref{fig:datamodeling} shows a synthesis of data modeling process
+frameworks from across the data modeling literature. It is mainly based on
+\cite[fig.~3-1]{Simsion2007} who gives an in-depth review of literature and on
+\cite[fig.~2]{Steel1975}.\footnote{\textcite[fig.~2]{Steel1975} has a better
+view of \textcite[fig.~VIII~5.1]{Steel1975b}. Most later works combine realm of
+reality and conceptual realm into the conceptual model and concentrate on data
+realm.} A common model of reality that exists in our minds, shared between
+individuals via any language, is called \Term{universe of discourse}. We can
+only express a limited model and try to formally capture it as \Term{conceptual
+schema} in a \Term{conceptual model}. Conceptual models are also called `domain
+models` or `semantic data models' \cite{Hull1987,Peckham1988} and come with a
+graphical notation for better understandability. Most conceptual modeling
+techniques are based on or influenced by the \Tacro{Entity-Relationship
+Model}{ERM} \cite{Chen2007}.  This thesis uses the \Tacro{Object Role
+Modeling}{ORM} notation as laid out below and in section~\ref{sec:orm}.  The
+terms `model' and `schema' are often used synonymously with connotation on
+expression for schemas or on meaning for models. A conceptual model can be
+expressed as \Term{logical schema} in a \term{data description language}.  It
+is also called \Term{external schema} if it only covers parts of a conceptual
+model (as `views' to the full model) or if it is not primarily meant for
+storing data. Both logical and external schema must be implemented in a
+\Term{physical schema} to actually hold data. If data is stored as database, a
+\Tacro{database management system}{DBMS} typically implements the physical
+level so users can work on the \term{logical level}. External models can also
+be realized as data formats and formal ontologies. Examples of languages to
+express logical and external schemas are \acro{SQL}, \acro{XSD}, and
+\acro{RDFS}.
+
+It is important to recognize that each step includes a feedback loop to the
+prior level of description: constraints of physical schemas influence logical
+schemas, logical schemas affect conceptual models, and reality is perceived and
+changed to better fit existing mental models, as language affects the way we
+think \cite{Whorf1956}. Modelers and architects of information systems often
+ignore these feedbacks, although it can even cascade through multiple levels. If
+something cannot be expressed  within the artificial boundaries of a system, 
+we often mistakenly assume that is does not exist. In practice data is often
+created and shaped without a clean, explicit data modeling process. Instead of
+reflecting mental models, data modeling then starts with a conceptual model or
+even directly with a logical schema or implementation \cite{Simsion2007}.
+One can therefore simplify the data modeling process in four levels:
+mind (reality and mental models), model (conceptual model), schema (logical
+and external schemas), and implementation (physical schemas) as shown in
+figure~\ref{fig:simplifieddatamodeling} at page~\pageref{fig:simplifieddatamodeling}.
+
+Data modeling is only one part of the design process of information systems.
+It may be part of \Term{software engineering} if the goal is to create an
+application, or part of \Term{information engineering} if the goal is not
+a single application but an integrated set of tasks and techniques for
+business communication within an enterprise.\footnote{The term
+information engineering was popularized by \Person[James]{Martin} and
+\Person[Clive]{Finkelstein} in the 1980s. It also denotes the
+\acro{ERM} notation variant that they described in \cite{Martin1990}.}
+As argued by \textcite{Brooks1987} from in software engineering there is
+no `silver bullet' -- no single technology or management technique
+can provide increase in performance orders of magnitude higher
+compared to other good techniques. Instead programming is a creative 
+design process and great differences can only be made by great 
+designers. This should also apply to data modeling.
+
+\subsectionexample{Object Role Modeling}
+\label{sec:ormbasicexample}
+
+\begin{figure}[b]
+\centering
+\begin{tikzpicture}[orm,ind/.style={dotted,->,shorten >=2pt}]
+\entity (A) {Work};
+\value[right=3 of A]  (B) {Title} 
+  edge[relation,required] node(R)[roles,unique]{} (A);
+
+\node[above=1mm of R] (has) {is~titled};
+\node [above=5mm of has.north west] (pred) {$\mathrm{predicate}$};
+\draw (pred.-100) edge[ind,shorten >=0pt] (has.120);
+
+\node[role name,below=0.5mm of R.south,anchor=north east] (r1) {[signified]};
+\node[role name,below=0.5mm of R.south,anchor=north west] (r2) {[signifier]};
+
+\node [below=of A] {$\mathrm{entity~type}$} edge[ind] (A);
+\node [below=of B] {$\mathrm{value~type}$}  edge[ind] (B);
+
+\node [below=9mm of R] (rs) {$\mathrm{role~names}$} edge[ind] (r1) edge[ind] (r2);
+%\node [below=of R] (rs) {$\mathrm{relationship}$} edge[ind] (R);
+%\node [below=0 of rs,yshift=2mm] {$\mathrm{(with~roles)}$};
+
+\node [above=of B.north west] (m) {$\mathrm{mandatory~role~dot}$};
+\draw (m.-150) edge[ind,shorten >=5pt] (B.west);
+
+\node [above=of A] (ub) {$\mathrm{uniqueness~bar}$};
+\draw (ub) edge[ind,yshift=3mm] (R.north west);
+\end{tikzpicture}
+\caption{Basic elements of ORM2 notation}
+\label{fig:orm2basics}
+\end{figure}
+
+Throughout this thesis \tacro{Object Role Modeling}{ORM} is used as conceptual
+modeling language in its modern graphical notation \acro{ORM2}. \acro{ORM} is
+further described by \textcite{Halpin2008} and in section~\ref{sec:orm}. 
+Figure~\ref{fig:orm2basics} shows an annotated example of a very simple 
+conceptual model in \acro{ORM2}.
+%
+The example depicts a model with two \Term{object types}: one 
+\Term{entity type} \format{Work} and one \Term{value type} 
+\format{Title}. This means, in our conceptual domain there are works
+and titles, but only the latter can be written down as concrete values. 
+The two object types are connected by a \Term[predicate (ORM]{predicate}
+(or relationship), that consists of two \Term[role (ORM)]{roles}. 
+In a particular relationship between one work and one title, the 
+role \format{signified} is played by the work, and the role 
+\format{signifier} is played by the title. Each predicate has a label,
+which can be used to verbalize concrete
+relationships. If some work $w$ is connected to some title $t$, we
+can say that `$w$ \format{is titled} $t$`. Predicates with more than
+two roles have slots for each role in their label. For instance we 
+could have a predicate with three roles, verbalized as
+`$w$ \format{was translated into} $l$ \format{by} $p$'. The basic 
+support of $n$-ary predicates is one feature of \acro{ORM} which 
+not exists for instance in \acro{RDF}-based modeling languages.
+
+Basic \acro{ORM} is grounded in \term{predicate logic}, so two particular
+objects can only be connected once by a given predicate: either $w$ is titled
+$t$ or $w$ is not titled $t$. Additional constraints and integrity rules can be
+expressed by natural language and by a variety of \acro{ORM} constraint types.
+In the given model from figure~\ref{fig:orm2basics} each \format{Title} must
+play the \format{signifier} role in at least one \format{is titled} predicate
+(mandatory role constraint, marked by a dot), and each \format{Work} can play
+the \format{signified} role in at most one \format{is titled} predicate
+(uniqueness role constraint, marked by a bar).  The conceptual model can be
+used to identify and discuss the \term{universe of discourse}, for instance
+whether works can have multiple titles, without having to deal with details of
+implementation in a concrete data structuring language. An example of a simple
+\acro{ORM} model implemented in a logical schema is included in
+section~\ref{sec:docobj} with example~\ref{ex:ormsql}.

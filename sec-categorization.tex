@@ -1,0 +1,79 @@
+\section{Categorization of methods}
+\label{sec:categorization}
+
+\begin{quotation}%
+Notoriamente no hay clasificación del universo que no sea arbitraria y 
+conjetural. La razón es muy simple: no sabemos qué cosa es el universo.
+\\\quotationsource \Person[Jorge Luis]{Borges} (\citeyear{Borges1952})
+\end{quotation}
+
+\noindent The following categorization of data structuring methods is a result
+of the collection of methods analyzed in chapter~\ref{ch:methods}. Given these
+methods one can categorize them by history and origin, by type of application,
+by complexity, and by many other criteria.  This approach, however, can result
+in rather arbitrary classifications, because a single facet has to be chosen
+and because most facets are not selective for all instances.  Another approach,
+that better fits to how people cognitively perceive and classify things, is
+grouping based on prototypes which act as cognitive reference points
+\cite{Lakoff1987,Rosch1983}.  Following this approach, categories of data
+structuring methods are not defined by selected features, but data structuring
+methods are clustered by similarity, until prototypical methods emerge. A
+\Term{prototype} can act as good example of a certain category, while other
+instances belonging to this category are less central. For instance in western
+society, a chair is a central prototype of furniture, although other furniture
+may share little properties with chairs. 
+
+\begin{table}
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{category} & \textbf{main purpose} & \textbf{examples} \\
+\hline
+encodings       & express data & \term{Unicode}, \term{Base64} \\
+storage systems & store data & \acro{NTFS}, \acro{RDBMS} \\
+identifier and query languages   & refer to data  & \acro{URI}, \acro{XPath} \\
+structuring and markup languages & structure data & \acro{XML}, \acro{CSV}, \acro{RDF} \\
+schema languages  & constrain data & \acro{BNF}, \acro{XSD} \\
+conceptual models & describe data  & \term{Mind Maps}, \acro{ERM} \\
+\hline
+\end{tabular}
+\caption{Prototype categorization of data structuring methods}
+\label{tab:protocat}
+\end{table}
+
+The final prototype categorization of data structuring methods found in this
+study is summarized in table~\ref{tab:protocat}. The categorization is a novel
+result, because comparative studies of data structuring methods, as broad as
+given in this thesis, have not been conducted yet. The prototypes have partly
+been anticipated in the division of chapter~\ref{ch:methods}:
+
+\begin{itemize}
+ \item encodings: section 
+  \ref{sec:characters}
+ \item storage systems: section 
+  \ref{sec:filesystems} and \ref{sec:databases}
+ \item identifier and query languages: section
+   \ref{sec:identifiers} and \ref{sec:queries}
+ \item structuring and markup languages: section
+  \ref{sec:dsl} and \ref{sec:markuplanguages}
+ \item schema languages: 
+   section \ref{sec:schemas}
+ \item conceptual models:
+   section \ref{sec:modelangs} and \ref{sec:diagrams}
+\end{itemize}
+
+To further validate this result, the prototype categorization was analyzed to
+find a supporting facet that best divides categories by one aspect of data
+structuring. As the \term{research question} asks for general methods that
+span a wide range of digital technologies, the supporting facet should be
+independent from particular use cases and applications. It was found that the
+{\em main purpose} of a method can be used as dividing facet. This purpose
+describes what a method mainly does with data. For instance the main purpose of
+storage systems like databases and file systems is storage.  The data
+structuring method's main purpose can act as guideline to find the nearest
+prototype from table~\ref{tab:protocat}. Still this dividing facet should not
+be confused with a strict classifier as known from more formal approaches of
+categorization. Instances from each category can also serve multiple purposes,
+just like one can use a chair to stand on it when changing a light bulb.
+
+

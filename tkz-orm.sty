@@ -1,0 +1,1101 @@
+%<–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
+%
+%  tkz-orm.sty - Object-Role Modeling Diagrams in LaTeX
+%
+%<–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
+% This is file may be be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+%
+% Copyright 2009-2010 by Jakob Voss
+%<–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tkz-orm}[2011/12/05 v0.1.3 Object-Role Modeling]
+%<–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
+\RequirePackage{tikz}[2009/09/04]
+
+%%%% Required pgf/TikZ libraries
+%\usetikzlibrary{calc}
+\usepgflibrary{shapes.multipart}
+\usetikzlibrary{shadows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+
+\makeatletter
+
+%%%% Options
+
+%\DeclareOption*{%
+%   \PackageWarning{tkz-orm}{Unknown option ‘\CurrentOption’}%
+%}
+
+\def\orm@error#1{\relax}% TODO
+%\def\orm@error#1{\PackageWarning{tkz-orm}{#1}}%
+
+%\pgfkeysdefargs{/tikz/ormcolorlet}{#1}{\colorlet{#2}{#1}} 
+% \pgfkeys{/orm/.is family} % TODO
+
+\def\tkzorm{\textsf{tkz-orm}}
+
+%%%% ORM color constants
+\colorlet{constraintcolor}{magenta!100}
+\colorlet{ormconstraintcolor}{magenta!100}
+\colorlet{ormdeonticcolor}{blue!100}
+\colorlet{ormimpliedcolor}{gray!100}
+
+\def\orm@constraint@stroke{magenta}
+\def\orm@constraint@fill{magenta}
+
+\pgfkeysdefargs{/tikz/constraintcolor}{#1}{\colorlet{constraintcolor}{#1}} 
+
+%%%% ORM width and length
+\newlength{\orm@linewidth}
+\setlength{\orm@linewidth}{0.25mm}
+
+%%%% ORM fonts
+\newcommand{\orm@font}{\sffamily\small}
+\newcommand{\orm@font@bold}{\bfseries\sffamily\small}
+\newcommand{\orm@font@tiny}{\sffamily\tiny}
+\newcommand{\orm@font@scriptsize}{\sffamily\scriptsize}
+\newcommand{\orm@font@bold@scriptsize}{\bfseries\sffamily\scriptsize}
+
+%%%% Text markup
+
+% textsubscript may not be defined like textsuperscript
+\newcommand{\orm@textsubscript}[1]{%
+  {\m@th\ensuremath{_{\mbox{\fontsize\sf@size\z@#1}}}}}
+
+% similar to \blacktriangle (could better be implemented directly in pgf)
+\def\orm@blacktriangle#1{
+  \tikz \node[draw=none,inner sep=.2ex] {
+    \tikz [#1]\path[fill=black]
+    (0,0) -- (.6ex,1.3ex) -- (1.2ex,0) -- cycle;};
+}
+\def\ormarrowup{\orm@blacktriangle{rotate=0}}
+\def\ormarrowdown{\orm@blacktriangle{rotate=180}}
+\def\ormarrowleft{\orm@blacktriangle{rotate=90}}
+\def\ormarrowright{\orm@blacktriangle{rotate=-90}}
+
+\def\ormtext{\orm@font}
+\def\ormbf{\orm@font@bold}
+\def\ormc{\orm@font\color{constraintcolor}}
+\def\ormsup#1{\textsuperscript{\orm@font@scriptsize #1}}
+\def\ormsub#1{\orm@textsubscript{\orm@font@scriptsize #1}}
+\def\ormind#1{\textsuperscript{\orm@font@bold@scriptsize\color{constraintcolor} #1}}
+\def\ormbraces#1{{\orm@font\textbraceleft#1\textbraceright}}
+\def\ormvalues#1{\ormc{\ormbraces{#1}}}
+
+\def\ormleft#1{{\ormarrowleft\ormtext #1}}
+\def\ormup#1{{\ormtext #1\ormarrowup}}
+
+% TODO: add '*' variant in constraint color for each command
+
+%%% Sizes 
+\def\orm@role@linewidth{\orm@linewidth} % 0.25mm
+\def\orm@role@width{4mm}
+\def\orm@role@height{2.5mm}
+
+
+%%%% ORM styles
+
+\pgfkeys{/tikz/constraint stroke/.store in=\orm@constraint@stroke}
+\pgfkeys{/tikz/constraint fill/.store in=\orm@constraint@fill}
+\pgfkeys{/tikz/constraint color/.style={constraint stroke=#1,constraint fill=#1}}
+
+
+\tikzstyle{every orm line}=         [solid,draw=black,line width=\orm@linewidth,-]
+\tikzstyle{orm}=                    [font=\orm@font,node distance=4mm,
+                                     %label distance=1.5mm,
+                                     %line width=\orm@linewidth,
+                                     label distance=1.25mm
+                                    ]
+
+\tikzstyle{every orm}=              [every orm line,fill=white,orm]
+
+\tikzstyle{zoomed}=                 [line width=\orm@linewidth*1.5]
+
+\tikzstyle{every object}=           []
+\tikzstyle{every entity}=           []
+\tikzstyle{entity}=                 [every orm,
+                                     shape=rectangle,rounded corners,
+                                     align=center,minimum size=6mm,
+                                     every object,every entity]
+
+\tikzstyle{every value}=            []
+\tikzstyle{value}=                  [every orm,
+                                     shape=rectangle,rounded corners,densely dashed,
+                                     align=center,minimum size=6mm,
+                                     every object,every value]
+
+
+\tikzstyle{relationship}=           [every orm line,every relationship]
+\tikzstyle{relation}=               [relationship]
+\tikzstyle{plays}=                  [relationship]
+\tikzstyle{every relationship}=     []
+
+
+\tikzstyle{role index}=             [font=\orm@font@tiny,inner sep=0,minimum width=\orm@role@width]
+
+
+\tikzstyle{every predicate}=        []
+
+%%% Shortcuts in tikzpicture
+\tikzaddtikzonlycommandshortcutdef{\entity}{\node[entity]}
+\tikzaddtikzonlycommandshortcutdef{\value}{\node[value]}
+
+\tikzaddtikzonlycommandshortcutdef{\unary}{\node[role]}
+\tikzaddtikzonlycommandshortcutdef{\role}{\node[role]}
+\tikzaddtikzonlycommandshortcutdef{\binary}{\node[roles]}
+\tikzaddtikzonlycommandshortcutdef{\roles}{\node[roles]}
+\tikzaddtikzonlycommandshortcutdef{\ternary}{\node[roles=3]}
+
+\tikzaddtikzonlycommandshortcutdef{\vunary}{\node[vrole]}
+\tikzaddtikzonlycommandshortcutdef{\vrole}{\node[vrole]}
+\tikzaddtikzonlycommandshortcutdef{\vbinary}{\node[vroles]}
+\tikzaddtikzonlycommandshortcutdef{\vroles}{\node[vroles]}
+\tikzaddtikzonlycommandshortcutdef{\vternary}{\node[vroles=3]}
+
+\tikzaddtikzonlycommandshortcutdef{\plays}{\draw[relationship]}
+
+% TODO: add error message if matrix package not loaded ?
+\tikzaddtikzonlycommandshortcutdef{\rules}{\matrix[row sep=0mm,nodes={right}]}
+
+\tikzaddtikzonlycommandshortcutdef{\limits}{\draw[limits]}
+\tikzaddtikzonlycommandshortcutdef{\limited}{\draw[limits]}
+\tikzaddtikzonlycommandshortcutdef{\limitsto}{\draw[limits to]}
+
+\tikzaddtikzonlycommandshortcutdef{\constraint}{\node[text=constraintcolor]}
+
+%%%% Textual rules
+
+\tikzset{rule/.style args={#1}{%
+  append after command={%
+    \bgroup%
+      [current point is local=true]
+      (\tikzlastnode.north west) node[font=\orm@font@bold@scriptsize,
+         anchor=north east,inner sep=0,text=constraintcolor] {#1}
+    \egroup%
+  },
+  orm,inner sep=0.5mm,
+}}
+\tikzset{rule/.default={}}
+
+
+%%%% Predicates and roles
+\tikzstyle{all predicates}=[
+  every orm line,
+  fill=white,
+  rectangle split,
+  inner sep=0
+]
+
+\tikzset{roles/.style args={#1}{
+  all predicates,rectangle split parts=#1, rectangle split allocate boxes=#1,
+  rectangle split horizontal=true,
+  rectangle split empty part height=2.5mm,rectangle split empty part width=2.25mm, % 4-1.5 = 2.5
+%  every label/.style={label distance=1.5mm}
+%label distance=1.5mm
+  every predicate
+}}
+\tikzset{roles/.default={2}}
+
+\tikzset{vroles/.add style={}{roles=#1,rotate=90}}
+\tikzset{vroles/.default={2}}
+\tikzstyle{role}=[roles=1]
+\tikzstyle{vrole}=[vroles=1]
+
+\tikzstyle{role name}=[font=\orm@font,color=blue,inner sep=0.5mm]
+
+%% end of roles
+
+% TODO: read
+% http://www.latex-project.org/guides/clsguide.pdf
+
+\pgfkeyssetvalue{/tkzorm/constraintstroke}{constraintcolor}
+\pgfkeyssetvalue{/tkzorm/constraintfill}{constraintcolor}
+
+%%%
+% arrow heads
+
+% dot as arrow head (no color)
+\pgfarrowsdeclare{dot}{dot}{
+  \pgfutil@tempdima=0.2pt%
+  \advance\pgfutil@tempdima by.2\pgflinewidth%
+  \pgfutil@tempdimb=5.5\pgfutil@tempdima\advance\pgfutil@tempdimb
+  by\pgflinewidth
+  \pgfarrowsleftextend{+-\pgfutil@tempdimb}
+  \pgfutil@tempdimb=1.5\pgfutil@tempdima\advance\pgfutil@tempdimb
+  by.5\pgflinewidth
+  \pgfarrowsrightextend{+\pgfutil@tempdimb}
+}{
+  \pgfutil@tempdima=0.2pt%
+  \advance\pgfutil@tempdima by.2\pgflinewidth%
+  \pgfsetdash{}{+0pt}
+  \pgfpathcircle{\pgfqpoint{+3\pgfutil@tempdima}{0pt}}{+4.5\pgfutil@tempdima}
+  \pgfsetstrokecolor{\orm@constraint@stroke}
+  \pgfsetfillcolor{\orm@constraint@fill}
+  %\pgfsetfillcolor{\pgfkeysvalueof{/tkzorm/constraintfill}}
+  \pgfusepathqfillstroke
+}
+
+% new arrow heads >dot and dot<
+\pgfarrowsdeclarecombine[-3\pgflinewidth]{>dot}{>dot}{to}{to}{dot}{dot}
+\pgfarrowsdeclarecombine[-3\pgflinewidth]{dot<}{dot<}{to}{to}{dot}{dot}
+
+% mandatory constraint dot arrow head
+\pgfarrowsdeclare{mdot}{mdot}{
+  \pgfarrowsrightextend{0pt}% put arrow head over the tip
+  \pgfutil@tempdima=0.25mm\advance\pgfutil@tempdima by 0.5\pgflinewidth% lw
+  \pgfarrowsleftextend{+-\pgfutil@tempdima}% for arrow composing
+}{
+  \pgfutil@tempdima=0.5mm\advance\pgfutil@tempdima by \pgflinewidth% radius
+  \pgfutil@tempdimb=0.25mm\advance\pgfutil@tempdimb by 0.5\pgflinewidth% lw
+  \pgfpathcircle{\pgfqpoint{0.5\pgflinewidth}{0pt}}{\pgfutil@tempdima}
+  \pgfsetfillcolor{ormconstraintcolor}
+  \pgfusepathqfill
+}
+
+% implied mandatory constraint dot arrow head
+\pgfarrowsdeclare{idot}{idot}{
+  \pgfarrowsrightextend{0pt}% put arrow head over the tip
+  \pgfutil@tempdima=0.25mm\advance\pgfutil@tempdima by 0.5\pgflinewidth% lw
+  \pgfarrowsleftextend{+-\pgfutil@tempdima}% for arrow composing
+}{
+  \pgfutil@tempdima=0.5mm\advance\pgfutil@tempdima by \pgflinewidth% radius
+  \pgfpathcircle{\pgfqpoint{0.5\pgflinewidth}{0pt}}{\pgfutil@tempdima}
+  \pgfsetfillcolor{ormimpliedcolor}
+  \pgfusepathqfill
+}
+
+% deontic mandatory constraint dot arrow head
+\pgfarrowsdeclare{odot}{odot}{
+  \pgfutil@tempdima=0.5mm\advance\pgfutil@tempdima by 1.0\pgflinewidth% radius
+  \pgfarrowsrightextend{0.5\pgfutil@tempdima}% put arrow head over the tip
+  \pgfarrowsleftextend{0pt}% for arrow composing
+}{
+  %\pgfutil@tempdima=0.5mm\advance\pgfutil@tempdima by 1.0\pgflinewidth% radius
+  %\pgfutil@tempdimb=0.25mm\advance\pgfutil@tempdimb by 0.5\pgflinewidth% lw
+  %\advance\pgfutil@tempdima by -0.5\pgfutil@tempdimb% -linewidth
+  \pgfutil@tempdima=0.475mm\advance\pgfutil@tempdima by 0.75\pgflinewidth% r-lw
+  \pgfutil@tempdimb=0.25mm\advance\pgfutil@tempdimb by 1\pgflinewidth% lw
+  \pgfpathcircle{\pgfqpoint{\pgfutil@tempdimb}{0pt}}{\pgfutil@tempdima}
+  \pgfutil@tempdima=0.25mm\advance\pgfutil@tempdima by 0.5\pgflinewidth% lw
+  \pgfsetdash{}{+0pt}
+  \pgfsetlinewidth{\pgfutil@tempdima}
+  \pgfsetstrokecolor{ormdeonticcolor}
+  \pgfsetfillcolor{white}
+  \pgfusepathqfillstroke
+}
+
+% implied deontic mandatory constraint dot arrow head
+\pgfarrowsdeclare{iodot}{iodot}{
+  \pgfutil@tempdima=0.5mm\advance\pgfutil@tempdima by 1.0\pgflinewidth% radius
+  \pgfarrowsrightextend{0.5\pgfutil@tempdima}% put arrow head over the tip
+  \pgfarrowsleftextend{0pt}% for arrow composing
+}{
+  \pgfutil@tempdima=0.475mm\advance\pgfutil@tempdima by 0.75\pgflinewidth% r-lw
+  \pgfutil@tempdimb=0.25mm\advance\pgfutil@tempdimb by 1\pgflinewidth% lw
+  \pgfpathcircle{\pgfqpoint{\pgfutil@tempdimb}{0pt}}{\pgfutil@tempdima}
+  \pgfutil@tempdima=0.25mm\advance\pgfutil@tempdima by 0.5\pgflinewidth% lw
+  \pgfsetdash{}{+0pt}
+  \pgfsetlinewidth{\pgfutil@tempdima}
+  \pgfsetstrokecolor{ormimpliedcolor}
+  \pgfsetfillcolor{white}
+  \pgfusepathqfillstroke
+}
+
+
+% filled arrow for subtyping, subset constraints and value-comparision constraints
+\pgfarrowsdeclare{orm arrow}{orm arrow}
+{
+  \pgfutil@tempdima=0.5pt%
+  \advance\pgfutil@tempdima by.1\pgflinewidth%
+  \pgfutil@tempdimb=8.705\pgfutil@tempdima\advance\pgfutil@tempdimb by.5\pgflinewidth%
+  \pgfarrowsleftextend{+-\pgfutil@tempdimb}
+  \pgfutil@tempdimb=.5\pgfutil@tempdima\advance\pgfutil@tempdimb by1.28\pgflinewidth%
+  \pgfarrowsrightextend{+\pgfutil@tempdimb}
+}{
+  \pgfutil@tempdima=0.5pt%
+  \advance\pgfutil@tempdima by.1\pgflinewidth%
+  \pgfsetdash{}{+0pt}
+  \pgfsetmiterjoin
+  \pgfpathmoveto{\pgfpointadd{\pgfqpoint{0.5\pgfutil@tempdima}{0pt}}{\pgfqpointpolar{157}{10\pgfutil@tempdima}}}
+  \pgfpathlineto{\pgfqpoint{0.5\pgfutil@tempdima}{0\pgfutil@tempdima}}
+  \pgfpathlineto{\pgfpointadd{\pgfqpoint{0.5\pgfutil@tempdima}{0pt}}{\pgfqpointpolar{-157}{10\pgfutil@tempdima}}}
+  \pgfpathclose
+  \pgfsetfillcolor{ormconstraintcolor} % TODO: change if implied, deontic etc.
+  %\pgfsetstrokefillcolor{ormconstraintcolor} % TODO: change if implied, deontic etc.
+  \pgfusepathqfillstroke
+}
+
+% line styles that enable the mandatory constraint arrow tip
+\tikzstyle{required}      =[relationship,mdot-]
+\tikzstyle{required by}   =[relationship,-mdot]
+\tikzstyle{both required} =[relationship,mdot-mdot]
+
+% aliases
+\tikzstyle{mandatory}     =[required]
+\tikzstyle{both mandatory}=[both required]
+\tikzstyle{optional}      =[relationship]
+
+
+% draw a mandatory constraint arrow tip over a node
+\tikzset{constraint dot/.style={append after command={
+  (\tikzlastnode.center) edge[required] (\tikzlastnode.center)
+}}}
+\tikzstyle{cdot}            =[constraint dot]
+
+
+%%%% Constraint symbols
+\tikzstyle{every constraint}=       []
+% TODO: every uniqueness bar
+\tikzstyle{every constraint line}=  [every orm line,draw=constraintcolor,every constraint]
+%\tikzstyle{every constraint line}=  [line width=\orm@linewidth,draw=constraintcolor,solid]
+\tikzstyle{every constraint circle}=[]
+\tikzstyle{constraint circle}=      [every orm,every constraint line,
+                                     shape=circle,
+                                     font=\orm@font@scriptsize,
+                                     minimum size=4mm,,inner sep=0pt,
+                                     every constraint circle]
+\tikzstyle{constraint no circle}=   [constraint circle,draw=none,fill=none]
+
+\tikzstyle{limits}=                 [every constraint line,dotted]
+\tikzstyle{limits to}=              [every constraint line,dashed,-orm arrow]
+
+
+% internal uniqueness constraint
+
+% Implied and duplicated model parts:
+
+\tikzstyle{duplicated}=             [drop shadow]
+\tikzstyle{duplicated model}=       [every orm/.append style={drop shadow},
+                                     every predicate/.append style={drop shadow}]
+
+\tikzstyle{every implied line}=     [constraintcolor=gray!80,thin]
+\tikzstyle{every implied}=          [fill=gray!30,every implied line]
+
+\tikzstyle{implied}=[
+    every orm/.append style={every implied},
+    every orm line/.append style={every implied line},,
+    constraint color=gray!100,thin,
+    every relationship/.style={fill=gray!30},
+	required/.append style={idot-},
+	required by/.append style={-idot},
+	both required/.append style={idot-idot}
+]
+\tikzstyle{implied model}=[implied]
+
+\tikzstyle{deontic}=                [
+    every orm line/.append style={constraintcolor=blue!100},
+    constraintcolor=blue!100,
+    constraint color=blue!100,
+    required/.append style={odot-},
+    required by/.append style={-odot},
+    both required/.append style={odot-odot}
+]
+
+
+%%%% Constraints
+
+% Define a constraints type
+%
+% #1 = name of the constraint
+% #2 = path code to be drawn above the constraint circle with |append after command|
+%
+\newcommand{\constraintdeclare}[2]{%
+  \tikzset{constraint/#1/.style={constraint circle,append after command={#2}}}%
+}
+
+% Define a constraint alias
+%
+% #1 = alias name
+% #2 = name of the constraint
+%
+\newcommand{\constraintdeclarealias}[2]{%
+  \tikzset{constraint/#1/.style={constraint=#2}}%
+}
+
+% Define a constraint by drawing another node at the some position as the current node
+\newcommand{\constraintdeclareasnode}[2]{
+  \constraintdeclare{#1}{
+    (\tikzlastnode.center) node[anchor=center] {\tikz{#2}}
+}}
+
+% style /tikz/constraint and its keys
+\tikzset{constraint/.is choice}
+
+%\tikzset{constraint/misc/.style={constraint circle,text=constraintcolor}}%
+
+
+%\constraintdeclarealias{le}{symmetric}
+%\tikzset{constraint/le/.append style={label={[text=constraintcolor,font=\orm@font@scriptsize]center:$<$}}}
+
+% TODO: clean up code
+\tikzset{constraint/</.style={
+  constraint circle,
+  append after command={
+    \bgroup%
+      [current point is local=true]
+      (\tikzlastnode) +(180:2mm) node[cdot]{}
+                      +(0:2mm) node[cdot]{}
+    \egroup%
+  },
+  label={[text=constraintcolor,font=\orm@font@scriptsize]center:$<$}
+}}
+% TODO: clean up code
+\tikzset{constraint/ge/.style={
+  constraint circle,
+  append after command={
+    \bgroup%
+      [current point is local=true]
+      (\tikzlastnode) +(180:2mm) node[cdot]{}
+                      +(0:2mm) node[cdot]{}
+    \egroup%
+  },
+  label={[text=constraintcolor,font=\orm@font@scriptsize]center:$\ge$}
+}}
+% TODO: clean up code
+\tikzset{constraint/>/.style={
+  constraint circle,
+  append after command={
+    \bgroup%
+      [current point is local=true]
+      (\tikzlastnode) +(180:2mm) node[cdot]{}
+                      +(0:2mm) node[cdot]{}
+    \egroup%
+  },
+  label={[text=constraintcolor,font=\orm@font@scriptsize]center:$>$}
+}}
+% TODO: clean up code
+\tikzset{constraint/le/.style={
+  constraint circle,
+  append after command={
+    \bgroup%
+      [current point is local=true]
+      (\tikzlastnode) +(180:2mm) node[cdot]{}
+                      +(0:2mm) node[cdot]{}
+    \egroup%
+  },
+  label={[text=constraintcolor,font=\orm@font@scriptsize]center:$\le$}
+}}
+
+%\tikzstyle{entity}=                 [every orm,
+%                                     shape=rectangle,rounded corners,
+%                                     align=center,minimum size=6mm,
+%                                     every object,every entity]
+\tikzset{constraint/text/.style={color=constraintcolor,font=\orm@font,align=center}}
+
+\tikzset{constraint/.default=text}
+
+% TODO: color=constraintcolor
+
+
+%%%% Ring constraints
+
+% TODO: possibly join with cdot
+\tikzstyle{ormdot}=         [fill=constraintcolor,radius=.6mm,draw=none]
+
+
+\constraintdeclareasnode{acyclic}{
+  \path [ormdot]  (90:2mm) circle;
+  \path [ormdot] (210:2mm) circle;
+  \path [ormdot] (330:2mm) circle;
+  \draw [every constraint line] 
+      (270:1mm) edge (270:3mm);
+}
+%\constraintdeclarealias{DAG}{acyclic} % directed-acyclic-graph (DAG)
+
+\constraintdeclareasnode{intransitive}{
+  \fill[every constraint line,fill=white,draw=white] circle (2.2mm);
+  \path [ormdot]  (90:2mm) circle;
+  \path [ormdot] (210:2mm) circle;
+  \path [ormdot] (330:2mm) circle;
+  \path[every constraint line,rounded corners=0] (90:2mm) -- (210:2mm) -- (330:2mm) -- (90:2mm);
+  \draw[every constraint line] (270:0mm) to (270:1.75mm);
+}
+
+% TODO: document
+\constraintdeclareasnode{strongly intransitive}{
+  \fill[every constraint line,fill=white,draw=white] circle (2.2mm);
+  \path [ormdot]  (90:2mm) circle;
+  \path [ormdot]  (30:1mm) circle;
+  \path [ormdot] (210:2mm) circle;
+  \path [ormdot] (330:2mm) circle;
+  \path[every constraint line,rounded corners=0] (90:2mm) -- (210:2mm) -- (330:2mm) -- (90:2mm);
+  \draw[every constraint line] (270:0mm) to (270:1.75mm);
+}
+
+% TODO: document tree and otree
+\constraintdeclareasnode{tree}{
+  \fill[every constraint line,fill=white,draw=white] circle (2.2mm);
+  \path [ormdot]  (90:2mm) circle;
+  \path [ormdot] (210:2mm) circle;
+  \path [ormdot] (330:2mm) circle;
+  \path[every constraint line,rounded corners=0] (339:2mm) -- (90:2mm) -- (210:2mm);
+}
+
+\constraintdeclareasnode{otree}{
+  \fill[every constraint line,fill=white,draw=white] circle (2.2mm);
+  \path [ormdot]  (90:2mm) circle;
+  \path [ormdot] (210:2mm) circle;
+  \path [ormdot] (330:2mm) circle;
+  \path[every constraint line,rounded corners=0] (339:2mm) -- (90:2mm) -- (210:2mm);
+  \path[every constraint line,rounded corners=0] 
+    (.8mm,-0mm) -- (-.6mm,-1mm) -- (.8mm,-2mm);
+}
+
+\constraintdeclareasnode{purely reflexive}{
+  \path[use as bounding box] (270:2.75mm) -- (90:2.75mm);
+  \path [ormdot] (180:2mm) circle;
+  \draw[every constraint line] (90:1.25mm) to (270:1.25mm);
+%    (-.8mm, .4mm) -- (.8mm, .4mm)
+%    (-.8mm,-.4mm) -- (.8mm,-.4mm);
+}
+
+\constraintdeclareasnode{reflexive}{
+  \path[use as bounding box] (270:2.75mm) -- (90:2.75mm);
+  \path [ormdot] (180:2mm) circle;
+}
+
+\constraintdeclareasnode{irreflexive}{
+  \path[use as bounding box] (270:2.75mm) -- (90:2.75mm);
+  \path [ormdot] (180:2mm) circle;
+%  \draw [every constraint line] (90:1.25mm) -- (270:1.25mm);
+  \draw [every constraint line] (270:1mm) to (270:2.75mm);
+}
+
+\constraintdeclareasnode{symmetric irreflexive}{
+  \path [ormdot] (180:2mm) circle;
+  \path [ormdot] (  0:2mm) circle;
+  \draw [every constraint line]
+    (-.8mm, .4mm) -- (.8mm, .4mm)
+    (-.8mm,-.4mm) -- (.8mm,-.4mm)
+    (90:1.25mm) to (270:1.25mm);
+}
+
+\constraintdeclareasnode{transitive}{
+  \draw[every constraint line,fill=white,draw=white] circle (2.2mm);
+  \path [ormdot]  (90:2mm) circle;
+  \path [ormdot] (210:2mm) circle;
+  \path [ormdot] (330:2mm) circle;
+  \draw[every constraint line] (90:2mm) -- (210:2mm) -- (330:2mm) -- (90:2mm);
+}
+
+\constraintdeclareasnode{acyclic intransitive}{
+  \path [ormdot]  (90:2mm) circle;
+  \path [ormdot] (210:2mm) circle;
+  \path [ormdot] (330:2mm) circle;
+  \path[every constraint line] (90:2mm) -- (210:2mm) -- (330:2mm) -- (90:2mm);
+  \draw[every constraint line] (270:0mm) to (270:2.75mm);
+}
+
+\constraintdeclareasnode{symmetric}{
+  \path [ormdot] (180:2mm) circle;
+  \path [ormdot] (  0:2mm) circle;
+}
+
+\constraintdeclareasnode{asymmetric}{
+  \path[use as bounding box] (270:2.75mm) -- (90:2.75mm);
+  \path [ormdot] (+2mm,0mm) circle;
+  \path [ormdot] (-2mm,0mm) circle;
+  \draw [every constraint line] (270:1mm) to (270:2.75mm);
+}
+
+\constraintdeclareasnode{antisymmetric}{
+  \path [ormdot] (180:2mm) circle;
+  \path [ormdot] (  0:2mm) circle;
+  \draw[every constraint line] (90:2.75mm) to (270:2.75mm);
+}
+
+\constraintdeclareasnode{tree}{
+  \draw [every constraint line,fill=white,draw=white] circle (2.2mm);
+  \path [ormdot]  (90:2mm) circle;
+  \path [ormdot] (210:2mm) circle;
+  \path [ormdot] (330:2mm) circle;
+  \draw [every constraint line] (210:2mm) -- (90:2mm) -- (330:2mm);
+}
+
+% TODO: strictly order, total, connected, etc.
+
+
+% TODO: test and document this
+\tikzset{objectification/.style={
+  entity,fill=none,
+  append after command={
+    \bgroup%
+      [current point is local=true]
+      node[orm,above=0 of \tikzlastnode] {``#1''}
+    \egroup%
+  }
+}}
+
+
+%%%% Subtypes
+ % TODO: how to get current line width?
+\tikzstyle{inheritance}=[line width=\orm@linewidth*1.5,>=orm arrow,
+  draw,color=constraintcolor]
+\tikzstyle{subtype}=[inheritance,<-,solid]
+\tikzstyle{suptype}=[inheritance,->,solid]
+\tikzstyle{subinterface}=[subtype,dashed]
+\tikzstyle{supinterface}=[suptype,dashed]
+
+%%%% Role indices
+
+\tikzset{index/.code={\orm@parse@index#1:\pgf@nil}}
+\tikzset{index/.default=1}
+
+\def\orm@parse@index#1:#2\pgf@nil{%
+  \def\orm@temp{#2}%
+  \ifx\orm@temp\pgfutil@empty%
+    \orm@@parse@index1:#1:\pgf@nil%
+  \else%
+    \orm@@parse@index#1:#2\pgf@nil%
+  \fi%
+}
+
+% \orm@verticalfalse
+% \orm@verticaltrue
+% \tikz@do@alignfalse
+
+\def\orm@@parse@index#1:#2:\pgf@nil{%
+  \tikzset{append after command={%
+    \bgroup%
+     [current point is local=true]
+      let \n1 = {#1*\orm@role@width} in
+      (\tikzlastnode.west) to[draw=none]
+      node[role index,pos=1,sloped,anchor=east] {#2}
+      ($(\tikzlastnode.west)!\n1!(\tikzlastnode.east)$)
+    \egroup%
+  }
+}}
+\tikzset{index/.default=1}
+
+
+%%%% Uniqueness constraint bars
+
+\def\orm@rolebar@length#1{#1*\orm@role@width-2*\orm@role@linewidth}
+\def\orm@rolebar@shift{0.75mm} % = 3*0.25mm
+
+\def\orm@rolebar@xshifta#1{\orm@role@linewidth+#1*\orm@role@width-\orm@role@width}
+\def\orm@rolebar@xshiftb#1{#1*\orm@role@width-\orm@role@linewidth}
+\def\orm@rolebar@yshift#1{%
+  \ifnum#1<0-\fi0.5*\orm@role@height+#1*\orm@rolebar@shift%
+}
+
+\tikzstyle{uniqueness bar}=[every constraint line,-]
+\tikzstyle{skipped uniqueness bar}=[
+  every constraint line,-,dotted,preaction={every constraint line,-,white}
+]
+
+\def\orm@unique@bar@normal{uniqueness bar}
+\def\orm@unique@bar@skipped{skipped uniqueness bar}
+\global\let\orm@unique@bar@style=\orm@unique@bar@normal
+
+%%
+% Styles to draw external constraints
+%
+\pgfkeys{
+  /orm/external constraint/.style={
+    every constraint line,
+    fill=white,text=constraintcolor,align=center,
+    font=\orm@font@scriptsize,minimum size=4mm,inner sep=0pt
+  }
+}
+
+% Defines an external constraints as node shape, based on the circle shape
+% The symbol is *always* drawn but circle and fill can be modified.
+% You can still modify the layout via color, line width, stroke opacity.
+% The shapes do not respect outer sep (outer xsep/outer ysep) yet (TODO).
+\newcommand{\constraintdeclareshape}[2]{%
+  \expandafter\pgfdeclareshape{#1}{
+    \inheritsavedanchors[from=circle]
+    \inheritanchor[from=circle]{north}
+    \inheritanchor[from=circle]{north west}
+    \inheritanchor[from=circle]{north east}
+    \inheritanchor[from=circle]{center}
+    \inheritanchor[from=circle]{west}
+    \inheritanchor[from=circle]{east}
+    \inheritanchor[from=circle]{mid}
+    \inheritanchor[from=circle]{mid west}
+    \inheritanchor[from=circle]{mid east}
+    \inheritanchor[from=circle]{base}
+    \inheritanchor[from=circle]{base west}
+    \inheritanchor[from=circle]{base east}
+    \inheritanchor[from=circle]{south}
+    \inheritanchor[from=circle]{south west}
+    \inheritanchor[from=circle]{south east}
+    \inheritanchorborder[from={circle}]
+    \backgroundpath{% \behindbackgroundpath and \beforebackgroundpath don't do.
+      \pgfsetdash{}{0pt}% solid circle
+      \pgfutil@tempdima=\radius%
+      \pgfmathsetlength{\pgf@xb}{\pgfkeysvalueof{/pgf/outer xsep}}%  
+      \pgfmathsetlength{\pgf@yb}{\pgfkeysvalueof{/pgf/outer ysep}}%  
+      \ifdim\pgf@xb<\pgf@yb%
+        \advance\pgfutil@tempdima by-\pgf@yb%
+      \else%
+        \advance\pgfutil@tempdima by-\pgf@xb%
+      \fi%
+      \pgfpathcircle{\centerpoint}{\pgfutil@tempdima}%
+    }
+    \foregroundpath{%
+      \pgfsetdash{}{0pt}%
+      \pgfsetbuttcap%
+      \pgfsetmiterjoin%
+      #2 \pgfusepathqstroke%
+    }
+  }
+  \tikzset{constraint/#1/.style={/orm/external constraint,shape=#1}}
+  \tikzset{#1 constraint/.style={/orm/external constraint,shape=#1}}
+}
+
+
+\constraintdeclareshape{unique}{
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\radius}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\radius}%
+}
+
+\constraintdeclareshape{preferred unique}{
+  \centerpoint \pgf@xc=\pgf@x \pgf@yc=\pgf@y%
+  \pgfutil@tempdima=\pgflinewidth%
+  \pgfutil@tempdima1.5\pgfutil@tempdima%
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\radius\advance\pgf@y by-\pgfutil@tempdima}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\radius\advance\pgf@y by-\pgfutil@tempdima}%
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\radius\advance\pgf@y by\pgfutil@tempdima}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\radius\advance\pgf@y by\pgfutil@tempdima}%
+}
+
+\constraintdeclareshape{equal}{
+  \pgfutil@tempdima=\radius% x
+  \pgfutil@tempdima0.4\pgfutil@tempdima% 
+  \pgfutil@tempdimb=\radius% y
+  \pgfutil@tempdimb0.2\pgfutil@tempdimb%
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\pgfutil@tempdima\advance\pgf@y by\pgfutil@tempdimb}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\pgfutil@tempdima\advance\pgf@y by\pgfutil@tempdimb}%
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\pgfutil@tempdima\advance\pgf@y by-\pgfutil@tempdimb}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\pgfutil@tempdima\advance\pgf@y by-\pgfutil@tempdimb}%
+}
+
+\constraintdeclareshape{subset}{
+  \pgf@xa=\radius \pgf@xa0.4\pgf@xa% xa = 0.5 r
+  \pgf@ya=\radius \pgf@ya0.4\pgf@ya% ya = 0.4 r
+  \pgf@yb0.5\pgf@ya% yb = 0.5 ya = 0.2 r
+  \pgf@xb=\pgf@xa \advance\pgf@xb by -\pgf@yb%
+
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\pgf@xa\advance\pgf@y by-\pgf@ya}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by \pgf@xa\advance\pgf@y by-\pgf@ya}%
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by \pgf@xa}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by-\pgf@xb}%
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by \pgf@xa\advance\pgf@y by\pgf@ya}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by-\pgf@xb\advance\pgf@y by\pgf@ya}%
+  \pgfpatharc{90}{270}{\pgf@yb}
+}
+
+\constraintdeclareshape{supset}{
+  \pgf@xa=\radius \pgf@xa0.4\pgf@xa% xa = 0.5 r
+  \pgf@ya=\radius \pgf@ya0.4\pgf@ya% ya = 0.4 r
+  \pgf@yb0.5\pgf@ya% yb = 0.5 ya = 0.2 r
+  \pgf@xb=\pgf@xa \advance\pgf@xb by -\pgf@yb%
+
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\pgf@xa\advance\pgf@y by-\pgf@ya}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by \pgf@xa\advance\pgf@y by-\pgf@ya}%
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\pgf@xa}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by \pgf@xb}%
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\pgf@xa\advance\pgf@y by\pgf@ya}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by \pgf@xb\advance\pgf@y by\pgf@ya}%
+  \pgfpatharc{90}{-90}{\pgf@yb}
+}
+
+\constraintdeclareshape{exclusive}{% exclusive constraint ('x')
+  \pgfpathmoveto{\pgfpointadd{\centerpoint}{\pgfqpointpolar{45}{\radius}}}%
+  \pgfpathlineto{\pgfpointadd{\centerpoint}{\pgfqpointpolar{225}{\radius}}}%
+  \pgfpathmoveto{\pgfpointadd{\centerpoint}{\pgfqpointpolar{135}{\radius}}}%
+  \pgfpathlineto{\pgfpointadd{\centerpoint}{\pgfqpointpolar{-45}{\radius}}}%
+}
+
+% inclusive-or (disjunctive mandatory role) constraint
+\constraintdeclareshape{mandatory}{
+  \pgf@xa=\radius \pgf@xa0.4\pgf@xa%
+  \pgfpathcircle{\centerpoint}{\pgf@xa}
+  \pgfsetfillcolor{constraintcolor} % TODO: constraitfillcolor / not for deontic
+  % use deontic dot instead?
+  \pgfusepathqfillstroke
+}
+
+% exclusive-or constraint ('xor' or 'partition')
+\constraintdeclareshape{partition}{
+  \pgf@xa=\radius \pgf@xa0.4\pgf@xa%
+  \pgfpathcircle{\centerpoint}{\pgf@xa}
+  \pgfsetfillcolor{constraintcolor} % TODO: constraitfillcolor / not for deontic
+  \pgfusepathqfillstroke
+  \pgfpathmoveto{\pgfpointadd{\centerpoint}{\pgfqpointpolar{45}{\radius}}}%
+  \pgfpathlineto{\pgfpointadd{\centerpoint}{\pgfqpointpolar{225}{\radius}}}%
+  \pgfpathmoveto{\pgfpointadd{\centerpoint}{\pgfqpointpolar{135}{\radius}}}%
+  \pgfpathlineto{\pgfpointadd{\centerpoint}{\pgfqpointpolar{-45}{\radius}}}%
+}
+
+% Collection constraints (not standard ORM2)
+\constraintdeclareshape{rank}{% aka ordered set
+  \pgf@xa=\radius \pgf@xa0.3\pgf@xa%
+  \pgf@ya=\radius \pgf@ya0.4\pgf@ya%
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by\pgf@xa\advance\pgf@y by\pgf@ya}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by-\pgf@ya}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\pgf@xa\advance\pgf@y by-\pgf@ya}%
+}
+\constraintdeclareshape{sequence}{%
+  \pgf@xa=\radius \pgf@xa0.3\pgf@xa%
+  \pgf@ya=\radius \pgf@ya0.4\pgf@ya%
+  \pgf@xc=\radius \pgf@xc0.2\pgf@xc%
+
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by\pgf@xa\advance\pgf@y by\pgf@ya}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by-\pgf@ya}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\pgf@xa\advance\pgf@y by-\pgf@ya}%
+  \pgfusepathqstroke
+
+  \pgfsetdash{{\pgflinewidth}{1pt}}{0pt}% dotted
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\radius}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\radius}%
+}
+\constraintdeclareshape{weak sequence}{%
+  \pgf@xa=\radius \pgf@xa0.3\pgf@xa%
+  \pgf@xb=\pgflinewidth%
+  \pgf@yb=\radius \pgf@yb0.15\pgf@yb%
+  \pgf@ya=\radius \pgf@ya0.4\pgf@ya%
+
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by\pgf@xa\advance\pgf@y by\pgf@ya\advance\pgf@y by\pgf@yb}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by-\pgf@xa\advance\pgf@y by\pgf@yb}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\pgf@xa\advance\pgf@y by-\pgf@ya\advance\pgf@y by\pgf@yb}%
+
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\pgf@xa\advance\pgf@x by-\pgf@xb\advance\pgf@y by-\pgf@yb}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\pgf@xa\advance\pgf@x by-\pgf@xb\advance\pgf@y by-\pgf@ya\advance\pgf@y by-\pgf@yb}%
+  \pgfusepathqstroke
+  
+  \pgfsetdash{{\pgflinewidth}{1pt}}{0pt}% dotted
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\radius\advance\pgf@y by\pgf@yb}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\radius\advance\pgf@y by\pgf@yb}%
+}
+
+\constraintdeclareshape{weak rank}{% aka poset
+  \pgf@xa=\radius \pgf@xa0.3\pgf@xa%
+  \pgf@xb=\pgflinewidth%
+  \pgf@yb=\radius \pgf@yb0.15\pgf@yb%
+  \pgf@ya=\radius \pgf@ya0.4\pgf@ya%
+
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by\pgf@xa\advance\pgf@y by\pgf@ya\advance\pgf@y by\pgf@yb}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by-\pgf@xa\advance\pgf@y by\pgf@yb}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\pgf@xa\advance\pgf@y by-\pgf@ya\advance\pgf@y by\pgf@yb}%
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\pgf@xa\advance\pgf@x by-\pgf@xb\advance\pgf@y by-\pgf@yb}%
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\pgf@xa\advance\pgf@x by-\pgf@xb\advance\pgf@y by-\pgf@ya\advance\pgf@y by-\pgf@yb}%
+}
+
+\constraintdeclareshape{counted}{
+  \pgf@xa=\radius \pgf@xa0.5\pgf@xa%
+  \pgf@xb=\radius \pgf@xb0.25\pgf@xb%
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\pgf@xa\advance\pgf@y by\pgf@xb}
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\pgf@xa\advance\pgf@y by\pgf@xb}
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\pgf@xa\advance\pgf@y by-\pgf@xb}
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\pgf@xa\advance\pgf@y by-\pgf@xb}
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by\pgf@xb\advance\pgf@y by\pgf@xa}
+  \pgfpathlineto{\centerpoint\advance\pgf@x by\pgf@xb\advance\pgf@y by-\pgf@xa}
+  \pgfpathmoveto{\centerpoint\advance\pgf@x by-\pgf@xb\advance\pgf@y by\pgf@xa}
+  \pgfpathlineto{\centerpoint\advance\pgf@x by-\pgf@xb\advance\pgf@y by-\pgf@xa}
+}
+%\constraintdeclarealias{in bag}{counted}
+%\constraintdeclarealias{in multiset}{counted}
+
+\constraintdeclareshape{external}{} % needed because shapes are in /orm/...
+\constraintdeclareshape{misc}{} % alias for 'external'
+
+%\constraintdeclare{custom}{} % empty constraint circle
+
+\constraintdeclarealias{required}{mandatory}
+\constraintdeclarealias{total}{mandatory}
+\constraintdeclarealias{or}{mandatory}
+\constraintdeclarealias{x}{exclusive}
+\constraintdeclarealias{xor}{partition}
+
+%%
+% Styles to draw uniqueness bars
+%
+\pgfkeys{/orm/.cd,
+    uniqueness bar from/.initial=1,%
+    uniqueness bar to/.initial=1,%
+    uniqueness bar level/.initial=1,%
+    uniqueness bar roles/.initial=1,%
+    uniqueness bar set roles/.style={% 
+      /orm/uniqueness bar roles=#1,
+      /pgf/minimum width=#1*4mm
+    },
+    uniqueness bar lower/.initial=0,%
+    uniqueness bar from/.value required,%
+    uniqueness bar to/.value required,%
+    uniqueness bar level/.value required,%
+    uniqueness bar roles/.value required,%
+    uniqueness bar set roles/.value required,%
+    uniqueness bar lower/.value required,%
+    uniqueness bar style/.style={}
+}
+
+%
+% This node shape draws a uniqueness bar above or below a predicate node.
+% You should use is to shape an invisible node of same size and position
+% as the predicate to constraint. The bar is affected by several styles
+% named '/orm/uniqueness bar ...' each.
+%
+\pgfdeclareshape{uniqueness bar}{
+  \inheritsavedanchors[from=rectangle]
+  \inheritanchorborder[from=rectangle]
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{center}
+  \savedmacro\barlevel{%
+      \edef\barlevel{\pgfkeysvalueof{/orm/uniqueness bar level}}%
+      \edef\barfrom{\pgfkeysvalueof{/orm/uniqueness bar from}}%
+      \edef\barto{\pgfkeysvalueof{/orm/uniqueness bar to}}%
+      \edef\barroles{\pgfkeysvalueof{/orm/uniqueness bar roles}}%
+      \edef\barlower{\pgfkeysvalueof{/orm/uniqueness bar lower}}%
+  }
+  \foregroundpath{
+    \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+    \pgfmathsetlength\pgfutil@tempdima{ 
+        (\pgf@xb-\pgf@xa-\pgflinewidth) / (\barroles>0 ? \barroles : 1)
+    }% role width
+    \pgf@xb=\pgf@xa
+    \advance\pgf@xa by 1.5\pgflinewidth%
+    \advance\pgf@xa by -1\pgfutil@tempdima%
+    \advance\pgf@xa by \barfrom\pgfutil@tempdima%
+    \advance\pgf@xb by-0.5\pgflinewidth%
+    \advance\pgf@xb by \barto\pgfutil@tempdima%
+    \pgfmathsetlength\pgfutil@tempdima{\barlevel}%
+    \pgfutil@tempdimb=3\pgflinewidth% level distance
+    \ifdim\pgfutil@tempdima<0pt%
+      \advance\pgf@ya by +0.5\pgflinewidth%
+      \advance\pgf@ya by \barlower\pgfutil@tempdimb%
+      \advance\pgf@ya by \barlevel\pgfutil@tempdimb%
+      \pgf@yb=\pgf@ya%
+    \else%
+      \advance\pgf@yb by-0.5\pgflinewidth%
+      \advance\pgf@yb by -\barlower\pgfutil@tempdimb%
+      \advance\pgf@yb by \barlevel\pgfutil@tempdimb%
+    \fi%
+    \pgfpathmoveto{\pgfqpoint{\pgf@xa}{\pgf@yb}}%
+    \pgfpathlineto{\pgfqpoint{\pgf@xb}{\pgf@yb}}%
+ }
+}
+
+
+\tikzset{
+  unique/.code={\orm@parse@xunique#1:\pgf@nil},
+  unique/.default=1,
+}
+
+% parses '<which>:<level>' and '<which>'
+\def\orm@parse@xunique#1:#2\pgf@nil{%
+  \def\orm@temp{#2}%
+  \ifx\orm@temp\pgfutil@empty%
+    \orm@@parse@xunique#1:1:\pgf@nil%
+  \else%
+    \orm@@parse@xunique#1:#2\pgf@nil%
+  \fi%
+}
+
+% parses n-m:<level> and n:<level>
+\def\orm@@parse@xunique#1:#2:\pgf@nil{%
+  \pgfutil@in@{-}{#1}%
+  \ifpgfutil@in@%
+     \orm@parse@xunique@@bar#1:#2\pgf@nil%
+  \else%
+    \orm@parse@xunique@@bar#1-#1:#2\pgf@nil%
+  \fi%
+}
+
+\def\orm@parse@xunique@@bar#1-#2:#3\pgf@nil{%
+  \def\orm@tempA{#1}%
+  \ifx\orm@tempA\pgfutil@empty%
+    \relax%
+    \orm@parse@xunique@@bar#2-#2:-1\pgf@nil
+  \else%
+\tikzset{append after command={
+    \bgroup%
+     [current point is local=true]
+     let \p1 = (\tikzlastnode.west), \p2 = (\tikzlastnode.east)
+     in \pgfextra{\pgfmathparse{(\x2-\x1)/4mm}}
+     (\tikzlastnode) node[
+        /orm/uniqueness bar from/.expand once=#1,
+        /orm/uniqueness bar to/.expand once=#2,
+        /orm/uniqueness bar set roles/.expand once=\pgfmathresult,
+        /orm/uniqueness bar level=#3,
+        shape=uniqueness bar,
+        \orm@unique@bar@style,
+        minimum height=2.5mm,
+        /orm/uniqueness bar style
+     ]{}
+    \egroup
+    }}%
+  \fi%
+}
+
+%% Skipped uniqueness bar 
+% TODO: remove this duplicated code. 
+
+\tikzset{
+  skip unique/.code={\orm@parse@sunique#1:\pgf@nil},
+  skip unique/.default=1,
+}
+
+% parses '<which>:<level>' and '<which>'
+\def\orm@parse@sunique#1:#2\pgf@nil{%
+  \def\orm@temp{#2}%
+  \ifx\orm@temp\pgfutil@empty%
+    \orm@@parse@sunique#1:1:\pgf@nil%
+  \else%
+    \orm@@parse@sunique#1:#2\pgf@nil%
+  \fi%
+}
+
+% parses n-m:<level> and n:<level>
+\def\orm@@parse@sunique#1:#2:\pgf@nil{%
+  \pgfutil@in@{-}{#1}%
+  \ifpgfutil@in@%
+     \orm@parse@sunique@@bar#1:#2\pgf@nil%
+  \else%
+    \orm@parse@sunique@@bar#1-#1:#2\pgf@nil%
+  \fi%
+}
+
+\def\orm@parse@sunique@@bar#1-#2:#3\pgf@nil{%
+  \def\orm@tempA{#1}%
+  \ifx\orm@tempA\pgfutil@empty%
+    \relax%
+    \orm@parse@xunique@@bar#2-#2:-1\pgf@nil
+  \else%
+\tikzset{append after command={
+    \bgroup%
+     [current point is local=true]
+     let \p1 = (\tikzlastnode.west), \p2 = (\tikzlastnode.east)
+     in \pgfextra{\pgfmathparse{(\x2-\x1)/4mm}}
+     \pgfextra{\let\orm@unique@bar@style=\orm@unique@bar@skipped}%
+     (\tikzlastnode) node[
+        /orm/uniqueness bar from/.expand once=#1,
+        /orm/uniqueness bar to/.expand once=#2,
+        /orm/uniqueness bar set roles/.expand once=\pgfmathresult,
+        /orm/uniqueness bar level=#3,
+        shape=uniqueness bar,
+        \orm@unique@bar@style,
+        minimum height=2.5mm
+     ]{}
+    \egroup
+    }}%
+  \fi%
+}
+
+% TODO: add optional parameters and document this
+\tikzstyle{preferred unique}=[unique=1:1,unique=1:2]
+
+\makeatother
+
+%<–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––>
+\endinput

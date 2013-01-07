@@ -1,0 +1,170 @@
+%\vfill
+%\pagebreak
+\section{Basic patterns}
+\label{sec:basic-patterns}
+
+Basic patterns highlight the the most fundamental strategies of describing and
+structuring data elements. The patterns can be found anywhere at single data
+elements. The patterns \pattern{label} and \pattern{atomicity} take an element
+as such without further inspection. The patterns \pattern{size},
+\pattern{optionality}, and \pattern{prohibition} also include the idea of
+content which a data element is build of and which can be shaped in a specific
+way for each of the patterns.
+
+\input{datapatterns/basic}
+
+\clearpage
+\section{Combining patterns}
+\label{sec:combining-patterns}
+
+The primarily purpose of combining patterns is to connect multiple data
+elements to larger structures. This combination can be done by several methods.
+Combining patterns include \pattern{sequence} and \pattern{graph} which
+structure multiple elements on the same level, and \pattern{container},
+\pattern{dependence}, and \pattern{embedding} which include an idea of
+subsuming elements.  As shown in figure~\ref{fig:compatterns}, combining
+patterns are hierarchically connected to each other by general implications and
+by the context they occur in (both connections shown by arrows).
+
+The most fundamental and most abstract patterns are \pattern{embedding} and
+\pattern{dependence}. More visible data combinations can be found as general
+collections (\pattern{container}), such as sets of files and records, and in
+form of ordered data (\pattern{sequence}) and graph structures
+(\pattern{graph}). Together with these combining patterns one often finds two
+basic patterns and two continuing patterns, \pattern{size} and
+\pattern{atomicity}, which reflect a number of (possibly combined) elements and
+the indivisible items to be connected, respectively. The continuing patterns
+\pattern{separator} and \pattern{etcetera} are needed to indicate borders and
+connections between elements and to indicate that a combination is incomplete.
+
+
+\vfill
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\matrix[every node/.style={draw,ellipse,},column sep=3mm,row sep=5mm,
+ ] {
+  & & & \node (separator) {\pattern{separator}}; \\
+  & \node (graph) {\textbf{\pattern{graph}}}; &
+	\node (sequence) {\textbf{\pattern{sequence}}}; &
+	\node (etcetera) {\pattern{etcetera}}; \\
+  & \node (atomicity) {\pattern{atomicity}}; &
+	\node (container) {\textbf{\pattern{container}}}; & \\
+	\node (dependence) {\textbf{\pattern{dependence}}}; &
+  \node (size) {\pattern{size}}; &
+  \node (embedding) {\textbf{\pattern{embedding}}}; & \\
+};
+\draw[garc] (graph) to (container);
+\draw[garc] (graph) to[out=-160,in=90] (dependence);
+\draw[garc] (atomicity) to (size);
+\draw[garc] (container) to (size);
+\draw[garc] (container) to (embedding);
+\draw[garc] (etcetera) to[out=-100,in=30] (embedding);
+\draw[garc] (etcetera) to (container);
+\draw[garc] (sequence) to (container);
+\draw[garc] (separator) to[out=-20,in=0] (embedding);
+\draw[garc] (separator) to (sequence);
+\end{tikzpicture}
+\caption{Connections between patterns (combining patterns in bold)}
+\label{fig:compatterns}
+\end{figure}
+\vfill
+
+
+\clearpage
+\input{datapatterns/combining}
+
+\clearpage
+\section{Relationing patterns}
+\label{sec:relationing-patterns} 
+
+The following data patterns primarily relate elements to each other. In
+contrast to combining patterns (section~\ref{sec:combining-patterns}), which
+primarily group data to larger structures, the connections established by
+relationing patterns are more between data elements which serve different
+purposes. Each pattern solves a general problem in data structuring and
+description, for instance complexity (solved by \pattern{encoding}) and
+redundancy (solved by \pattern{normalization} and \pattern{derivation}).
+Figure~\ref{fig:relpatterns} groups relationing patterns by connections of
+implication or context in three levels: the most fundamental patterns include
+\pattern{identifier} and \pattern{derivation}. Based on these patterns one can
+find instances of \pattern{encoding} and \pattern{flag}, among other
+structures. Finally instances of \pattern{normalization} and \pattern{schema}
+are based on patterns of the second level. Figure~\ref{fig:relpatterns}
+includes more patterns connected to relational patterns by informal implication
+and context. A full diagram of connections is given in appendix
+\ref{appendixC}.
+
+\vfill
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\matrix[every node/.style={draw,ellipse,},column sep=3mm,row sep=5mm,
+ ] {
+ \node (optionality) 
+ 	{\pattern{optionality}}; &
+ \node (garbage) 
+ 	{\pattern{garbage}}; &
+ \node (prohibition) 
+ 	{\pattern{prohibition}}; \\
+ \node (normalization) 
+ 	{\pattern{normalization}}; &
+ \node (schema) 
+ 	{\textbf{\pattern{schema}}}; \\
+ \node (encoding) 
+ 	{\textbf{\pattern{encoding}}}; &
+ \node (flag) 
+ 	{\textbf{\pattern{flag}}}; &
+ \node (void) 
+ 	{\pattern{void}}; \\
+ \node (identifier) 
+ 	{\textbf{\pattern{identifier}}}; &
+ \node (derivation) 
+ 	{\textbf{\pattern{derivation}}}; \\
+}; % end of matrix
+\draw[garc] (optionality) to (schema);
+\draw[garc] (garbage) to (schema);
+\draw[garc] (prohibition) to (schema);
+\draw[garc] (normalization) to (encoding);
+\draw[garc] (schema) to (flag);
+\draw[garc] (flag) to (derivation);
+\draw[garc] (encoding) to (identifier);
+\draw[garc] (encoding) to (derivation);
+\draw[garc] (void) to (derivation);
+%\draw[garc,dashed] (flag) to (void);
+%\draw[garc,dashed] (garbage) to (identifier);
+\end{tikzpicture}
+\caption{Connections between patterns (relationing patterns in bold)}
+\label{fig:relpatterns}
+\end{figure}
+\vfill
+
+\clearpage
+\input{datapatterns/relational}
+
+\clearpage
+\section{Continuing patterns}
+\label{sec:continuing-patterns}
+
+Continuing patterns are are easily overlooked because they don't show explicit
+encoding. Instead these patterns primarily refer to data that is continued
+elsewhere, possibly even at another level or another realm of description. The
+most prominent continuing pattern is the \pattern{separator} which indicates a
+border between data elements. The ``punctuation of data'' is often visible in
+form of brackets, delimiters, and whitespace. The \pattern{etcetera} pattern is
+less welcome because it shows that data is rarely complete. Continuation
+markers such as `\verb|et al.|' still have their use because gaps and limits
+would be hidden without them. In the end all data refers to something in the
+realm of reality which is never fully encoded in data. The \pattern{garbage}
+pattern can indicate missing data as well but in this case there is nothing
+more to be encoded. Garbage values such as `\verb|n/a|` and `\verb|NULL|' make
+irrelevant or inapplicable values explicit instead of just omitting them.
+Omission on the other hand is the basic idea of the \pattern{void} pattern.  If
+patterns would be given more colloquial nicknames, the continuing patterns
+could also be named ``the glue`` (\pattern{separator}), ``the hint''
+(\pattern{etcetera}), ``the ugly'' (\pattern{garbage}), and ``the mystery''
+(\pattern{void}).
+
+%\clearpage
+\input{datapatterns/continuing}
+\clearpage

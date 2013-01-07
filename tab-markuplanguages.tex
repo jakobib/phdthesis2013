@@ -1,0 +1,67 @@
+\begin{sidewaystable}
+    \begin{tabularx}{\textwidth}{|l|X|X|X|X|}
+    \hline
+    \textbf{language} & \textbf{bold face} & \textbf{italic face} &
+    \textbf{monospace} & \textbf{sub-/superscript} \\
+    \hline \term{DocBook}
+    & \verb|<emphasis| \verb|role='strong'>|
+    & \verb|<emphasis>|, \verb|<firstterm>|
+    & \verb|<code>|, \verb|<varname>|
+    & \verb|<subscript>|,  \verb|<superscript>|
+    \\
+    \hline \acro{HTML}
+    & \verb|<b>| 
+    & \verb|<t>|
+    & \verb|<tt>|, \verb|<code>|
+    & \verb|<sub>|, \verb|<sup>| 
+    \\
+    \hline \acro{TEI}
+    & \verb|<hi rend="bold">|
+    & \verb|rend="italics"|
+    & \verb|rend="typewriter"|
+    & \verb|rend="subscript"|, \verb|rend="superscript"| \\
+    \hline \TeX\sindex[acronym]{tex@\TeX}
+    & \verb|\textbf{text}| 
+    & \verb|\textit{text}|, \verb|\emph{text}|
+    & \verb|\texttt{text}|, \verb|\verb#text#|
+    & \verb|^{text}|, \verb|_{text}| \\
+    \hline \acro{RTF}
+    & \verb|{\b text}| 
+    & \verb|{\i text}|
+    & \verb|{\fmodern text}| 
+    & \verb|{\sub text}|, \verb|{\sup text}| \\
+    \hline \term{MediaWiki}
+    & \verb|'''text'''|
+    & \verb|''text''|
+    & \verb|<tt>|, \verb|<code>|
+    & \verb|<sub>|, \verb|<sup>| \\
+    \hline \term{Markdown} 
+    & \verb|**text**|, \verb|__text__|
+    & \verb|*text*|, \verb|_text_|
+    & \verb|``text``|
+    & \verb|<sub>|, \verb|<sup>| \\
+    \hline \term{Textile}
+    & \verb|*text*|
+    & \verb|_text_|
+    & \verb|@text@|
+    & \verb|~text~|, \verb|^text^| \\
+    \hline \term{reStructuredText}
+    & \verb|**text**| 
+    & \verb|*text*|
+    & \verb|``text``| 
+    & \verb|:sub:`text`|, \verb|:sup:`text`| \\
+    \hline \acro{POD}
+    & \verb|B<text>|
+    & \verb|I<text>|
+    & \verb|C<text>| 
+    & -- \\
+    \hline GNU \term{troff} (man)
+    & \verb|.fam B text .fam|, \verb|\fBtext\fP|
+    & \verb|.fam I text .fam|, \verb|\fItext\fP|
+    & \verb|.fam C text .fam|, \verb|\fCtext\fP| 
+    & \verb|^text^|, \verb|~text~| \\
+    \hline
+    \end{tabularx}
+  \caption{Comparision of markup languages}
+  \label{tab:markuplanguages}
+\end{sidewaystable}

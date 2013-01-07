@@ -1,0 +1,392 @@
+\section{Markup languages}
+\label{sec:markuplanguages}
+
+A \Term{markup language} is a formal language that is used to structure and
+annotate text. A good introduction into theory and history of markup languages
+until the late 1980s is given by \textcite{Coombs1987}. The origin of markup
+languages is attributed to \Person[William]{Tunnicliffe} who in 1967 made a
+presentation about the ``Separation of Information Content of Documents from
+their Format'' and to \Person[Stanley]{Rice} \cite{Goldfarb1996}.  Tunnicliffe
+proposed to use descriptive tags (called \Term[see{descriptive markup}]{generic
+coding}) to mark up structural elements of publications instead of procedural
+formatting codes. Their ideas later evolved into the \tacro{Generalized Markup
+Language}{GML} that led to the \tacro{Standard Generalized Markup
+Language}{SGML} \cite{Goldfarb1990}.  Both languages could be adopted to
+different kinds of documents by using a \acro{DTD} (see~\ref{sec:xmlschemas}).
+This shifted markup languages to data structuring languages, such as
+\acro{SGML}'s successor \acro{XML} (see sec.~\ref{sec:xml}).  Eventually a
+\emph{general} markup language is nothing but a kind of a readable \term{data
+structuring language} with strong support of character strings and other
+ordered lists, but little support of \term[data type]{data types} and
+additional relationships,beside simple hierarchy.  The document structure
+imposed by markup languages is usually described as an \tacro{ordered hierarchy
+of content objects}{OHCO} \cite{DeRose1997,Renear1996}, although there are
+attempts to extend markup languages with better support of multi-hierarchical
+structures \cite{Pondorf2010}.
+
+\subsection{General markup types}
+\label{sec:markuptypes}
+The possibility to separate content and presentation has always been a strong
+argument for markup languages. With \Term{descriptive markup} in contrast to
+\Term{presentational markup} authors can focus on the structure of documents
+and mark what a text element \emph{is} instead of how it should look like
+\cite{Coombs1987}. Elements of a descriptive markup language are declared on
+the basis of their meaning --- the markup is also called
+\emph{semantic}.\index{semantic!markup|see{descriptive markup}}\footnote{This
+term is brought up with every new data structuring language: \acro{SGML},
+\acro{XML}, \acro{RDF}\ldots} However the distinction between layout and
+significance is less clear than it seems. Attributes like font size, color, and
+style may both serve readability and imply a special meaning. The meaning
+combined with a set of attributes can differ between texts or even within one
+text. And markup does not have to be descriptive per se. Sometimes bold text is
+just bold. Existing markup languages like \acro{HTML} therefore often mix
+descriptive and presentational elements.\footnote{\acro{HTML} has descriptive
+elements like \texttt{<title>}, \texttt{<h1>}, \texttt{<em>}, and
+\texttt{<code>} but also purely presentational elements like \texttt{<i>} and
+\texttt{<tt>}. With \acro{HTML5} the standard is shifted more to descriptive
+markup with presentational capabilities separated in
+\acro{CSS} \cite{Hickson2009}.}
+
+In most applications markup is not presented directly to the user but only
+visible by means of its effects. A heading may be marked up as such but the
+reader can only differentiate based on layout properties (font size and
+style, section numbers etc.). With \acro{WYSIWYG} editors, that provide
+direct visual feedback while editing, the descriptive markup is even hidden to
+the author. Although \term{word processor}s support some separation of structure
+and layout via so called styles or templates, a `What You See Is What You
+Mean' paradigm is difficult to achieve. Unless descriptive markup has some
+useful impact that is directly visible to the author (for instance automatic
+table of contents based on heading markup), one can unlikely motivate its usage.
+The concrete meaning of markup not only depends on the concrete markup language
+but also on its actual use and implications, and authors easily misuse markup
+elements for something other than their intended purpose. Eventually the
+markup's meaning is \emph{only} its actual usage if we follow
+\person[Ludwig]{Wittgenstein}. For a computer program, on the other hand,
+markup can only have an effect in form of \Term{procedural markup} that
+indicates what to do with a given piece of text. Although procedural markup
+is mostly hidden to the user (descriptive and presentational markup is mapped
+to it internally), it affects the usage of markup as well. An author of an
+\acro{HTML} document may use specific tags not (only) to indicate the
+meaning of some text or to shape its layout, but also to accomplish some
+behaviour in search engines, browsers and other programs that process the
+document.
+
+Beside this three types of document markup there is a fourth class that
+gained importance with \acro{SGML} and document types: a \Term{prescriptive
+markup language} imposes a set of rules, which all matching documents
+must follow. A descriptive markup language in contrast describes document
+structures \emph{a posteriori} rather than prescribing rules over them
+\cite{Quin1996,Renear2000}. The difference between the two lies in the
+purpose of \term{validation}, and applies not to single pieces of markup
+but to markup languages as a whole \cite{Piez2001}. Prescriptive markup implies
+a strict validation that checks whether a document instance fits to
+a given document or not. Descriptive markup, in contrast, only provides
+loose validation but many degrees of freedom to describe documents
+of possibly unknown structure.
+
+\subsection{Text markup languages}
+We will now look at some popular concrete markup languages for textual
+documents:
+
+\begin{description}
+
+\item[\acro{HTML}, \acro{TEI}, and \term{DocBook}] are the major text
+markup languages. All were based on \acro{SGML} and migrated to
+\acro{XML} around the turn of the millennium. Each language covers a
+specific document type and mixes descriptive markup with some presentational
+markup \cite{Hickson2009,Burnard2007,Walsh2010}.
+
+\item[\TeX] %\index{\TeX}\index{\LaTeX} % TODO
+is a powerfull programming language
+for typesetting, created by \Person[Donald]{Knuth} in 1978 \cite{Knuth1984}.
+It is popular especially in mathematics and related disciplines because of
+its strong support of formulae. Its popular extension \LaTeX\ defines a rich
+variety of macros; however there is no clear separation between descriptive
+markup, presentational typesetting, and programming \cite{Lamport1994}.
+
+\item[\term{troff}] is a presentational markup language that evolved from the
+very first text formatting program \acro{RUNOFF} (1964). Several macro
+packages add descriptive markup for different document types
+\cite{Dougherty1987}. Troff has mainly been replaced by \LaTeX\ and DocBook.
+
+\item[\tacro{OpenDocument Format}{ODF}] is an \acro{XML} based file format for
+several kinds of office documents. It includes detailed capabilities to encode
+text formatting, partly based on \acro{CSS} and \acro{XSL-FO}
+\cite{OpenDocument2012}. Its extent and complexity limits the use a markup
+language to a subset of \acro{ODF}, but to lesser degree than the rival
+``Office Open XML'' file format by Microsoft.
+
+\item[\term{Lightweight markup languages}] have a simple syntax, designed to
+be easy for a human to read and to enter with a plain text editor. Popular
+lightweight markup languages include \term{reStructuredText}, \term{Markdown},
+\term{Textile}, \acro{POD}, and several Wiki syntaxes. Examples of lightweight
+markup languages are shown in table~\ref{tab:markuplanguages}, different
+markup languages cover same or overlapping document models by different syntax.
+
+\item[\tacro{Rich Text Format}{RTF}] is a file format developed by
+\term{Microsoft} in 1987 to exchange text documents. It is not meant to
+directly be created by people but has a readable syntax and some concepts
+similar to \TeX\ \cite{Burke2003}.
+
+\item[\tacro{Extensible Stylesheet Language -- Formatting Objects}{XSL-FO}]
+is an \acro{XML} based markup language, that is used to describe the layout
+of documents, based on an area model \cite[par. 6 and 4]{Berglund2006}. The 
+area model defines pages, blocks, and lines, partly derived from the \acro{CSS}
+formatting model.\footnote{The \acro{XSL} family of standards and its
+relation to \acro{CSS} and \acro{XML} is somehow confusing. In short
+the \Tacro{Extensible Stylesheet Language}{XSL} consists of \emph{i}) a
+query language for addressing parts of an \acro{XML} document (\acro{XPath}),
+\emph{ii}) a programming language for transforming \acro{XML} documents
+(\acro{XSLT}) that uses \acro{XPath}, \emph{iii}) an area model that defines
+layout properties, and \emph{iv}) an \acro{XML} syntax to specify documents
+based in the are model (\acro{XSL-FO}). \acro{XSL} builds on concepts of
+\acro{CSS} and the \Tacro{Document Style Semantics and Specification
+Language}{DSSSL} but not as its subset or superset.\label{fn:xsl}}
+
+\item[\tacro{Cascading Style Sheets}{CSS}] is a stylesheet language
+to describe the presentation of elements in document markup languages
+\cite{Bos2009}. Introduced first by \Person[H\r{a}kon Wium]{Lie} in 1994 for
+\acro{HTML}, it has since been adopted for several other document types. In
+contrast to the other languages listed above, \acro{CSS} does not markup text
+but describe the layout properties of elements in marked up documents.
+\end{description}
+
+\input{tab-markuplanguages}
+
+% TODO: change font and use \acro
+\begin{figure}
+\centering
+\begin{tikzpicture}[orm,ml/.style={fill=white,inner sep=3pt,align=center}]
+ \draw[|-|] (1.2,4.5) to node[ml] {\acro{HTML}} +(6*1.2,0);
+ \draw[|-|] (1.2,3.7) to node[ml] {\acro{TEI}, \term{DocBook}} +(3*1.2,0);
+ \draw[|-|] (2.4,2.9) to node[ml] {\TeX,~\LaTeX,~troff} +(5*1.2,0);
+ \draw[|-|] (0.0,2.0) to node[ml] {\acro{ODF}} +(2*1.2,0);
+ \draw[ -|] (2.4,2.0) to node[ml] {Lightweight\\markup languages} +(4*1.2,0);
+ \draw[ -|] (7.2,2.0) to node[ml] {\acro{RTF},\\\acro{XSL-FO}} +(2*1.2,0);
+ \draw[|-|] (0.0,1.1) to node[ml] {\acro{CSS}} +(8*1.2,0);
+ \node[align=center] (s) at (0,0) {\ormbf storage\\\ormbf format};
+ \node[align=center] (e) at (4.8,0) {\ormbf edit\\\ormbf format};
+ \node[align=center] (o) at (9.6,0) {\ormbf output\\\ormbf format};
+ \draw[thick,<->] (s) to node[above] {load/save} (e);
+ \draw[thick, ->] (e) to node[above] {export} (o);
+ \coordinate[below=0.3 of e.south] (e2);
+ \draw[thick] (s.south east) to[out=-20,in=180] (e2);
+ \draw[thick,->] (e2) to[out=0,in=180] (o);
+\end{tikzpicture}
+\caption{Main applications of some markup languages}
+\label{fig:mlapps}
+\end{figure}
+
+Each language implies or defines a \Term{document model} with entities such as
+pages, paragraphs, tables, lists, lines characters etc. \term[character
+encoding]{Character encodings} as described in section~\ref{sec:characters}
+provide the fundament of such models. Markup languages and document models are
+shaped by the focus of their application. We can divide \emph{i}) storage
+formats, which are mainly used to store and exchange documents, \emph{ii})
+output formats, which procedurally or descriptively trigger a display device,
+and \emph{iii}) edit formats, which are used to create, analyze, and modify
+documents (figure~\ref{fig:mlapps}). Edit formats require the markup language
+to be expressed in a specific \term[syntax!of markup languages]{syntax};
+basically most markup languages are foremost defined by a markup syntax and
+`markup' is often used as a synonym for a markup language's syntax. Syntax,
+however, should not be confused with the document model.
+Table~\ref{tab:markuplanguages} list four common concepts and their expression
+in syntax of different markup languages. As shown in
+table~\ref{tab:titleinmarkup}, the same document (here it is just a title) can
+be expressed differently in different form.  Following the radical position of
+\textcite{Renear2009}, either the forms do not represent the same document or
+the document does not change if we transform one form to the other. But what is
+the document, if we only have markup language in form of syntax?
+
+\begin{table}
+\begin{minipage}{\linewidth} 
+\renewcommand{\footnoterule}{}
+\begin{tabular}{rl}
+\acro{HTML} & \texttt{Radiative \&beta;-decay in <sup>141</sup>Ce} \\
+\LaTeX & \verb|Radiative \textbeta-decay in ^{141}Ce| \\
+Textile & \verb|Radiative &beta;-decay in [^141^]Ce| \\
+non-standard markup & \texttt{Radiative \textbeta-decay in \^{}1\^{}4\^{}1Ce} \\
+plain Unicode\footnote{This special title can be expressed in plain
+Unicode because the subscript digits 1 and 4 happen to be defined as codepoint
+\U{00B9} and \U{2074} and the upright beta is defined as codepoint \U{03B2}.} 
+ & \texttt{Radiative \textbeta-decay in \textsuperscript{141}Ce} \\
+simplified transcription &\texttt{Radiative beta-decay in 141Ce} \\
+\end{tabular}
+\caption{An article title marked up in syntax of several markup languages}
+\label{tab:titleinmarkup}
+\end{minipage}
+\end{table}
+
+Defining a markup language by its syntax introduces some problems with escaping,
+concatenating, nesting, and alternatives. First, characters acting as syntax
+elements cannot directly be used in text but must be escaped or forbidden.
+% most basic example: characters as null-terminated string
+For instance in \acro{HTML} the less-than sign `$<$' (\U{3C}) must be escaped as
+`\verb|&lt;|', `\verb|&#60;|', or `\verb|&#x3C;|'. Second, syntax elements often
+cannot arbitrarily be nested and/or concatenated. For instance in Textile
+`\verb|**__B__**|' encodes a bold, italic letter `B' but if it is surrounded by
+other letters, it must be put in square brackets as `\verb|A[**__B__**]C|'. 
+Alternatives occur especially if there is no isomorphism between syntax and 
+document model (\ref{fig:mlalt}). As each markup element has a special
+meaning you can rarely derive general rules for all parts of the syntax.
+
+\begin{figure}
+\begin{tabular}{rcl|l}
+\verb|<b><i>A</i></b>| &$\cong$& \verb|<i><b>A</b></i>| 
+  & `\textbf{\textit{A}}' \\
+\verb|<i><i>A</i></i>| &$\cong$& \verb|<i>A</i>| & `\textit{A}' \\
+\verb|<i>A</i><i>B</i>| &$\cong$& \verb|<i>AB</i>| & `\textit{AB}' \\
+\verb|<sup>a</sup><sup>b</sup>| &$\cong$& \verb|<sup>ab</sup>| 
+  & $^\text{ab}$ \\
+\verb|a<sub>b<sup>c</sup></sub>|&$\ncong$& \verb|a<sup>b<sub>c</sub></sup>| 
+  & $\text{a}^{\text{b}_\text{c}}$ $\neq$ $\text{a}_{\text{b}^\text{c}}$  \\
+\verb|a<sup><sup>b</sup></sup>| &$\ncong$& \verb|a<sup>b</sup>| 
+  & $a^{^\text{b}}$ $\neq$ $a^\text{b}$ \\
+\end{tabular}
+\caption{Ambiguities and structural element differences in markup syntax}
+\label{fig:mlalt}
+\end{figure}
+
+In most markup languages it is not even obvious which parts of a markup syntax
+are nested (tree model) and which are concatenated (sequence/event model). The
+interpretation of an element can depend on its position in a tree of elements,
+on its position in a sequence of elements, and/or on its position relative to
+other elements (see table~\ref{tab:mleventtree}, elements are shown underlined
+for better readability). In practise all markup language syntaxes have some
+tree-based parts and some event-based parts.
+
+\begin{table}
+\begin{tabular}{rcl}
+\textbf{syntax} & \textbf{model} & \textbf{document instance} \\
+MediaWiki & events &
+  \texttt{\uline{\tq\tq\tq} bold~~\uline{\tq\tq} bold-italic \uline{\tq\tq\tq}
+~~~~~~~italic \uline{\tq\tq}} \\
+invalid \acro{HTML} & events & \texttt{\uline{<b>} bold
+  \uline{<i>} bold-italic \uline{</b>}~~~~~~~italic \uline{</i>}} \\
+\acro{HTML} & tree & 
+  \texttt{\uline{<b>} bold
+  \uline{<i>} bold-italic \uline{</i></b><i>}italic \uline{</i>}} \\
+\end{tabular}
+\caption{Event model vs. tree model in markup languages}
+\label{tab:mleventtree}
+\end{table}
+
+A widespread example of markup for metadata exists in citation styles and 
+forms of heading, such as \acro{ISBD}. Character strings that result from
+library cataloging rules, have mainly used for printing catalog cards and
+to support other forms of retrieval. Although often described as 
+\term{record}, they can better be viewed as a special kind of document.
+As shown by \textcite{Thomale2010} for \acro{MARC}, the origin as markup
+has also influenced bibliographic data formats.\footnote{The treatment
+of existing markup in cataloging, which would result in markup in markup,
+has not been analyzed deeply yet. Most cataloging rules do not preserve 
+font styles, emphasis, or even non-latin characters but make use of
+transcriptions and comments.}
+
+% Rules: (AACR2, RAK, RDA\ldots): Auszeichnungen werden in der Regel nicht
+% übernommen oder durch einen
+% Ggf. zusätzlichen Kommentar in einer Fußnote angegeben
+% RAK-WB §§ 116, 206, 207
+% RAK-WB und AACR haben weniger mit Daten und Informationen zu tun als mit dem
+% Aussehen und Sortieren von Katalogkarten
+% nicht lateinische 
+% Most cataloging rules do not preserve markup like font styles, emphasis and
+% subscript/superscript, or even non latin characters
+
+% TODO: Example: Zero-terminated string vs. fixed length strings
+% most basic example: null-terminated string (subset of Unicode-String!)
+
+Despite different applications and syntaxes, among markup languages you can
+find sets of shared concepts. Especially lightweight markup languages build
+on a common document model and differ mainly in details of syntax.
+Table~\ref{tab:markuplanguages} compares selected inline markup (bold,
+italics, monospace, subscript and superscript) in 11 different markup
+languages. Without loss of generality, we can limit analysis to inline
+formatting because that may more often occurr in other fields of metadata
+(see table~\ref{tab:titleinmarkup}). An integration of common parts will 
+lead to a document model like the area model of \acro{XSL-FO} or the 
+formatting model of \acro{CSS}. Much work of such integration has been done
+in the \Term{pandoc} document converter software written by
+\Person[John]{MacFarlane}.\footnote{\url{http://johnmacfarlane.net/pandoc/}}
+Pandoc implements a set of parsers and a set of writers for various textual
+markup languages. They connect through a representation of parsed documents
+in a common document model, implemented as data structure in Haskell.
+
+\subsectionexample{The CSL text markup model}
+The \Tacro{Citation Style Language}{CSL} is an \acro{XML} based formal 
+language for describing the formatting of in-text citations, notes and 
+bibliographies \cite{Zelle2012}. \acro{CSL} does not require fixed input and
+output formats. Citations and bibliographic records must only conform to a
+common model and formatted bibliographies can be produced in different markup 
+languages such as  \acro{HTML}/\acro{CSS}, \acro{RTF}, and \TeX. Parts of 
+the input may be  formatted by additional markup as shown in
+table~\ref{tab:titleinmarkup}. \acro{CSL} processors must be aware of this
+markup and transform it into a common text markup model. The markup includes 
+italics, bold, and small caps as flags; nestable subscript and superscript;
+and quotations in up to two levels (pairwise quotation marks are treated 
+as markup that can be modified by specific \acro{CSL} styles). The implied
+text markup model is shown in figure \ref{fig:cslmarkupmodel}. The model
+abstracts from alternatives as listed in figure~\ref{fig:mlalt}.
+
+% TODO: missing abbr
+% TODO: nodecor of quotation marks?!
+% TODO: Unicode NFC (composed grapheme)
+% TODO: superscript glyphs in Unicode
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[orm]
+
+\entity (c) {Character};
+
+\unary[left=of c,label=left:bold,yshift=5mm](bold){} edge[plays] (c);
+\unary[left=of c,label=left:italic,yshift=0mm](italic){} edge[plays] (c);
+\unary[left=of c,label=left:small caps,yshift=-5mm](sc){} edge[plays] (c);
+
+\draw[decoration={brace},decorate]
+(sc.south west)++(-18mm,0) -- +(0,+13mm) node[anchor=east,pos=0.5] {\ormind{2}};
+
+\binary[left=of c,xshift=2mm,label=left:\ormleft{protected},yshift=-12mm](p){} edge[plays] (c);
+
+\value[below=of p.one south,label=below:\ormvalues{case,decor}]{Protect} edge[plays] (p.one south);
+
+\binary[right=of c,yshift=5mm,unique=2,label=above:has] (r) {} edge[required by] (c);
+\value[right=of r] {GraphemeCluster} edge[plays] (r);
+
+\binary[right=of c,yshift=-5mm,unique=2,label=above:has] (s) {} edge (c);
+\value[right=of s,label=right:\ormvalues{1,2}] {QuotationLevel} edge[plays] (s);
+
+\ternary[above=12mm of c,unique=1-3,skip unique=2,unique=1-2:2,
+  label=above:contains\ldots at\ormind{1}](sc){} edge[plays] (c);
+\entity[left=5mm of sc]{String~!} edge[plays] (sc);
+\value[right=5mm of sc,label=right:\ormvalues{1,2,\ldots}]{Position} edge[plays] (sc);
+
+\binary[below=1 of c,unique,unique=2,xshift=2mm] (lc) {};
+\plays (c) to (lc.one north);
+\node[above=0.1 of lc.two north] {has};
+\entity[right=of lc] (L) {Level} edge[plays] (lc);
+
+\value[right=1.6 of L](S){Shift} edge[required by]
+  node[roles,unique=2,label=below:is]{} (L);
+
+\constraint[right=0 of S,text width=1.8cm]
+  {\textbraceleft supscript, superscript\textbraceright};
+
+\binary[below=of L,unique=1,unique=2,label=below:\ormleft{includes}] (n) {};
+\plays (L) to (n.one north);
+\plays (L) to (n.two north);
+
+\limits (n.west) -| node[constraint=xor]{} (lc.two south);
+
+\node[rule=1,anchor=north west] at (-3,-3.2) 
+{character positions of a string must have consecutive positions.};
+\node[rule=2,anchor=north west] at (-3,-3.7) 
+{only if supported by the character's grapheme cluster.};
+
+\end{tikzpicture}
+\caption{Text markup model of \acrostyle{CSL}}
+\label{fig:cslmarkupmodel}
+\end{figure}
+
+% TODO: describe/mention "GraphemeCluster"
+

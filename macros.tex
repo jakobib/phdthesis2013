@@ -1,0 +1,486 @@
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman,english]{babel}
+\usepackage{appendix}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Index
+
+\usepackage[protected]{splitidx}% makeindex will brake layout when sindex in table cells
+%\usepackage[makeindex,protected]{splitidx}
+\newindex[General Index]{idx}
+\newindex[Name index]{person}
+\newindex[List of acronyms]{acronym}
+
+\setindexpreamble[idx]{
+Page numbers set in bold font indicate a more detailed description. 
+Persons and acronyms are excluded and included in an index of its
+own respectively.}% TODO reference the page number of other indexes
+\setindexpreamble[acronym]{The world of data is full of acronyms.
+Bold page numbers indicate a further description of the entry, 
+normal page numbers indicate where an acronym is used in the text.}
+
+\usepackage{multicol}
+\extendtheindex{}%
+{\useindexpreamble
+\small\begin{multicols}{2}}%
+{\end{multicols}}% after the index
+{}% no change after the ending
+
+% required hack to mix hyperref and formatted page numbers
+% \newcommand{\bfhref}[1]{\textbf{\hyperpage{#1}}}
+
+\setindexpreamble[person]{
+This index lists all persons that are cited by their works (page numbers in
+normal font) or directly referenced by name (page numbers in \textbf{bold}) font.
+}
+
+% style of the page numbers in person index
+\newcommand*{\personindexcitepage}[1]{\hyperpage{#1}}
+\newcommand*{\personindextextpage}[1]{\textbf{\hyperpage{#1}}}
+
+% command to create a person index entry
+\newcommand{\personindex}[1]{\sindex[person]{#1}}
+
+% command to create a specific type of person indext entry (text or cite)
+\newcommand{\personindexcite}[1]{\personindex{#1|personindexcitepage}}
+\newcommand{\personindextext}[1]{\personindex{#1|personindextextpage}}
+
+\newcommand{\Person}[2][]{% print and index full name
+\ifthenelse{\isempty{#1}}%
+{\personindextext{#2}#2}%
+{\personindextext{#2, #1}#1 #2}}
+
+\newcommand{\person}[2][]{% print surname only but index full name
+\ifthenelse{\isempty{#1}}%
+{\personindextext{#2}#2}%
+{\personindextext{#2, #1}#2}}
+
+% See http://www.anindexer.com/about/abbr/abbrindex.html for style tips
+
+%%% I want multiple indexes
+% \usepackage[abshang,hangindent=1em,font=small]{idxlayout}
+
+% Declared in biblatex: maybe change to suppress editors?
+% \DeclareIndexNameAlias{author}{default}
+% \DeclareIndexNameAlias{editor}{default}
+% \DeclareIndexNameAlias{bookauthor}{default}
+
+\newcommand{\unnumberedsection}[1]{
+  \clearpage
+  \phantomsection
+  \section*{#1}
+  \addcontentsline{toc}{section}{#1}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[automark]{scrpage2}
+\setheadsepline{0pt}% no vertical line below header
+\lehead{\upshape\headmark}% chapter
+%\lehead{\small\upshape\thechapter~\chaptermark}% chapter
+\rohead{\small\upshape\headmark}% section
+\pagestyle{scrheadings}
+\automark[section]{chapter}
+%%%%
+
+% thanks to http://mintaka.sdsu.edu/GF/bibliog/latex/floats.html
+\renewcommand{\topfraction}{0.9}	% max fraction of floats at top
+\renewcommand{\bottomfraction}{0.8}	% max fraction of floats at bottom
+
+%   Parameters for TEXT pages (not float pages):
+\setcounter{topnumber}{2}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}     % 2 may work better
+\setcounter{dbltopnumber}{2}    % for 2-column pages
+\renewcommand{\dbltopfraction}{0.9}	% fit big float above 2-col. text
+\renewcommand{\textfraction}{0.07}	% allow minimal text w. figs
+				    %   Parameters for FLOAT pages (not text pages):
+\renewcommand{\floatpagefraction}{0.7}	% require fuller float pages
+% N.B.: floatpagefraction MUST be less than topfraction !!
+\renewcommand{\dblfloatpagefraction}{0.7}% adjust style of chapter and section headers
+
+\setkomafont{disposition}{\normalcolor\rmfamily\bfseries}
+\addtokomafont{section}{\LARGE}
+\addtokomafont{subsection}{\large}  
+
+% chapter title
+\addtokomafont{chapter}{\Huge}
+\renewcommand*{\chapterformat}{\LARGE\chaptername~\thechapter}
+
+% chapter mark in the header
+\renewcommand*{\chaptermarkformat}{\thechapter\enskip}
+
+%% Use serife from kpfonts as standard font
+\usepackage[light,onlyrm,largesmallcaps]{kpfonts} % serife
+
+% defines \textgreater and \textless
+\usepackage{textcomp}% only required in one image (???)
+
+% Zeilenabstand
+% \linespread{1.1}
+\usepackage{microtype}
+\SetExpansion[context=sloppy,shrink=60]{encoding={OT1,T1,TS1}}{}
+
+\usepackage{rotating} % for sidewaystable
+\usepackage{tipa,textcomp} % needed for \textbeta in combination with hyperref
+
+\usepackage{afterpage}
+
+%%% extended tables
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{upquote}
+
+\usepackage{fancybox}
+\usepackage{float}
+\makeatletter
+\newcommand{\fs@shadow}{%
+  \fs@plain
+  \def\@fs@pre{%
+    \setbox\@currbox\vbox{\shadowbox{\box\@currbox}}%
+  }
+  \let\@fs@iftopcapt=\iffalse}
+\makeatother
+
+\newcommand{\subsectionexample}[1]{
+  \stepcounter{example}
+  \subsection*{Example \theexample: #1}
+  \addcontentsline{example}{example}{\protect\numberline{\theexample}#1}
+}
+
+\let\tq\textquotesingle
+\let\sp\textvisiblespace
+
+%\usepackage{mathabx} % THANKS to http://carlo-hamalainen.net/blog/?p=8
+% \usepackage{MnSymbol}
+%\usepackage{tabularx}
+\usepackage{graphicx}
+
+%%% Add a space after footnote marks (only problematic if referenced)
+\let\myfootnote\footnote
+\renewcommand{\footnote}[1]{\myfootnote{~#1}}
+
+% Zeilenabstand vorübergehend ändern
+%%\usepackage{setspace}
+
+%%% tikz and tkz-orm
+%\usepackage{tikz-er2} % TODO: say thanks
+\usepackage{tkz-orm}
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{matrix}
+\usetikzlibrary{shapes} % for shape ellipse
+\usetikzlibrary{chains}
+\usetikzlibrary{calc}
+\usetikzlibrary{mindmap,trees} 
+\usetikzlibrary{snakes}
+
+% some tikz styles for data matrices
+\tikzset{ucs/.style={font=\ttfamily\scriptsize,color=black!70,align=center}}
+\tikzset{datamatrix/.style={matrix of nodes,nodes in empty cells,
+                            nodes={anchor=west,font=\ttfamily}}}
+
+% some tikz styles for drawing graphs
+\tikzstyle{gnode}=[circle,fill=black,minimum size=2mm,inner sep=0pt]
+\tikzstyle{garc}=[solid,thick,->,shorten >=0.75pt,>=latex]
+\tikzstyle{gedge}=[thick]
+\tikzstyle{glink}=[thick,dashed,->,shorten >=0.75pt,>=latex]
+\tikzstyle{ggraph}=[every node/.style={gnode},every edge/.style={garc}]
+
+% some tikz styles for drawing ERM diagrams
+\tikzstyle{erm}=[font=\sffamily,node distance=4mm,
+          label distance=1.25mm,line width=0.25mm]
+\tikzstyle{ermnode}=[draw,minimum size=6mm]
+
+\newcommand{\ignore}[1]{}
+
+%%% Captions of figures, tables, etc.
+\usepackage[hang,small,bf]{caption}
+%\renewcommand{\captionfont}{\rmfamily} 
+%\renewcommand{\captionlabelfont}{\rmfamily\textbf}
+
+
+%% additional mathematical symbols, align etc.
+\usepackage{amsmath,amsthm,amssymb}
+
+% relation
+\newcommand{\rel}{\longrightarrow}
+\newcommand{\bij}{\leftrightarrow}
+
+\usepackage[normalem]{ulem} % underline, strikeout etc.
+%\newcommand{\pattern}[1]{\dashuline{#1}} % or dotuline
+%\normalem % use standard layout for emph instead of underline
+
+%\newcommand{\pattern}[1]{\emph{#1}}
+\newcommand{\pattern}[1]{\hyperref[pattern:#1]{\emph{#1}}}
+
+\usepackage{acroterm}
+\usepackage{relsize}
+%\renewcommand{\acrostyle}[1]{\textsc{\smaller #1}}
+%\renewcommand{\Acrostyle}[1]{\textsc{#1}}
+\renewcommand{\acrostyle}[1]{#1}
+\renewcommand{\Acrostyle}[1]{\textit{#1}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Syntax highlighting
+\PassOptionsToPackage{x11names,rgb}{xcolor}
+\usepackage[procnames]{listings}
+
+\definecolor{mygray}{rgb}{0.4,0.4,0.4}
+\definecolor{mydarkblue}{rgb}{0.0,0.0,0.4}
+\definecolor{mycyan}{rgb}{0.0,0.4,0.4}
+\definecolor{mygreen}{rgb}{0.0,0.5,0.0}
+
+\lstset{
+  basicstyle=\ttfamily,
+  showstringspaces=false,
+  commentstyle=\color{mygray}\upshape,
+  stringstyle=\color{black},
+  numberstyle=\color{black}\footnotesize,
+  keywordstyle=\color{mycyan},
+  identifierstyle=\color{mydarkblue}
+}
+
+\lstdefinelanguage{XML}
+{
+  columns=fullflexible,
+  alsoletter={-.:},
+  morecomment=[s]{!--}{--},
+  morestring=[b]",
+  morestring=[s]{>}{<},
+  morecomment=[s]{<?}{?>},
+}
+\lstdefinelanguage{DTD}{
+  alsoletter={-\#.:},
+  keywords={,CDATA,DOCTYPE,ATTLIST,ELEMENT,EMPTY,ANY,ID,%
+      IDREF,IDREFS,ENTITY,ENTITIES,NMTOKEN,NMTOKENS,NOTATION,%
+      INCLUDE,IGNORE,SYSTEM,PUBLIC,NDATA,PUBLIC,%
+      \#PCDATA,\#REQUIRED,\#IMPLIED,\#FIXED,}%
+  morecomment=[s]{<!--}{-->},
+  morestring=[d]",
+  morestring=[d]',
+  stringstyle=\color{mygreen},
+}
+\lstdefinelanguage{rnc}{
+  keywords={,attribute,default,datatypes,div,element,empty,external,grammar,%
+    include,inherit,list,mixed,namespace,notAllowed,parent,start,string,%
+	text,token,},
+  alsoletter={-.:},
+  morecomment=[l]{\#},
+  columns=flexible,
+}
+\lstdefinelanguage{BNF}
+{
+  columns=flexible,
+  morestring=[d]",
+  morestring=[d]',
+  morestring=[s]{\[}{\]},
+  morestring=[s]{\#}{\ },
+%  stringstyle=\itshape\color[rgb]{0.0,0.5,0.0},
+  stringstyle=\color{mygreen},
+%  stringstyle=\color[rgb]{0.0,0.5,0.5},
+  identifierstyle=\sffamily\color{mydarkblue} %darkblue? 
+}
+\lstdefinelanguage{turtle}
+{
+  columns=fullflexible,
+  morekeywords={@prefix,@base,@forSome,@forAll,@keywords},
+  morecomment=[l]{\#},
+  alsoletter={-?}, % allowed in names
+%  morecomment=[l][\color{cyan}]{@}, % TODO: language tags
+  morecomment=[s][\color{mydarkblue}]{<}{>},
+%  basicstyle=\ttfamily\color{gray}, % . , ;
+%  numberstyle=\color{darkblue},
+  morestring=[b][\color{black}]\",
+}
+\newcommand\rdf[1]{\lstinline[language=turtle]{#1}}
+\newcommand\xml[1]{\lstinline[language=XML]{#1}}
+\newcommand\dtd[1]{\lstinline[language=DTD]{#1}}
+\newcommand\bnf[1]{\lstinline[language=BNF]{#1}}
+\newcommand\sql[1]{\lstinline[language=SQL,morekeywords={SCHEMA}]{#1}}
+
+\newcommand\bnfstring[1]{\texttt{\color{mygreen}#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{mdframed}
+%\mdfdefinestyle{exampleStyle}{topline=false,bottomline=false,leftline=true,rightline=true}
+%
+%\newcommand\fs@myExampleStyle{\def\@fs@cfont{\bfseries}\let\@fs@capt\floatc@plain
+%\def\@fs@pre{\begin{mdframed}[style=examleStyle]}%
+%\def\@fs@mid{}%
+%\def\@fs@post{\end{mdframed}}\let\@fs@iftopcapt\iffalse}
+
+%\floatstyle{myExampleStyle}
+%\floatstyle{border}
+\newfloat{example}{htp}{example}
+\floatname{example}{Example}
+%\floatstyle{plain}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Bibliography and citation style
+\usepackage[
+  style=authoryear-comp,
+  sorting=nyvt,hyperref=true,
+  indexing=cite,
+  url=true,
+  isbn=false,
+  doi=false, 
+  backend=biber
+]{biblatex}
+
+%\DeclareFieldFormat*{url}{}
+\DeclareFieldFormat*{url}{\url{#1}}
+\DeclareFieldFormat[book]{url}{}
+%\DeclareFieldFormat[misc]{url}{\url{#1}}
+%\DeclareFieldFormat[standard]{url}{\url{#1}}
+%\DeclareFieldFormat[report]{url}{\url{#1}}
+%\DeclareFieldFormat[misc]{url}{\url{#1}}
+%\DeclareFieldFormat[misc]{article}{\url{#1}}
+\AtEveryBibitem{% remove url if pages field
+	\iffieldundef{pages}{%
+	}{%
+		\clearfield{url}
+	}%
+}
+
+% show note in parens
+\DeclareFieldFormat[misc]{note}{\mkbibparens{#1}}
+
+
+% let cite behave like \parencite
+\let\cite\parencite
+
+\DeclareCiteCommand{\citeyear} 
+  {\boolfalse{citetracker}% 
+   \boolfalse{pagetracker}% 
+   \usebibmacro{prenote}} 
+  {\printtext[bibhyperref]{\printfield{year}}} 
+  {\multicitedelim} 
+  {\usebibmacro{postnote}} 
+
+\setlength{\bibitemsep}{1pt}% TODO
+
+
+\usepackage{xifthen}
+
+\DeclareIndexNameFormat{default}{%
+  \usebibmacro{index:name}{\personindexcite}{#1}{#3}{#5}{#7}}
+
+\DeclareIndexFieldFormat{indextitle}{}% do not index titles
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Size of Quotation / Quote / Verse
+%\let\oldquote\quote
+%\renewcommand\quote{\par\singlespacing\small\oldquote}
+%\let\oldquotation\quotation
+%\renewcommand\quotation{\par\singlespacing\small\oldquotation}
+%\let\oldverse\verse
+%\renewcommand\verse{\par\singlespacing\small\oldverse}
+
+% TODO calc \textwidth - \parindent
+\renewenvironment{quotation}%
+{\begin{center}\begin{minipage}[h]{0.95\textwidth}\small\noindent}%
+{\end{minipage}\end{center}\noindent}
+
+\newcommand{\quotationsource}{\hspace*{0.5em} --- }
+
+% chapter numbers roman
+%\def\thechapter{\Roman{chapter}}
+
+%%% enable '|' to type verbatim
+\usepackage{fancyvrb}% TODO: really needed?
+
+%%% Unicode codepoint
+\newcommand{\U}[1]{\texttt{U+#1}}
+\newcommand{\Ox}[1]{\texttt{0x#1}}
+
+\newcommand\format[1]{\textsf{#1}}
+\newcommand{\formati}[2]{\ensuremath{\format{#1}_{\textsf{#2}}}}
+
+\newcommand{\tuple}[1]{\langle #1 \rangle}
+
+% Set brackets and set builder notation
+\newcommand{\set}[2][]{%
+  \ifthenelse{\isempty{#1}}%
+    {\ensuremath{\{#2\}}}
+    {\ensuremath{\{\,#1\,|\,#2\,\}}}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\nwc}[1]{\ensuremath{#1^\uparrow}}
+\newcommand{\nwr}[1]{\ensuremath{#1^\downarrow}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\usepackage{enumerate}
+\usepackage{enumitem}
+\setlist{leftmargin=*,rightmargin=\parindent,font=\rmfamily}
+\setlist[description]{labelsep=0.5em,leftmargin=0.5em}
+%TODO: this make build brake:?!
+%\setlist[description]{labelindent=\parindent,label=--,topsep=2pt,itemsep=2pt,parsep=0pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newcommand{\lowercasepatternlabel}[1]{pattern:\lowercase{#1}}
+%\newcommand{\patternlabel}[1]{%
+%    \expandafter\label\lowercasepatternlabel\expandafter{#1}%
+%}
+\newcommand{\patternsection}[2]{%
+
+  % horizontal line
+  \vskip\medskipamount % or other desired dimension
+  \leaders\vrule width \textwidth\vskip0.4pt % or other desired thickness
+  \vskip\medskipamount % ditto
+  \nointerlineskip
+
+  \expandafter\subsection\expandafter{#1 pattern}
+  \expandafter\label\expandafter{#2}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\TODO}[1]{\vspace{\parskip}\noindent%
+\begin{tikzpicture}
+\node (b) [font=\scriptsize,rectangle,
+  inner sep=5pt,
+  text width=\linewidth,
+  %text justified,
+  anchor=south
+]{\parbox[t]{\linewidth}{#1}};
+\draw[dashed,very thick,red] (b.north west) to (b.south west)
+to +(10pt,0);
+\draw[dashed,very thick,red] (b.north west) to +(10pt,0);
+\end{tikzpicture}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[
+  pdfborder={0 0 0},colorlinks,
+  linkcolor=purple, citecolor=olive, urlcolor=violet
+]{hyperref}
+
+% Add ToC to PDF bookmarks
+%\BeforeTOCHead[toc]{{\cleardoublepage\pdfbookmark[0]{\contentsname}{toc}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliography{bibliography}
+
+\raggedbottom % prevent LaTeX from adding vertical white space in strange places on pages that it cannot fill properly.
+
+% numerate subsubsections in small roman numbers but don't shown them in ToC
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+\renewcommand{\thesubsubsection}{\Roman{subsubsection}}
+
+%\usepackage{tocstyle}
+%\usetocstyle{allwithdot} 
+\renewcommand{\contentsname}{Table of Contents}
+%%\renewcommand\cfttoctitlefont{\Large\hfill\MakeUppercase}
+%%\renewcommand{\cftaftertoctitle}{\hfill}
+%\renewcommand{cftloftitlefont
+
+

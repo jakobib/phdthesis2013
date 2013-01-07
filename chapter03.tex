@@ -1,0 +1,133 @@
+\chapter{Methods of data structuring}
+\label{ch:methods}
+
+% This chapter contains a comprehensive survey of methods that
+% are used to store and structure data in the wild.
+
+% ACHTUNG: Nur das jeweils charachteristische sollte beschrieben werden
+% Beschränkung aufs Wesentliche, Extremfälle, Besonderheiten
+% Deutlich machen: Warum ist diese Typologie/Classification sinnvoll
+
+This chapter holds the main empirical part of my thesis. Based on intensive
+review of literature and standards, I give a comprehensive analysis of methods
+and systems for structuring and describing data. The summary focuses on
+conceptual properties: details of implementation such as performance and
+security, are only mentioned briefly, if they show why specific techniques have
+evolved. The goal of this analysis is to later find patterns and paradigms
+independent from particular methods. For this reason I followed
+\textcite{Meek1995} whose trick to become language-independent was ``to develop
+a healthy disrespect for all languages, and look for faults in them all the
+time.'' The division of methods in sections partly anticipates a more detailed
+typology that will be developed in detail in chapter~\ref{ch:findings}. The
+survey starts with character encodings (section~\ref{sec:characters}) that are
+needed to express any textual data.  Identifiers
+(section~\ref{sec:identifiers}) are used as part of all other methods as as
+well. The most basic method to store and manage digital data are files
+(section~\ref{sec:filesystems}) followed by databases
+(section~\ref{sec:databases}). The analysis does not consider concrete database
+systems, but general database models which \tacro[Database Management
+System]{Database Management Systems}{DBMS} can be classified into.  Data
+structuring or serialization languages (section~\ref{sec:dsl}) organize data in
+general forms for storage and exchange; popular examples include \acro{XML},
+\acro{CSV}, and \acro{RDF}. There is some overlap with markup languages
+(section~\ref{sec:markuplanguages}), which mainly apply to text and similar
+sequential data. Schema languages (section~\ref{sec:schemas}) express logical
+schemas as data formats.  Conceptual modeling languages (\ref{sec:modelangs})
+are used to capture a part of reality in formal language. They are often
+combined with a graphical notation which is a strict form of a conceptual
+diagram (section~\ref{sec:diagrams}).  Query languages
+(section~\ref{sec:queries}) can define or be part of an \tacro{Application
+programming Interface}{API} to select or identify a specific piece of data.
+
+\pagebreak
+\input{sec-characters}
+
+\input{sec-identifiers}
+\pagebreak
+
+\include{sec-filesystems}
+\pagebreak
+
+\input{sec-databasemodels}
+\pagebreak
+
+\input{sec-dsl}
+\pagebreak
+
+\input{sec-markuplanguages}
+\pagebreak
+
+\input{sec-schemas}
+\pagebreak
+
+\input{sec-modelangs}
+\pagebreak
+
+\input{sec-diagrams}
+\pagebreak
+
+\input{sec-apis}
+
+% ``The entity-relationship model adopts the
+% more natural view that the real world consists of entities
+% and relationships.
+
+% See http://en.wikipedia.org/wiki/AmigaOS#Datatypes
+% Datatypes / formats on OS level! (also in BeOS)
+
+% OODBs. World is a set of objects.
+% On the Representation of Roles in Object-Oriented and Conceptual Modelling
+% \cite{Steimann2000} pointed out that roles, as introduced by
+% \person[Charles]{Bachman} \cite{Bachman1977} are a third, fundamental
+% concept beside objects and relationships.
+
+
+% MOTIVATION: Many formats and data without common model or with no model at all (model not available, only logical schema exists...)
+% REMINDER: one reality -> many possible models
+% REMINDER: one schema -> multiple possible models
+% REMINDER: modeling is design , is an art!
+%
+% model integration needed for information integration!
+% but literature deals most with schema integration!
+
+%----
+% Sehr geehrter Herr Naumann,
+%
+% Ich sitze derzeit an meiner informationswissenschaftlichen Dissertation über
+% die Modellierung von bibliographischen Daten. Dabei bin ich wieder auf das
+% Probleme der Informationsintegration gestoßen. Im SSWS 200? hatte ich dazu
+% an der HU ein Hauptseminar besucht und meine Prüfungsleistung als Wikipedia-
+% Artikel abgegeben, vielleicht können Sie sich noch erinnern - wir hatten uns
+% dann nochmal auf der WWW200? in Edinburgh getroffen.
+%
+% Ich habe folgende Frage ...
+%
+% Nach meinem Eindruck beschränkt sich der Großteil der Informationsintegration
+% mit der Integration von Schemata wie SQL-Schemas, XML Schemas etc. Nach der
+% traditionellen Einteilung der Datenmodellierung in ...
+%
+% 1. Kennen Sie gute Arbeiten, die sich mit der Integration von Informationen
+% auf der konzeptuellen Ebene beschäftigen - d.h. unabhängig davon, ob Daten 
+% in XML, SQL, RDF, CSV oder wie auch immer abgelegt werden?
+
+% Anbei schicke ich Ihnen einen Auszug aus dem Grundlagenkapitel meiner
+% Arbeit, wo ich u.A. kurz Datenmodellierung erkläre. Im Hauptteil nehme
+% ich eine Bestandsaufnahme von verschiedensten Methoden zur Strukturierung
+% von Daten vor (angefangen von Dateisystemen und Datenbanken über Sprachen
+% wie CSV und XML und Schemasprachen wie XSD und OWL bis zu graphischen
+% Notationssystemen wie ER-Diagramme und Mindmaps)
+
+
+% Conceptual Mapping / Topic Maps / Structured Maps
+% But Evans et al. (2003) argue that 'a truly flexible model-driven development 
+% process should not dictate the language that practitioners should use to
+% construct models, even an extensible one. Instead they should be free to use
+% whichever language is appropriate for their particular domain and application,
+% particularly as many languages cannot be shoe-horned into the UML family'. We
+% follow this argument and suggest extending the model mapping of MDA (Caplat &
+% Sourrouille, 2003) to 'language mapping'. 
+% In: Rittgen, 2006
+%
+% XML Language for Conceptual Graphs exist!
+
+

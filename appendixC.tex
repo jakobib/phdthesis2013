@@ -1,0 +1,28 @@
+
+\section{A pattern graph}
+\label{appendixC}
+
+Figure~\ref{fig:patterngraph} contains a graph that was automatically created
+from the connections between patterns in chapter~\ref{ch:patterns}. Bold arrows
+indicate connections to implied patterns or to patterns which occur in the
+context of another pattern: for instance the context of a \pattern{separator}
+pattern is a \pattern{sequence} and sequences imply an \pattern{embedding}. The
+relationship, however, is no formal implication in terms of logic.  Subsets of
+this graph are shown in figure~\ref{fig:compatterns} with focus on combining
+patterns and figure~\ref{fig:relpatterns} with focus on relational patterns.
+The full graph in figure~\ref{fig:patterngraph} further contains dashed arrows
+that indicate which patterns can be found in implementations of another
+pattern.  One could further draw connections between related patterns, but
+these links are too dense to make use of it in a static graph with all
+patterns. A hypertext version will be provided at \url{http://aboutdata.org}
+for easier browsing of the pattern language. An alternative overview of the
+pattern language is given in form of a classification in
+table~\ref{tab:patternclassification} at
+page~\pageref{tab:patternclassification}.
+
+\begin{sidewaysfigure}
+\input{datapatterns/patterngraph}
+\caption{Connections between all patterns}
+\label{fig:patterngraph}
+\end{sidewaysfigure}
+

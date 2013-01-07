@@ -1,0 +1,3 @@
+[submodule "datapatterns"]
+	path = datapatterns
+	url = https://github.com/jakobib/datapatterns2013

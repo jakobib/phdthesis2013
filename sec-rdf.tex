@@ -1,0 +1,539 @@
+\subsection{RDF}
+\label{sec:rdf}
+
+The \Tacro{Resource Description Framework}{RDF} dates back to the
+\tacro{Meta Content Framework}{MFC} which \Person[Ramanathan]{Guha}
+had created in the 1990s at \term{Apple} \cite{Andreessen1999,Guha1996}.
+\textcite{Guha1997} submitted the idea of \acro{MFC} to the \acro{W3C}, where 
+it evolved to a general graph-based metadata framework, first released as 
+\acro{RDF} specified by \textcite{Lassila1999}. Merged with ideas of 
+\textcite{TBL1997}, the focus had widened to metadata about any objects for
+creating a ``\term{Semantic Web}'', that can express knowledge
+about the world itself \cite{BernersLee2001a}. The ambitious aim of \acro{RDF}
+can be traced back further to the artificial intelligence project \term{Cyc},
+which \person[Ramanathan]{Guha} was co-leader of in 1987--1994, and to
+the original proposal of the \acro{WWW} \cite{BernersLee1989}.
+We will first describe the basic components of \acro{RDF}, show how its 
+structure can be described and extended, and list several serialization forms.
+Afterwards we will discuss how semantics is brought to \acro{RDF} via an
+algebra over RDF graphs.
+
+\subsubsection{RDF components}
+
+In its most basic form --- that is without additional techniques such as 
+\acro{RDFS}, \acro{OWL}, \acro{SKOS}, etc. --- \acro{RDF} is just a, graph-based 
+data structuring language. The \acro{RDF} data model is defined as abstract 
+syntax by \textcite{Klyne2004} as follows: an \Term[graph!in RDF]{RDF graph} 
+is a set of \Term[triple (RDF)]{RDF triples} (also known as \Termstyle{statement}s)
+each consisting of a \Term[subject (RDF)]{subject}, a \Term[predicate (RDF)]{predicate}
+(also known as \Term[property (RDF)]{property}), and an \Term[object (RDF)]{object}.
+The nodes of an RDF graph are its subjects and objects, and the edges are labeled by
+its predicates. Because RDF graphs are defined on mathematical sets, each particular 
+combination of subject, predicate, and object is only counted once in a graph.
+In summary, an RDF graph can be described as multigraph with labeled edges, possible
+loops (triples where subject and object coincide), and partly labeled nodes. This 
+multigraph may contain two kinds of graph labels: First an \Term{URI reference} 
+(or \Termstyle{URIref}) is an absolute, percent-encoded \acro{URI} or \acro{IRI}. 
+Two URIrefs are equal if and only if they compare as equal as encoded strings.%
+\label{term:uriref}%
+\footnote{This definition of equality is not based on normalized \acro{IRI}s, but 
+on Unicode character string comparision \cite[6.4]{Klyne2004}. This makes 
+\url{http://example.com/\%41} and \url{http://example.com/A} two distinct URIrefs, 
+although in most applications, after normalization of percent-encoding, the former 
+results in the latter. The ambiguity cannot be solved in general, because there
+is no general canonicalization algorithm for all types of \acro{IRI}s. It is 
+possible but strongly discouraged to have two different URIrefs that 
+percent-encode the same \acro{IRI}.} URIrefs are treated as identifiers
+for \Term[resource (RDF)]{RDF resources}, which beside triples are the central 
+part of the Resource Description Framework. No assumptions are made about the 
+nature of resources, but the same URIref always refers to the same resource
+\cite[section 1.2]{Hayes2004}. \acro{RDF} allows different URIrefs to refer to
+the same resource (synonyms), but unlike natural langugages it is assumed to
+have no homonym URIrefs just by definition.\footnote{By this, \acro{RDF}
+can be seen as one of many attempts to create a `perfect language', in which same
+words always refer to same objects. The history of other attempts and their
+failures have been illustrated vivid by \textcite{Eco1995}.}
+It should be noted that RDF graphs cannot contain resources which are not linked
+to other resources: you state that some resource plays a specific role in at least
+one \acro{RDF} triple, but you cannot state that a selected resource only `exists`.
+
+The second type of graph labels are \Term[literal (RDF)]{RDF literals}. A
+literal is a Unicode string, which should be in \term{Normalization Form C}.
+Optionally it is combined with either a lowercase \Term{language tag} as
+defined by \textcite{RFC4646}, or with a \Term{datatype URI} being an URIref.
+Literals with datatype are called \Term{typed literals} in contrast to
+\Term{plain literals}. Two literals are equal if they hold the same Unicode
+string (also called its \Term[lexical form (RDF literal)]{lexical form}), and
+(if given) the same language tag datatype \acro{URI}. Datatypes may enforce
+restrictions and normalization rules on lexical forms, but the details of this
+rules are out of the scope of basic \acro{RDF}.\footnote{To give an example,
+the \term{XML Schema} specification \cite{Biron2004} defines the datatype
+\rdf{xs:boolean} with four allowed lexical values (``\texttt{true}'',
+``\texttt{1}``, ``\texttt{false}'', ``\texttt{0}'') that map to the canonical
+literal values ``\texttt{true}'' and ``\texttt{false}''.}
+
+In addition to labeled nodes, at least subjects and objects can be unlabeled
+\Term[blank node]{blank nodes}. Blank nodes are treated as variables for 
+unknown URI references in one particular RDF graph. You can state that two
+blank nodes in one graph refer to the same resource, but blank nodes from
+different graphs are disjoint, unless you replace them with URIrefs. In
+practice, blank nodes are identfied by arbitrary identifiers, that are not
+shared among different graphs. As laid out by \textcite{Carroll2003}, blank
+nodes can make it hard to check, whether two graphs are equal, to calculate 
+a canonical representation of an RDF graph, and to remove all infereable
+tuples from a graph.\footnote{\label{fn:gi}It is assumed
+that the underlying \tacro{graph isomorphism problem}{GI} is strictly harder 
+than \tacro{polynomial time}{P}, and strictly easier than nondeterministic 
+\tacro{non-deterministic polynomial time}{NP} \cite{Kobler2006}.}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[orm,arrow/.style={->,thick},box/.style={draw,rectangle,thick}]
+\node[box,inner sep=4pt] (r) {info:oclcnum:318301686};
+
+\node[right=15mm of r,yshift=8mm] (t) {"The C programming language"@en};
+\draw[arrow,out=35,in=180] (r) to (t);
+\node[left=1mm of t,yshift=2mm] {dc:title};
+
+\node[right=15mm of r] (y) {"1978"\textasciicircum\textasciicircum};
+\draw[arrow] (r) to (y);
+\node[left=1mm of y,yshift=2mm] {dc:date};
+\node[right=0mm of y,box,inner sep=2pt,yshift=-0.5mm] 
+    {http://www.w3.org/2001/XMLSchema\#gYear};
+
+\node[draw,thick,circle,right=16mm of r,yshift=-8mm] (b1) {};
+\node[draw,thick,circle,right=16mm of r,yshift=-15mm] (b2) {};
+
+\draw[arrow,out=-25,in=180,shorten >=1mm] (r) to (b1);
+\node[left=1mm of b1,yshift=3mm] {dc:creator};
+\draw[arrow,out=-75,in=180,shorten >=1mm] (r) to (b2);
+\node[left=1mm of b2,yshift=2mm] {dc:creator};
+
+\node[right=18mm of b1] (v1) {"Kernighan"};
+\draw[arrow] (b1) to node[yshift=2mm] {foaf:name} (v1);
+\node[right=18mm of b2] (v2) {"Ritchie"};
+\draw[arrow] (b2) to node[yshift=2mm] {foaf:name} (v2);
+
+\matrix[row sep=2mm] (m) at (6,-3.2) {
+ \node[box,anchor=west,label=left:{dc:title =},inner sep=2pt]  
+     {http://purl.org/dc/elements/1.1/title}; \\
+ \node[box,anchor=west,label=left:{dc:creator =},inner sep=2pt] 
+    {http://purl.org/dc/elements/1.1/creator}; \\
+ \node[box,anchor=west,label=left:{foaf:name =},inner sep=2pt] 
+   {http://xmlns.com/foaf/0.1/name}; \\
+};
+\draw[decorate,decoration={brace},xshift=-2cm] 
+  (m.south west) -- node[anchor=east,inner sep=2mm]
+  {abbreviations} (m.north west);
+
+\end{tikzpicture}
+\caption{Example of a simple RDF graph}
+\label{fig:rdfgraphexample}
+\end{figure}
+
+Figure \ref{fig:rdfgraphexample} shows a simple \acro{RDF} graph consisting
+of six triples. URIrefs are depicted as rectangles, blank nodes as circles,
+and predicates are labeled arcs. Literals are shown in quotation marks,
+optionally followed by ``\verb|@|'' and a language tag, or by
+``\verb|^^|'' and a datatype \acro{URI}. The same graph in
+Turtle syntax is shown in figure~\ref{fig:rdfgraphexturtle}.
+
+\begin{table}
+\centering
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\textbf{\acrostyle{RDF} extension} & \textbf{subject} & \textbf{predicate} & 
+\textbf{object} & \textbf{datatype} & \textbf{lang.} & \textbf{graph} \\
+\hline
+standard          & $U \cup B$        & $U$        & $U \cup B \cup L$ & $U$ & $T$ & -- \\
+\hline
+symmetric         & $U \cup B \cup L$ & $U$        & $U \cup B \cup L$ & & & \\
+\hline
+generalized       & $U \cup B \cup L$ & $U\cup B\cup L$ & $U\cup B \cup L$ & & & \\
+\hline
+full blanks       & & $U\cup B$ & & $U\cup B$ & & $U\cup B$ \\
+\hline
+named graphs      &  &  &  & & & $U$ \\
+\hline
+language URIs     & & & & & $U [\cup B]$ & \\
+\hline
+\end{tabular}
+
+\begin{tabular}{l}
+$U$: URIref, $B$: blank node, $L$: Literal,
+$S$: Unicode string, $T$: language tag \\
+$L= S \cup (S \times U) \cup (S \cup T)$ 
+and $U, B, L, S, T$ are pairwise disjoint. \\
+The set of blank nodes $B$ is partitioned into disjoint sets
+for different \acro{RDF} graphs.
+\end{tabular}
+
+\caption{Definitions of the \acrostyle{RDF} data model and its extensions}
+\label{tab:rdfvariants}
+\end{table}
+
+\subsubsection{The model and its extensions}
+\label{sec:rdfmodels}
+
+An \acro{RDF} graph can formally be defined as subset of the set 
+$(U \cup B) \times U \times (U \cup B \cup L)$ of all triples, as laid
+out in table~\ref{tab:rdfvariants}. You can think of several
+useful extensions of the standard \acro{RDF} data model.
+First literals can also be allowed as subject of a triple. This 
+extension to `symmetric' \acro{RDF} allows reversing the direction of 
+any triple by switching subject and object. In standard \acro{RDF} you
+cannot state, that a given literal is the `name of' a given resource, but 
+only that a resource is `named as' a literal. Symmetric \acro{RDF} is 
+allowed at least internally in many \acro{RDF} applications, for instance
+in \acro{SPARQL} \cite[sec. 12.1.4.]{Prudhommeaux2008}.
+Second you could allow literals and blank nodes at any part of a triple.
+This extension to \Term{generalized RDF} is allowed for instance in
+\acro{OWL2} \cite[sec. 2.1]{Schneider2009}. An \acro{ORM} model of
+generalized RDF is given in figure~\ref{fig:genrdfmodel}.
+Third you could allow blank nodes at every place where URIrefs are allowed,
+that means also as predicates and/or data types.
+
+A different popular extension
+allows labeling whole RDF graphs by URIrefs. This extension was 
+introduced as \Term{named graphs} by \textcite{Carroll2005}. It has been 
+adopted for instance in \term{triple store}s (in this case also known as 
+\term{quadstore}s) that deal with multiple RDF graphs.
+Finally the
+replacement of language tags by URIrefs or blank nodes would repair 
+another design failure of standard \acro{RDF}.\footnote{In standard \acro{RDF}
+you cannot refer to language tags in statements because language tags are 
+disjoint with URIrefs and blank nodes.}
+
+\subsubsection{Serializations}
+
+The \acro{RDF} data model is not bound to a specific syntax, but there a several
+serialization formats. The most common format is \acro{RDF/XML} which uses 
+\acro{XML} \cite{Beckett2004}. Suprisingly, some allowed RDF graphs cannot be 
+expressed in \acro{RDF/XML} because they contain literals or predicate \acro{URI}s
+with Unicode codepoints forbidden in \acro{XML}~1.0. There are also numerous alternative
+ways to describe the same RDF graph in \acro{RDF/XML}, which makes it hard 
+to use generic \acro{XML} tools to process general \acro{RDF} data.
+\Term{TriX} (RDF Triples in XML) is an alternative \acro{XML} based syntax for
+\acro{RDF}, that additionally provides for serializing several (named) graphs in
+a single document \cite{Carroll2004}. \acro{RDF/JSON} and \acro{JSON-LD} are serializations of
+\acro{RDF} in \tacro{JavaScript Object Notation}{JSON}, which is popular
+in several scripting languages \cite{Alexander2008,Sporny2012}.
+\Term{N-Triples} is a simple, plain text
+serialization that was created for test cases \cite{Grant2004}. RDF graphs in
+N-Triples are written one triple per line and the character set is 7-bit 
+US-ASCII, but still the format is capable of encoding all \acro{RDF}. 
+\Term{Turtle} (Terse RDF Triple Language) was created by \Person[David]{Beckett}
+as more flexible and readable syntax extension of N-Triples \cite{Beckett2007}.
+Turtle is probably the most popular \acro{RDF} serialization format next to 
+\acro{RDF/XML}; an example is shown in figure~\ref{fig:rdfgraphexturtle}.
+\Term{TriG} syntax \cite{Bizer2007,Carroll2005} extends Turtle by using curly 
+brackets to group triples into multiple graphs, and to precede each graph by an
+URIref as its name. Apart from minor syntax variants, that can be added 
+automatically (an equal sign before and a dot after each graph), TriG is also 
+compatible with the syntax of \Tacro{Notation3}{N3},\footnote{However both use
+different models of \acro{RDF}: Trig is based on named graphs and N3 on standard
+RDF with a custom \rdf{rei:} reification vocabulary.} which is another superset of 
+Turtle. \acro{N3} extends Turtle with features such as variables, formulae, logical 
+implications, and functional predicates, that can be used to abbreviate common 
+URIrefs and patterns of \acro{RDF} statements \cite{BernersLee2008}. A summary 
+of syntax elements of \term{Turtle} and \term{Notation3} is given in 
+table~\ref{tab:n3syntax}.
+
+\begin{figure}
+\centering
+\begin{minipage}{9cm}
+\begin{lstlisting}[language=turtle]
+@prefix xs: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<info:oclcnum:318301686>
+  dc:title "The C programming language"@en ;
+  dc:date "1978"^^xs:gYear ;
+  dc:creator [ foaf:name "Kernighan" ] ,
+             [ foaf:name "Ritchie"   ] .
+\end{lstlisting}
+\end{minipage}
+\caption{Simple RDF graph in Turtle syntax}
+\label{fig:rdfgraphexturtle}
+\end{figure}
+
+\begin{table}
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Syntax element(s)} & \textbf{purpose} \\
+\hline
+\rdf{@prefix} & defines a namespace shortcut to abbreviate URIrefs \\
+\rdf{@base}   & defines a standard prefix for URIrefs \\
+\rdf{<X>} & URIref with URI \url{X} \\
+\rdf{"..."}, \rdf{"""..."""} & literals \\ 
+\rdf{"..."@X} & literal with language tag \rdf{X} \\ 
+\rdf{"..."\^\^<X>} & literal with datatype URIref \url{X} \\ 
+\rdf{.} & marks the end of a statement \\
+\rdf{;} & following statement(s) have same subject \\
+\rdf{,} & following statement(s) have same subject and predicate \\
+\rdf{a} & shortcut for \rdf{rdf:type} \\
+\rdf{_:X}, \rdf{[ ]} & blank node with local id \rdf{X} or without specific id \\
+numeric literals & \rdf{xs:integer} and \rdf{xs:float} as datatype \\
+\rdf{( )} & \rdf{rdf:List}, \rdf{rdf:first}, \rdf{rdf:rest}, and \rdf{rdf:nil}.\\
+\rdf{#...} & comment \\
+\hline
+\rdf{=} & \rdf{owl:sameAs} \\
+\rdf{!}, \rdf{^}, \rdf{@forSome} & statements with blank nodes \\
+\rdf{=>}, \texttt{<=} & \rdf{log:implies} \\
+\rdf{\{  \}} & statements with \rdf{rei:} reification and formulae \\
+\rdf{@forAll} & \rdf{rei:universals} \\
+\rdf{?x}, \rdf{:y} & variables in formulae \\
+\hline
+\end{tabular}
+\begin{tabular}{l}
+ \rdf{rdf:} is a shortcut for \url{http://www.w3.org/1999/02/22-rdf-syntax-ns#} \\
+ \rdf{owl:} is a shortcut for \url{http://www.w3.org/2002/07/owl#} \\
+ \rdf{xs:} is a shortcut for \url{http://www.w3.org/2001/XMLSchema#} \\
+ \rdf{log:} is a shortcut for \url{http://www.w3.org/2000/10/swap/log#} \\
+ \rdf{rei:} is a shortcut for \url{http://www.w3.org/2004/06/rei#} \\
+\end{tabular}
+\caption{Syntax elements of Turtle (above) and Notation3 (additionally below)}
+\label{tab:n3syntax}
+\end{table}
+
+\subsubsection{Vocabularies}
+
+A common technique used in all syntaxes (except \term{N-Triples}) is the abbreviation
+of URIrefs with \term{namespace} prefixes. In practice it is often assumed, that all
+resources, under one namespace prefix share same properties and that they belong to 
+one common \Term{RDF vocabulary}. An \term{RDF vocabulary} is a set of URIrefs and
+statements, that are created, described, and maintained for a specific use-case. 
+If the vocabulary makes use of an RDF schema language like \acro{RDFS} or \acro{OWL}
+(see section~\ref{sec:rdfschemas}), or if it implies other logical inference rules, 
+the vocabulary can also be called an \term{ontology}.
+
+The basic \acro{RDF} data model as described by \textcite{Klyne2004} includes 
+only the predefined datatype URIref \rdf{rdf:XMLLiteral} for 
+embedding \acro{XML} in \acro{RDF} literals. The standard further recommends 
+to use datatypes from the \term{XML Schema} vocabulary
+(see section \ref{sec:xmlschemas}). Other parts of the \acro{RDF} specification
+\cite{Manola2004,Hayes2004,Brickley2004} provide a basic RDF vocabulary to
+collect resources in classes (\rdf{rdf:type}), and resources that are used
+as properties (\rdf{rdf:Property}). In addition the RDF vocabulary contains
+resources to express containers (\rdf{rdf:Seq}, \rdf{rdf:Bag}, \rdf{rdf:Alt},
+\rdf{rdf:_1}, \rdf{rdf:_2} \ldots), collections (\rdf{rdf:List}, 
+\rdf{rdf:first}, \rdf{rdf:rest}, \rdf{rdf:nil}), primary values 
+(\rdf{rdf:value}), and \Term{reification} (\rdf{rdf:Statement},
+\rdf{rdf:subject}, \rdf{rdf:predicate}, \rdf{rdf:object}). Reification
+is the description of \acro{RDF} triples using other \acro{RDF} triples.
+This technique can be used for instance to express provenance and 
+$n$-ary relationships, but it increases complexity and there are
+several competing reification ontologies.\footnote{See 
+\url{http://www.w3.org/TR/rdf-mt/\#Reif}, 
+\url{http://www.w3.org/DesignIssues/Reify.html},
+and \url{http://purl.org/ontology/prv/core\#} for other reification
+ontologies.}
+
+\subsubsection{Semantics}
+
+A common misconception of \acro{RDF} is, that \acro{RDF} data automatically 
+adheres to some semantics. The \acro{RDF} data model imposes no conditions
+on the use of \acro{RDF} vocabularies to only create `meaningful' or 
+`well-formed' \acro{RDF} graphs. On the contrary, an important principle 
+of \acro{RDF} is that ``anyone can say anything about anything''.%
+\footnote{This wording from the first \acro{RDF} concepts document
+draft \cite{Klyne2004} was later modified to ``Anyone Can Make Statements About
+Any Resource'' without changing the general declaration.} This means
+``\acro{RDF} does not prevent anyone from making assertions that 
+are nonsensical or inconsistent with other statements, or the world as 
+people see it'' and ``it is not assumed that complete information about 
+any resource is  available.'' \cite{Klyne2004}. The latter important 
+principle is also known as \Tacro{Open World Assumption}{OWA}: the absence
+of a particular statement from an \acro{RDF} graph does not mean that the 
+statement is false. We illustrate this by the first triple of the graph 
+in figure~\ref{fig:rdfgraphexample} and figure~\ref{fig:rdfgraphexturtle}.
+The triple can be read as '`\url{info:oclcnum:318301686} is titled
+`The C programming language' in English''. More precisely, it says
+``the resource identified by URIref \url{info:oclcnum:318301686} has 
+the English title `The C programming language', assuming the concept of 
+having-a-title as identified by URIref \url{http://purl.org/dc/elements/1.1/}.''
+However this statement does not imply the absence of parallel titles. The
+resource may also have more than the two authors from the example --- 
+we just only know that there are two authors named at least ``Kernighan'' 
+and ``Ritchie'' respectively. Once we start inferencing, it could also
+turn out to be one author with two names as shown in
+figure~\ref{fig:rdfgraphinstances}.
+
+The semantics that is usually associated with \acro{RDF}, does not origin 
+from the \acro{RDF} data model, but from an algebra, that can be defined on 
+\acro{RDF} graphs.\footnote{Some may argue, that the algebra is an
+inherent part of \acro{RDF}. But this would neglect all \acro{RDF} 
+applications, which do not fully implement all aspects of the \acro{RDF} 
+algebra.} The algebra allows you to freely merge and 
+intersect \acro{RDF} data based on simple set algebra. This is not possible 
+in most other data structuring languages, for instance tree-based languages, 
+which must have exactly one root element.%
+\footnote{You could define union, intersection, and relative complement 
+also for \acro{INI} files and some other record based data formats, but as described
+in section~\ref{sec:csvandini}, these formats lack a precise definition.}
+As blank nodes are always disjoint for different graphs, the simple set 
+intersection of \acro{RDF} graphs cannot contain blank nodes. The same applies
+to two \acro{RDF} graphs $A$ and $B$ with $A\equiv B$. The \acro{RDF} specification
+uses the word `equivalent' in a different way, so we better call $A$ and $B$
+`set-equivalent' or `identical' if $A\equiv B$. 
+
+The \acro{RDF} specification defines another kind of equivalence and 
+two additional relationships between \acro{RDF} graphs: \Term{graph equivalence}, 
+\Term{graph instance}, and \Term{graph entailment}. Basically, two \acro{RDF} 
+graphs $A$ and $B$ are \Term[equivalence (RDF)]{equivalent}, written as $A \cong B$,
+if there is a bijection $M$ that maps literals to equivalent literals, URIrefs 
+to equivalent URIrefs, blank nodes to blank nodes. In addition the triple
+$(s,p,o)$ is in $A$ if and only if $(M(s),M(p),M(o))$ is in 
+$B$ \cite[sec. 6.3]{Klyne2004}. It is recommended, but not required to 
+apply Unicode Normalization before comparing graphs for equivalence.
+
+An \acro{RDF} graph $H$ is called \Term[instance (RDF)]{instance of} an 
+\acro{RDF} graph $G$, if $H$ can be obtained from $G$ by replacing zero 
+or more of its blank nodes by literals, URIrefs, or other blank nodes.%
+\footnote{The term `instance' is used also in
+\term{RDFS} and \term{OWL} for the \rdf{rdf:type} URIref.} 
+$H$ is a \Term{proper instance} of $G$, if at least one of its blank
+nodes has been replaced by a non-blank node, or if at least two blank
+nodes have been mapped to one. Two graphs $A$ and $B$ are equivalent 
+if and only if both are instances of each other but neither a proper 
+instance. Figure~\ref{fig:rdfgraphinstances} shows two possible
+non-equivalent instances of the graph from figure~\ref{fig:rdfgraphexturtle}.
+
+\begin{figure}
+\begin{tabular}{ m{0.5\linewidth} m{0.5\linewidth} }
+%Blank nodes replaced by URIrefs: &
+%Two blank nodes merged to one: \\
+\begin{lstlisting}[language=turtle]
+@base <http://viaf.org/viaf/>.
+
+<info:oclcnum:318301686> dc:title 
+  "The C programming language"@en;
+ dc:date "1978"^^xs:gYear;
+ dc:creator <108136058>, <616522>.
+
+<108136058> foaf:name "Kernighan".
+<616522>    foaf:name "Ritchie".
+\end{lstlisting}
+&
+\begin{lstlisting}[language=turtle]
+
+
+<info:oclcnum:318301686> dc:title 
+  "The C programming language"@en;
+ dc:date "1978"^^xs:gYear;
+ dc:creator _:b1.
+
+ _:b1 foaf:name 
+    "Kernighan", "Ritchie".
+\end{lstlisting}
+\\
+blank nodes replaced by URIrefs &
+two blank nodes merged to one
+\\
+\end{tabular}
+\caption{Two examples of RDF graph instances}
+\label{fig:rdfgraphinstances}
+\end{figure}
+
+\label{page:entailment} \Term{Entailment} is a relationship between two
+\acro{RDF} graphs $A$ and $B$, that holds, if a graph equivalent to $B$ can be
+created from $A$ by adding triples, based on specific inference rules. There is
+not only one kind of entailment but a variety of \Term{entailment regimes} with
+different sets of inference rules.\footnote{See
+\url{http://www.w3.org/ns/entailment/} for a non-exclusive list of common
+entailment regimes.} A specific entailment regime can be defined by an
+ontology, by a set of inference rules, or by some application, that creates
+entailments. If the application can handle arbitrary inference rules in some
+rule language, it is also called a \Term{reasoner}. To distinguish different
+entailment regimes, we say that $A$ \emph{x-entails} $B$, if $B$ is an
+entailment of $A$ in regime $x$.  If some graph $G$ is not $x$-entailed by any
+other graph, then $G$ can be called $x$-\Term{lean}.\footnote{The \acro{RDF}
+specification only defines `lean' for simple entailment, but it can also be
+defined for other entailment regimes. Finding lean graphs for a given regime is
+an area of ongoing research \cite{Pichler2010}.}
+
+The \acro{RDF} specification describes rules for simple-entailment,
+rdf-entailment, and rdfs-entailment \cite[sec. 7]{Hayes2004}.
+Simple entailment adds copies of existing triples by replacing
+URIrefs of subject and/or object with blank nodes.\footnote{In Notation3:
+\rdf{\{ ?s ?p ?o \} => \{ ?s ?p [ ] . [ ] ?p ?o \}}.} 
+You can understand simple-entailment as generalization: an 
+\acro{RDF} graph is always simple-entailment by all of its 
+instances. \Term{rdf-entailment} extends this rule to literals. The
+regime furthermore adds a rule that connect all URIrefs to 
+\rdf{rdf:Property}, if they are used as property in some triple.% 
+\footnote{In Notation3: \rdf{\{ ?s ?p ?o \} => \{ ?s rdf:type rdf:Property \}}.}
+
+Entailment is an important aspect of \acro{RDF}, but it is not a feature of
+\acro{RDF} data. The \acro{RDF} specification only says how to apply
+entailment, but not whether and when to apply it.  In many cases inference is
+expensive to calculate and would lead to a massive expansion of graphs. Some
+regimes have infinite entailments also for simple graphs. Even the general
+problem of determining simple-entailment between arbitrary RDF graphs is
+NP-complete \cite{Hayes2004}, so most applications do not fully implement
+entailment unless it is explicitly required. Testing graphs for equivalence
+and instantiation is more common, but it also depends on entailment.
+Entailment is also used to detect inconsistencies in \acro{RDF} data with
+respect to some regime. For instance in \acro{OWL}, the triple 
+\rdf{\{ ?x owl:differentFrom ?x \}} is a contradiction, that entails any 
+possible triple, if \term{description logic} is applied. Reasoners for these 
+entailment regimes usually detect such inconsistencies instead of infinitely 
+adding triples.
+
+The vision of the \term{Semantic Web} includes the idea of 
+``intelligent agents'' that can aggregate information from distributed
+sources and that can draw conclusions based on inferencing 
+\cite{BernersLee2001a}. This idea requires decisions about which 
+sets of \acro{RDF} data to combine, which entailment regimes to 
+apply, and which URIrefs to rely on as non-ambiguous identifiers.
+All these agreements are out of the scope of \acro{RDF}, which
+alone is just another method of structuring data.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[orm]
+\entity[minimum width=1.8cm] (t) {};
+\node[above=0 of t] {Triple};
+\node[roles=3] (r) {};
+\entity[below=6mm of r] (n) {Node};
+\plays (n) to (r.one south) (n) to (r.two south) (n) to (r.three south);
+
+\node[constraint=partition,below=of n] (nc) {} edge[inheritance] (n);
+
+\entity[right=11.5mm of nc]  (u) {URI} edge[subtype] (nc);
+\entity[below=10mm of nc] (l) {Literal} edge[subtype] (nc);
+\entity[left=9.5mm of nc] (b) {Blank}  edge[subtype] (nc);
+
+\node[roles=3,unique=1,right=6mm of l,yshift=6mm] (ld) {}; 
+\node[roles=2,unique=1,right=8mm of l] (lv) {};
+\node[roles=3,unique=1,right=6mm of l,yshift=-6mm] (ll) {};
+\plays (ld.west) to (l) (lv.west) to (l) (ll.west) to (l);
+
+\node[constraint=partition,below=of l.south east] (lp) {};
+\limits (lp) to (ll.west) (lp) to (ld.west) (lp) to (lv.west);
+
+\plays (ld.two north) to (u);
+
+\value[right=10mm of lv] (s) {String};
+\plays (s) to (ld.east) (s) to (lv.east) (s) to (ll.east);
+
+%\value[right=6mm of ll.south east,yshift=-3mm] (lang) {LanguageTag};
+\value[below=of ll,anchor=north west,xshift=-4mm] (lang) {LanguageTag};
+\plays (ll.south) to ++(0,-4mm);
+
+\value[right=14mm of u] (uv) {URIref};
+%\draw[supinterface] (uv) to (s);
+%\draw[supinterface] (lang) to (s);
+
+\plays (uv) edge[both required] node (c) {} (u);
+\binary[unique=1,unique=2] at (c) {};
+
+%\draw[limits] (ld.one south) to node[constraint=x]{} (ll.one north);
+\end{tikzpicture}
+\caption{Model of generalized RDF}
+\label{fig:genrdfmodel}
+\end{figure}
+
+
