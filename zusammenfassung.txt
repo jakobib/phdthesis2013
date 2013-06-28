@@ -1,0 +1,22 @@
+Diese Arbeit behandelt die Frage, wie Daten grundsätzlich strukturiert und
+beschrieben sind. Im Gegensatz zu vorhandenen Auseinandersetzungen mit Daten im
+Sinne von gespeicherten Beobachtungen oder Sachverhalten, werden Daten hierbei
+semiotisch als Zeichen aufgefasst. Diese Zeichen werden in Form von digitalen
+Dokumenten kommuniziert und sind mittels zahlreicher Standards, Formate,
+Sprachen, Kodierungen, Schemata, Techniken etc. strukturiert und beschrieben.
+Diese Vielfalt von Mitteln wird erstmals in ihrer Gesamtheit mit Hilfe der
+phenomenologischen Forschungsmethode analysiert. Ziel ist es dabei, durch eine
+genaue Erfahrung und Beschreibung von Mitteln zur Strukturierung und
+Beschreibung von Daten zum allgemeinen Wesen der Datenstrukturierung und
+-beschreibung vorzudringen. Die Ergebnisse dieser Arbeit bestehen aus drei
+Teilen. Erstens ergeben sich sechs Prototypen, die die beschriebenen Mittel
+nach ihrem Hauptanwendungszweck kategorisieren. Zweitens gibt es fünf
+Paradigmen, die das Verständnis und die Anwendung von Mitteln zur
+Strukturierung und Beschreibung von Daten grundlegend beeinflussen. Drittens
+legt diese Arbeit eine Mustersprache der Datenstrukturierung vor. In zwanzig
+Mustern werden typische Probleme und Lösungen dokumentiert, die bei der
+Strukturierung und Beschreibung von Daten unabhängig von konkreten Techniken
+immer wieder auftreten. Die Ergebnisse dieser Arbeit können dazu beitragen, das
+Verständnis von Daten --- das heisst digitalen Dokumente und ihre Metadaten in
+allen ihren Formen --- zu verbessern. Spezielle Anwendungsgebiete liegen unter
+Anderem in den Bereichen Datenarchäologie und Daten-Literacy.
