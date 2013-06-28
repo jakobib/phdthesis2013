@@ -459,8 +459,16 @@ to +(10pt,0);
 
 \usepackage[
   pdfborder={0 0 0},colorlinks,
-  linkcolor=purple, citecolor=olive, urlcolor=violet
+  linkcolor=purple, citecolor=olive, urlcolor=violet,
+  bookmarksnumbered=true
 ]{hyperref}
+
+\hypersetup{
+    pdfauthor={Jakob Voß},
+    pdftitle={Describing data patterns. A general deconstruction of metadata standards},
+    pdfsubject={Common features across all methods of data structuring and description},
+    pdfkeywords={data, data description, data modeling, metadata, pattern language}
+}
 
 % Add ToC to PDF bookmarks
 %\BeforeTOCHead[toc]{{\cleardoublepage\pdfbookmark[0]{\contentsname}{toc}}}
