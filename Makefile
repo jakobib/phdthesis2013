@@ -1,7 +1,8 @@
 MAIN=phdvoss
 
 clean: # remove build artifacts
-	@rm -f *.aux *.out *.bcf *.bbl *.blg *.log *.lot *.toc *.dvi *.lof
+	@rm -f *.aux *.out *.bcf *.bbl *.blg *.log *.lot *.toc *.dvi *.lof \
+		*.run.xml
 
 patterns:
 	cd datapatterns; make tex; cd ..
