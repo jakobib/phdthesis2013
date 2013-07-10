@@ -457,9 +457,10 @@ to +(10pt,0);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\usepackage{hyperxmp}
 \usepackage[
-  pdfborder={0 0 0},colorlinks,
-  linkcolor=purple, citecolor=olive, urlcolor=violet,
+  pdfborder={0 0 0},
+  colorlinks=false, % linkcolor=purple, citecolor=olive, urlcolor=violet,
   bookmarksnumbered=true
 ]{hyperref}
 
@@ -467,7 +468,10 @@ to +(10pt,0);
     pdfauthor={Jakob Voß},
     pdftitle={Describing data patterns. A general deconstruction of metadata standards},
     pdfsubject={Common features across all methods of data structuring and description},
-    pdfkeywords={data, data description, data modeling, metadata, pattern language}
+    pdfkeywords={data, data description, data modeling, metadata, pattern language},
+    pdfmetalang={en},
+    pdfcopyright={CC-BY-SA by Jakob Voß},
+    pdflicenseurl={http://creativecommons.org/licenses/by-na/3.0/},
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
