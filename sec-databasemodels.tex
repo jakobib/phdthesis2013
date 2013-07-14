@@ -408,7 +408,7 @@ hierarchy\textbf{\small{*}}};\\
   };
 
 % \draw [dotted] (4.3,1.4) to (4.3,-7.4);
-
+  \begin{scope}[xshift=-8mm]
 \entity (vendor) at (9.5,.5) {vendor};
 \entity (library) at (7.7,.5) {library}
   child[set] {
@@ -442,6 +442,7 @@ hierarchy\textbf{\small{*}}};\\
     \node[rule=3] {recursive relationship modeled as record};\\
     \node[rule=4] {m:n relationship modeled as record};\\
   };
+  \end{scope}
 
 \end{tikzpicture}
 \caption{Hierarchical and a network database with its limitations}

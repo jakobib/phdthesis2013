@@ -13,4 +13,11 @@ new: clean
 	biber    $(MAIN)
 	pdflatex $(MAIN)
 
+
+deposit: phdvoss-deposit.pdf
+
+phdvoss-deposit.pdf: phdvoss.pdf
+	@echo Disable all security settings
+	@pdftk $< output $@ allow AllFeatures
+
 .PHONY: clean patterns

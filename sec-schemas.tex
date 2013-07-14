@@ -692,7 +692,7 @@ identify:
  \item various numeric types (see table~\ref{tab:xsdnumeric}),
  \item a boolean type (\xml{xs:boolean}, as shown in figure~\ref{fig:xsdtypes}),
  \item twelve different types for dates, times, and their parts or combinations,
- \item two binary types for encoded sequences of bytes (\xml{xs:base64Binary} and \xml{xs:hexBinary}),
+ \item two binary types for encoded byte sequences (\xml{xs:base64Binary}, \xml{xs:hexBinary}),
  \item a type for \acro{URI}s (\xml{xs:anyURI}) and for tuples of namespace
        \acro{URI} and local name to represent \acro{XML} element names with 
 	   namespaces (see example~\ref{ex:xmlns}),
@@ -859,7 +859,7 @@ foaf:Person rdf:type rdfs:Class ;
    owl:disjointWith foaf:Document, foaf:Organization, foaf:Project ;
    vs:term_status "stable" .
 
-foaf:birthday rdf:type owl:AnnotationProperty, owl:FunctionalProperty ;
+foaf:birthday rdf:type owl:AnnotationProperty, owl:FunctionalProperty;
    rdfs:comment """The birthday of this Agent, represented in
                     mm-dd string form, eg. '12-31'.""" ;
    rdfs:domain foaf:Agent ;
