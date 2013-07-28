@@ -208,11 +208,7 @@ normal font) or directly referenced by name (page numbers in \textbf{bold}) font
 \newcommand{\rel}{\longrightarrow}
 \newcommand{\bij}{\leftrightarrow}
 
-\usepackage[normalem]{ulem} % underline, strikeout etc.
-%\newcommand{\pattern}[1]{\dashuline{#1}} % or dotuline
-%\normalem % use standard layout for emph instead of underline
-
-%\newcommand{\pattern}[1]{\emph{#1}}
+\usepackage[normalem]{ulem} % use standard layout for emph instead of underline
 \newcommand{\pattern}[1]{\hyperref[pattern:#1]{\emph{#1}}}
 
 \usepackage{acroterm}
@@ -304,19 +300,8 @@ normal font) or directly referenced by name (page numbers in \textbf{bold}) font
 \newcommand\bnfstring[1]{\texttt{\color{mygreen}#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\usepackage{mdframed}
-%\mdfdefinestyle{exampleStyle}{topline=false,bottomline=false,leftline=true,rightline=true}
-%
-%\newcommand\fs@myExampleStyle{\def\@fs@cfont{\bfseries}\let\@fs@capt\floatc@plain
-%\def\@fs@pre{\begin{mdframed}[style=examleStyle]}%
-%\def\@fs@mid{}%
-%\def\@fs@post{\end{mdframed}}\let\@fs@iftopcapt\iffalse}
-
-%\floatstyle{myExampleStyle}
-%\floatstyle{border}
 \newfloat{example}{htp}{example}
 \floatname{example}{Example}
-%\floatstyle{plain}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Bibliography and citation style
@@ -416,7 +401,6 @@ normal font) or directly referenced by name (page numbers in \textbf{bold}) font
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%\usepackage{enumerate}
 \usepackage{enumitem}
 \setlist{leftmargin=*,rightmargin=\parindent,font=\rmfamily}
 \setlist[description]{labelsep=0.5em,leftmargin=0.5em}
@@ -424,10 +408,6 @@ normal font) or directly referenced by name (page numbers in \textbf{bold}) font
 %\setlist[description]{labelindent=\parindent,label=--,topsep=2pt,itemsep=2pt,parsep=0pt}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\newcommand{\lowercasepatternlabel}[1]{pattern:\lowercase{#1}}
-%\newcommand{\patternlabel}[1]{%
-%    \expandafter\label\lowercasepatternlabel\expandafter{#1}%
-%}
 \newcommand{\patternsection}[2]{%
 
   % horizontal line
@@ -457,23 +437,44 @@ to +(10pt,0);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\usepackage{hyperref}
 \usepackage{hyperxmp}
-\usepackage[
-  pdfborder={0 0 0},
-  %colorlinks=false, % linkcolor=purple, citecolor=olive, urlcolor=violet,
-  linkcolor=purple, citecolor=olive, urlcolor=violet,
-  bookmarksnumbered=true
-]{hyperref}
 
 \hypersetup{
+    pdfborder={0 0 0},
+    %colorlinks=false,
+    colorlinks=true, linkcolor=purple, citecolor=olive, urlcolor=violet,
+    bookmarksnumbered=true,
+    pdfpagemode=UseOutlines,
     pdfauthor={Jakob Voß},
+    pdfcreator={Jakob Voß},
     pdftitle={Describing data patterns. A general deconstruction of metadata standards},
     pdfsubject={Common features across all methods of data structuring and description},
     pdfkeywords={data, data description, data modeling, metadata, pattern language},
+    pdflang={en},
     pdfmetalang={en},
     pdfcopyright={CC-BY-SA by Jakob Voß},
-    pdflicenseurl={http://creativecommons.org/licenses/by-na/3.0/},
+    pdflicenseurl={http://creativecommons.org/licenses/by-sa/3.0/}
 }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% RGB color profile.
+
+% I had to download and copy sRGBIEC1966-2.1.icm to
+% /usr/share/texlive/texmf-dist/tex/latex/pdfx/
+% and run texthash afterwards.
+
+% code from pdfx package
+\immediate\pdfobj stream attr{/N 4} file{sRGBIEC1966-2.1.icm}
+\edef\OBJ@RVT{\the\pdflastobj}
+\pdfcatalog{%
+/OutputIntents [ <<
+/Type /OutputIntent
+/S/GTS_PDFA1
+/DestOutputProfile \OBJ@RVT\space 0 R
+/OutputConditionIdentifier (sRGB IEC61966-2.1)
+/Info(sRGB IEC61966-2.1)
+>> ]}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

@@ -18,11 +18,12 @@ revision from the git repository.
 * The version originally submitted for review in January 2013. The document
   is printed in A4 paper format and tagged as `voss20130107` in the repository.
 
-* The version submitted for deposit at Humboldt University document server
-  <http://edoc.hu-berlin.de/>. The paper format is A5.
-
 * A versions published as book at print-on-demand publisher CreateSpace with
-  ISBN 1-4909-3186-4.
+  ISBN 1-4909-3186-4. Paper format is 6.69 inch x 9.61 inch.
+
+* The version submitted for deposit at Humboldt University document server
+  <http://edoc.hu-berlin.de/>. Paper format is A4 with same pagination as
+  the print-on-demand version.
 
 ## Using this repository
 
@@ -37,6 +38,7 @@ Pandoc, Perl, BibLaTeX with biber, Perl, GraphViz, and dot2tex.
 Given the required packages, one should be able to create a PDF with:
 
     make patterns
+    # ... manually adjust image size by adding "scale=0.4"
     make new
 
 ## License
@@ -44,4 +46,3 @@ Given the required packages, one should be able to create a PDF with:
 The content of this repository is licensed under CC-BY-SA: feel free to copy,
 distribute, modify, merge, request changes etc, as long as the result is also
 licensed under CC-BY-SA and attribution is explicitly given to Jakob Voß.
-

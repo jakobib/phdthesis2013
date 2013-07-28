@@ -14,10 +14,12 @@ new: clean
 	pdflatex $(MAIN)
 
 
+# TODO: keep bookmarks, metadata, and XMP (and color profile?)
 deposit: phdvoss-deposit.pdf
 
 phdvoss-deposit.pdf: phdvoss.pdf
-	@echo Disable all security settings
-	@pdftk $< output $@ allow AllFeatures
+	@pdftk $< dump_data > dump.info
+	./scripts/pdfcrop.sh $< # this fails to keep bookmarks and metadata
+	@pdftk cropped-phdvoss.pdf update_info dump.info output $@ allow AllFeatures
 
 .PHONY: clean patterns

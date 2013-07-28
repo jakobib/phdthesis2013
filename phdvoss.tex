@@ -1,9 +1,6 @@
 \documentclass[
-%    a4paper, fontsize=10pt, BCOR=5mm, % reviewed version
-%    a5paper, fontsize=9pt, BCOR=17mm, DIV=19, % deposit version
+% a4paper, fontsize=10pt, BCOR=5mm, % reviewed version
   paper=6.69in:9.61in, fontsize=10pt, BCOR=9mm, DIV=15,
-  % inner margin: BCOR + (WITH-BCOR) / DIV =    19.7mm = 0.78in
-  % outer margin: 2 * (WIDTH-BCOR) / DIV   =   21.5m   = 0.84in
   pagesize=pdftex,
   headings=openright,
   headsepline,
@@ -14,9 +11,16 @@
   listof=leveldown
 ]{scrbook}
 
-%%% additional macros and packages
-\input{macros}
+% Area has been calculated based on:
+%   paper=6.69in:9.61in, fontsize=10pt, BCOR=9mm, DIV=15
+% resulting in:
+%   inner margin: BCOR + (WITH-BCOR) / DIV =    19.7mm = 0.78in
+%   outer margin: 2 * (WIDTH-BCOR) / DIV   =   21.5m   = 0.84in
 
+% A4 version:
+\usepackage[a4paper,textwidth=366.30324pt,textheight=526.0pt]{geometry}
+
+\input{macros}
 \input{metadata}
 
 \begin{document}
