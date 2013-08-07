@@ -2,28 +2,43 @@
 
 This git repository contains the source code of my PhD thesis *Describing data
 patterns*, submitted January 2013 at Humboldt University Berlin. The latest
-version of the repository can be found at
+version of the repository including errata can be found at
 <https://github.org/jakobib/phdthesis2013>.
 
 The pattern language of data structuring (chapter 5) is contained in another
 git repository that is included as git submodule from
 <https://github.com/jakobib/datapatterns2013>.
 
+Feedback is highly appreciated, for instance public via
+<https://github.com/jakobib/phdthesis2013/issues>.
+
 ## Document versions and variants
 
 Multiple versions and variants of the thesis exists with different paper format
 and minor changes. Each version should be buildable by checking out a tagged
-revision from the git repository.
-
-* The version originally submitted for review in January 2013. The document
-  is printed in A4 paper format and tagged as `voss20130107` in the repository.
+revision from the git repository:
 
 * A versions published as book at print-on-demand publisher CreateSpace with
-  ISBN 1-4909-3186-4. Paper format is 6.69 inch x 9.61 inch.
+  **ISBN 1-4909-3186-4**. Paper format is 6.69 inch x 9.61 inch. Copies can be
+  ordered for $12.80, 10.24€, £10.24 or less via
+
+    * <https://www.createspace.com/4351505>
+    * <http://amazon.com>, <http://amazon.co.uk>, <http://amazon.de> etc.
+    * [Barnes & Noble](http://www.barnesandnoble.com/) and library distributors 
+      such as [Ingram](http://www.ingramcontent.com/), 
+      [NACSCORP](http://www.nacscorp.com/), and 
+      [Baker & Taylor](http://www.btol.com/).
+    * Additional certified CreateSpace resellers
+
+  This version is tagged as `pod-20130805`.
 
 * The version submitted for deposit at Humboldt University document server
-  <http://edoc.hu-berlin.de/>. Paper format is A4 with same pagination as
-  the print-on-demand version.
+  at <http://edoc.hu-berlin.de/dissertationen/voss-jakob-2013-05-31/>
+  Paper format is A4 with same pagination as
+  the print-on-demand version. This version is tagged as `deposit-20130807`.
+
+* The version originally submitted for review in January 2013. The document is
+  printed in A4 paper format and tagged as `submision-20130107`.
 
 ## Using this repository
 
