@@ -437,13 +437,14 @@ to +(10pt,0);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\usepackage{hyperref}
+\usepackage[ocgcolorlinks]{hyperref}
 \usepackage{hyperxmp}
 
 \hypersetup{
     pdfborder={0 0 0},
-    colorlinks=false,
-    %colorlinks=true, linkcolor=purple, citecolor=olive, urlcolor=violet,
+    %colorlinks=false,ocgcolorlinks=false,
+    %colorlinks=true,
+    linkcolor=purple, citecolor=olive, urlcolor=violet,
     bookmarksnumbered=true,
     pdfpagemode=UseOutlines,
     pdfauthor={Jakob Voß},
@@ -456,6 +457,8 @@ to +(10pt,0);
     pdfcopyright={CC-BY-SA by Jakob Voß},
     pdflicenseurl={http://creativecommons.org/licenses/by-sa/3.0/}
 }
+
+\include{ocgcolorlinks}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % RGB color profile.
