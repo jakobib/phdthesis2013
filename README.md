@@ -1,7 +1,7 @@
-# Describing data patterns
+# Describing Data Patterns
 
-This git repository contains the source code of my PhD thesis *Describing data
-patterns*, submitted January 2013 at Humboldt University Berlin. The latest
+This git repository contains the source code of my PhD thesis *Describing Data
+Patterns*, submitted January 2013 at Humboldt University Berlin. The latest
 version of the repository including errata can be found at
 <https://github.org/jakobib/phdthesis2013>.
 
@@ -11,6 +11,20 @@ git repository that is included as git submodule from
 
 Feedback is highly appreciated, for instance public via
 <https://github.com/jakobib/phdthesis2013/issues>.
+
+## Citation
+
+I suggest the following bibliographic metadata, also
+[available at BibSonomy](http://www.bibsonomy.org/bibtex/2220c96bb2ad9a57367cb15378aef31a1):
+
+    @phdthesis{Voss2013,
+        author  = {Voß, Jakob},
+        title   = {Describing Data Patterns. A general deconstruction of metadata standards},
+        year    = {2013},
+        school  = {Humboldt University},
+        address = {Berlin},
+        isbn    = {1-4909-3186-4}
+    }
 
 ## Document versions and variants
 
