@@ -37,7 +37,9 @@ revision from the git repository:
   ordered for $12.80, 10.24€, £10.24 or less via
 
     * <https://www.createspace.com/4351505>
-    * <http://amazon.com>, <http://amazon.co.uk>, <http://amazon.de> etc.
+    * [http://amazon.com](http://amzn.com/1490931864),
+      [http://amazon.co.uk](http://amazon.co.uk/dp/1490931864/), 
+      [<http://amazon.de](http://www.amazon.de/dp/1490931864/) etc.
     * [Barnes & Noble](http://www.barnesandnoble.com/) and library distributors 
       such as [Ingram](http://www.ingramcontent.com/), 
       [NACSCORP](http://www.nacscorp.com/), and 
@@ -53,6 +55,8 @@ revision from the git repository:
 
 * The version originally submitted for review in January 2013. The document is
   printed in A4 paper format and tagged as `submision-20130107`.
+
+![](cover/cover-small.jpg)
 
 ## Using this repository
 
