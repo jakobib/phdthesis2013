@@ -7,7 +7,7 @@ HTML_ARGS=--css css/aboutdata.css
 
 .SUFFIXES: .html .md
 
-all: index.html publications.html
+all: index.html patterns.html publications.html
 
 %.html: %.md
 	@pandoc $< -o $@ --smart -t html5 $(HTML_ARGS) $(ARGS)
