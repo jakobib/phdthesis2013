@@ -23,7 +23,8 @@ I suggest the following bibliographic metadata, also
         year    = {2013},
         school  = {Humboldt University},
         address = {Berlin},
-        isbn    = {1-4909-3186-4}
+        isbn    = {1-4909-3186-4},
+        urn     = {urn:nbn:de:kobv:11-100212118}
     }
 
 ## Document versions and variants
@@ -39,7 +40,7 @@ revision from the git repository:
     * <https://www.createspace.com/4351505>
     * [http://amazon.com](http://amzn.com/1490931864),
       [http://amazon.co.uk](http://amazon.co.uk/dp/1490931864/), 
-      [<http://amazon.de](http://www.amazon.de/dp/1490931864/) etc.
+      [http://amazon.de](http://www.amazon.de/dp/1490931864/) etc.
     * [Barnes & Noble](http://www.barnesandnoble.com/) and library distributors 
       such as [Ingram](http://www.ingramcontent.com/), 
       [NACSCORP](http://www.nacscorp.com/), and 
@@ -48,8 +49,8 @@ revision from the git repository:
 
   This version is tagged as `pod-20130805`.
 
-* The version submitted for deposit at Humboldt University document server
-  at <http://edoc.hu-berlin.de/dissertationen/voss-jakob-2013-05-31/>
+* The PDF version submitted for deposit at Humboldt University document server
+  at <http://edoc.hu-berlin.de/dissertationen/voss-jakob-2013-05-31/>.
   Paper format is A4 with same pagination as
   the print-on-demand version. This version is tagged as `deposit-20130807`.
 
