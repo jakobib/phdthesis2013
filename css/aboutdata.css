@@ -55,8 +55,13 @@ h1 {
     color: #fff;
 }
 
-img {
+img.cover {
+    float: right;
+    margin: 10px;
     border: 1px solid gray;
+    -webkit-box-shadow: 7px 7px 10px rgba(200, 200, 200, 0.75);
+    -moz-box-shadow:    7px 7px 10px rgba(200, 200, 200, 0.75);
+    box-shadow:         7px 7px 10px rgba(200, 200, 200, 0.75);
 }
 
 footer {

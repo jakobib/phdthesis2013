@@ -2,8 +2,8 @@
 
 # Full thesis
 
-* Jakob Voß: *Describing data patterns – a general deconstruction of metadata standards*.
-  PhD thesis, Humboldt-University Berlin, 2013.
+> Jakob Voß: *Describing data patterns – a general deconstruction of metadata standards*.
+> PhD thesis, Humboldt-University Berlin, 2013.
 
 The PDF version submitted for deposit at Humboldt University document server is
 available at <http://edoc.hu-berlin.de/dissertationen/voss-jakob-2013-05-31/>.

@@ -10,4 +10,6 @@ HTML_ARGS=--css css/aboutdata.css
 all: index.html patterns.html publications.html
 
 %.html: %.md
-	@pandoc $< -o $@ --smart -t html5 $(HTML_ARGS) $(ARGS)
+	@pandoc $< -o $@ --smart -t html5\
+	  -V "include-after=`date -r $< -Iminutes`</footer>" \
+	  $(HTML_ARGS) $(ARGS)
