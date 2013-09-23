@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>optionality pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">optionality pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Possibility, required, mandatory.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>An element may be present but it can also be absent.</p>
+</dd>
+<dt>context</dt>
+<dd><p>A data element as part of a <a href="schema.html">schema</a> or <a href="embedding.html">embedding</a>.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Express constraints and possibilities and allow for flexibility.</p>
+</dd>
+<dt>implementations</dt>
+<dd><p>Either optional or mandatory elements must be marked by a special <a href="flag.html">flag</a>.</p>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>Optional parts in regular expressions are indicated by a question mark or with an asterisk.</li>
+<li>Mandatory roles in ORM are marked by a dot.</li>
+<li>Requirement keywords defined in RFC 2119 (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY).</li>
+<li>Elements in regular grammars are mandatory by default. In other systems, such as RDF Schemas, elements are optional by default.</li>
+<li>The end-tag matching to a start-tag in XML is mandatory. The same applies to closing brackets in JSON and other nested structures.</li>
+<li>With a fixed <a href="size.html">size</a> a specific number of elements is mandatory.</li>
+<li>Annotations and qualifiers as optional additional elements (<a href="flag.html">flag</a>).</li>
+</ul>
+</dd>
+<dt>counter examples</dt>
+<dd><ul>
+<li>Default values, for instance default XML namespaces, make optional elements impossible because a default value cannot be omitted.</li>
+</ul>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>Optionality adds deontic logic to the realm of data, with all of its difficulties: constraints on mandatory or optional data elements are not true or false but they can only be fulfilled or violated. Formalization of deontic rules may also lead to unexpected logic results.</li>
+<li>Different levels of obligation may exist: in practice some elements are more optional or more mandatory than others.</li>
+<li>Optional elements can be made mandatory and mandatory elements can be made optional by introducing special <a href="garbage.html">garbage</a> elements, such as <code>/</code>, <code>n/a</code>, <code>-</code>, <code>0</code> etc. Such null values are also created ad-hoc to trick mandatory constraints. For instance <code>12345</code> in a number field may indicate that the actual number was not available.</li>
+<li>In a <a href="schema.html">schema</a> it is common to either explicitly mark only mandatory only optional, assuming the other case as default. One needs to know which is the default in which context.</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><ul>
+<li>If optional parts are irrelevant, they can also be <a href="garbage.html">garbage</a>.</li>
+<li>An absent element can still be data as <a href="void.html">void</a> element.</li>
+<li>Instead of or in addition to being mandatory, elements can also be derivable from other elements (<a href="derivation.html">derivation</a>).</li>
+<li><a href="prohibition.html">Prohibition</a> can be used in a <a href="schema.html">schema</a> to express that specific elements must not be present.</li>
+</ul>
+</dd>
+<dt>implied patterns</dt>
+<dd><p>Every optionality is either part of a <a href="schema.html">schema</a> or it constitutes a virtual schema consisting of this single optionality.</p>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

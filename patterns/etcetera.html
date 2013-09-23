@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>etcetera pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">etcetera pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Ellipsis, partial collection, explicit abbreviating.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>Indicate that a collection of data elements is incomplete.</p>
+</dd>
+<dt>context</dt>
+<dd><p>A <a href="container.html">container</a> or <a href="embedding.html">embedding</a> of elements.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Collections may be too large to be expressed, or parts of a collection may be unimportant or already implied by context. This pattern allows for abbreviating and to show that a collection contains more then explicitly expressed.</p>
+</dd>
+<dt>implementations</dt>
+<dd><p>First, one needs to decide which parts to omit:</p>
+<ul>
+<li>Only express the first or the most important parts.</li>
+<li>Only express mandatory parts and omit the rest (<a href="optionality.html">optionality</a>).</li>
+<li>Give a random sample of of elements (<a href="garbage.html">garbage</a>).</li>
+</ul>
+<p>Second, the etcetera indicator can be expressed in several ways:</p>
+<ul>
+<li>Use a special element as etcetera indicator. This element must be a <a href="prohibition.html">prohibition</a> to not be confused with normal parts.</li>
+<li>Use obviously wrong elements as placeholders (<a href="garbage.html">garbage</a>).</li>
+<li>Define a fixed cut, for instance a maximum length.</li>
+</ul>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li><code>...</code> or <code>et al.</code> to indicate an abbreviated <a href="sequence.html">sequence</a>.</li>
+<li><code>e.g.</code> to indicate that the included elements are examples from a larger set.</li>
+<li>Omission of parts in the middle of an element with <code>[...]</code>.</li>
+<li>Library cataloging rules exist to only include three authors in a record, so the list of authors is always abbreviated if there are more then three authors.</li>
+</ul>
+</dd>
+<dt>counter examples</dt>
+<dd><p>Omission of details can also be an example of generalization and abstraction (see <a href="encoding.html">encoding</a>) instead of abbreviation.</p>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>Type and number of omitted parts and the reason for abbreviating are often unclear.</li>
+<li>An etcetera indicator and normal parts of a collection must not be confused (for instance strings that actually end with <code>...</code>).</li>
+<li>Indicators could also be used to tell that a collection may be extended or that an element can be repeated (see <a href="container.html">container</a> and <a href="schema.html">schema</a> patterns).</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><p>With a fixed cut this pattern also uses the <a href="void.html">void</a> pattern instead of an explicit etcetera indicator. The void pattern is also similar because it indicates elements. The etcetera pattern in contrast indicates the existence of more elements.</p>
+</dd>
+<dt>implied patterns</dt>
+<dd><p>The etcetera indicator only makes sense as part of an <a href="embedding.html">embedding</a> (typically a container or sequence).</p>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

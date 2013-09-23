@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>normalization pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">normalization pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Canonical form, equivalence, one-to-one.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>Make equal data elements identical by choosing one preferred version, based on relevant distinctions only.</p>
+</dd>
+<dt>context</dt>
+<dd><p>A set of data elements, one of them selected as normalized.</p>
+</dd>
+<dt>motivation</dt>
+<dd><ul>
+<li>Avoid ambiguity, redundancy and inconsistencies.</li>
+<li>Group multiple data elements with same characteristics.</li>
+</ul>
+</dd>
+<dt>implementations</dt>
+<dd><ul>
+<li>Avoid <a href="derivation.html">derivation</a> and <a href="garbage.html">garbage</a> in the data to be normalized.</li>
+<li>Define normalization rules in a <a href="schema.html">schema</a>.</li>
+</ul>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>Database normalization is recommended to avoid redundancy and inconsistencies.</li>
+<li>Unicode defines several normalization forms (NFD, NFC, NFKD, NFKC).</li>
+<li>XML Schema Datatypes have a canonical lexical representation to establish a one-to-one mapping between value space and literal representations. For instance the boolean value false can be represented as <code>0</code> and as <code>false</code> but the latter is the canonical, normalized form.</li>
+<li>Approximate data types use a finite (or denumerable infinite) number of distinct values to represent an infinite number of values. The approximation normalizes the infinite set by mapping multiple values to one.</li>
+<li>Whitespace normalization replaces multiple and different whitespace characters by one simple whitespace character.</li>
+<li>An ISBN can have multiple forms (with or without hyphen, or space, as ISBN-10 or ISBN-13 etc.).</li>
+</ul>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>Normalization depends on uniquely identifiable entities but an <a href="identifier.html">identifier</a> or <a href="label.html">label</a> is often missing.</li>
+<li>Normalization concentrates on the relevant aspects of a data element. It requires to define what variants are considered equivalent and what makes a difference. All these properties, however, may depend on context.</li>
+<li>Normalizing <a href="graph.html">graph</a> structures can be very hard both computationally and practically.</li>
+<li>Ordered values (numbers, coordinates…) can be treated as equal if they have a low distance, but they cannot be normalized because distance is not a transitive function.</li>
+<li>Despite its theoretical importance, for instance in database theory, normalization in practice is often applied incompletely or not at all.</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><ul>
+<li>Normalization groups data elements based on sameness of their characteristic properties. More general methods of grouping are examples of the <a href="container.html">container</a> pattern.</li>
+<li>Every normalization defines an <a href="identifier.html">identifier</a> (the reverse does not apply).</li>
+<li>Normalization may also be virtual, resulting in the <a href="void.html">void</a> pattern. For instance in some file systems file names are case insensitive but case preserving, so the normalized file name is not given directly.</li>
+</ul>
+</dd>
+<dt>implied patterns</dt>
+<dd><p>Every normalization implies a form of <a href="encoding.html">encoding</a>, as data elements can be encoded by the form they are normalized to. For instance XML documents are encoded by their document model, which gives a normalized form.</p>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

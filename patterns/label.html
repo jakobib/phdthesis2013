@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>label pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+    q { quotes: "“" "”" "‘" "’"; }
+  </style>
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">label pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Name, type, nomenclature.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>Give data elements a name.</p>
+</dd>
+<dt>context</dt>
+<dd><p>Any distinguishable data element.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Distinguish the nature of data elements and tell them apart by proper names.</p>
+</dd>
+<dt>implementations</dt>
+<dd><p>A sequence of characters (string) that should have a well-known meaning for human readers. Any documentation (definitions, translations, examples etc.) helps to clarify the interpretation of a label.</p>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>Domain names in DNS.</li>
+<li>File names in file systems.</li>
+<li>Field names in records and database schemas.</li>
+<li>Object keys in JSON and other data structuring languages.</li>
+<li>Tag names in XML and related markup languages.</li>
+<li>Names of classes and properties in RDF ontologies (<code>rdfs:label</code>).</li>
+<li>Names of entity types and relationship types in conceptual models.</li>
+<li>Class names in object orientated modeling.</li>
+<li>URI references within the RDF model do not carry any semantics but they usually include labels for human readers.</li>
+</ul>
+</dd>
+<dt>counter examples</dt>
+<dd><p>Labels have no internal structure. For instance the character sequence <q>Dublin, Ohio</q>, which refers to a city in the US, is not a pure label but it consists of two labels (<q>Dublin</q> and <q>Ohio</q>), one acting as qualifier for the other (<a href="flag.html">flag</a> pattern). Another counter example is a list of field names such as <q>address1, address2…</q>, that together refer lists of repeatable objects. Each of these field names is not a label but it consists of a label (<q>address</q>) and a <a href="sequence.html">sequence</a> indicator. To test whether a data element is a label, think about whether replacing all of its occurrences with the same random value would make a difference.</p>
+</dd>
+<dt>difficulties</dt>
+<dd><p>Labels are textual signs primarily interpreted by human readers. The label refers to something outside of the domain of data so one cannot find out its referent by looking at the data only but one must analyze its usage in practice. Labels may be both synonymous (multiple labels with same referent) and homonymous (one label used with different referents in different contexts). Labels are often created ad-hoc just because an identifier is needed. A well-considered choice of a label can improve readability of data a lot.</p>
+</dd>
+<dt>related patterns</dt>
+<dd><ul>
+<li>A label is similar to an <a href="identifier.html">identifier</a> and often both coincide. An identifier, however, always refers to a specific data element while the referent of a label can be more fuzzy.</li>
+<li>Data elements in an <a href="encoding.html">encoding</a> also refer to something but their mapping could be changed without making any difference.</li>
+<li>If labels are mutually exclusive, they can also act as <a href="flag.html">flag</a>.</li>
+<li>The actual value of a label is irrelevant to most data processing activities (one could replace all of its occurrences with a hash value), so a label may also be <a href="garbage.html">garbage</a>.</li>
+</ul>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

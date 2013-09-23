@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>size pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">size pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Number, length, count.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>Quantity before quality.</p>
+</dd>
+<dt>context</dt>
+<dd><p>A data element with some length or another numeric property.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Data elements with known size can be arranged and compared independent from their actual content. Size is relevant also because processing and storing data is always limited by size.</p>
+</dd>
+<dt>implementations</dt>
+<dd><ul>
+<li>Use a special element as end-marker such as the null byte for null-terminated strings (<a href="prohibition.html">prohibition</a>).</li>
+<li>Explicitly encode size value and content in an <a href="embedding.html">embedding</a>.</li>
+<li>Use fixed size elements only.</li>
+</ul>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>The size of a byte is 8 bit.</li>
+<li>All finite data types have limited size.</li>
+<li>Numeric data types represent a size.</li>
+<li>UTF-8 is a variable width encoding that expresses the number of bytes of a character with the number of 1 bits in the first byte.</li>
+<li>The possible number of occurrences of a data element can be expressed in <a href="schema.html">schema</a> languages, for instance with <code>:n-m</code> (BNF), <code>minOccurs</code>/<code>maxOccurrs</code> (XSD), and <code>maxCardinality</code>/<code>minCardinality</code> (OWL).</li>
+</ul>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>The prohibited end-marker may be allowed to be escaped. For instance the ending double quote in a string may be encoded as <code>\&quot;</code>. Such <a href="encoding.html">encoding</a> requires to parse the full content, contradicting the motivation of the size pattern.</li>
+<li>The conceptual difference between number (multiple elements) and size (one element) is not clear in all data.</li>
+<li>Counting requires to detect boundaries between elements (see <a href="sequence.html">sequence</a> and <a href="separator.html">separator</a> patterns).</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><ul>
+<li>Sizes can be constrained by a <a href="schema.html">schema</a>.</li>
+<li>The number of elements in a <a href="container.html">container</a> is a size.</li>
+<li>The size pattern includes the idea of (natural) numbers. Ordinal numbers in contrast are covered by the <a href="sequence.html">sequence</a> pattern.</li>
+</ul>
+</dd>
+<dt>specialized patterns</dt>
+<dd><p>Knowing the exact size of an element allows to skip its internal structure (<a href="atomicity.html">atomicity</a>).</p>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

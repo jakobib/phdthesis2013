@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>embedding pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+    q { quotes: "“" "”" "‘" "’"; }
+  </style>
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">embedding pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Frame.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>Put data elements as part into another element.</p>
+</dd>
+<dt>context</dt>
+<dd><p>At least two data elements, one of them a host or frame, in which the other elements are embedded.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Build data hierarchies.</p>
+</dd>
+<dt>implementations</dt>
+<dd><ul>
+<li>A frame of <a href="separator.html">separator</a> elements to put embeddings in between.</li>
+<li>The structure of an embedding can be expressed by a <a href="schema.html">schema</a> with placeholders, such as grouped expressions in BNF or non-terminal symbols in other formal grammars.</li>
+</ul>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>An XML element with embedded child elements.</li>
+<li>The structure <q>surname, given</q> with surname and given name embedded into a name element.</li>
+<li>A qualified expression, such as <q>Marx, Karl, 1818-1883</q> from the Library of Congress name authority file with qualifier <q>1818-1883</q>.</li>
+<li>Rules in a formal grammar with non-terminal symbols.</li>
+<li>All kinds of templates and forms that data is put into.</li>
+<li>A namespace with prefix (to specify the context) and embedded local identifier.</li>
+<li>Tree structures and part-whole relationships.</li>
+</ul>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>A clean hierarchy is sign of oversimplification. In practice one has to deal with cross-connections, parallel and overlapping hierarchies (e.g. <code>&quot;( { ) }&quot;</code>).</li>
+<li>Once a template has been filled with values, it becomes invisible. One must know the embedding rules to rediscover embedded elements, otherwise embedding frame and content easily get mixed up.</li>
+<li>Embeddings are part of other embedding, forming a long chain of levels. This chain should contain no circles, but self-referential embeddings may exist both in the conceptual realm and in the data realm (for instance a document that refers to itself or a zip file that contains a copy of itself).</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><ul>
+<li>A hierarchical structure could also be a constrained <a href="graph.html">graph</a> instead.</li>
+<li>Hierarchic nesting is also found in <a href="encoding.html">encoding</a>. While encodings stress the relations between signifier and signified, the purpose of an embedding is more to give context. The relation between encodings and embeddings is similar to the semiotic relation between langue and parole.</li>
+<li>Embedded elements may be mandatory or optional (<a href="optionality.html">optionality</a>), they may be constrained by <a href="prohibition.html">prohibition</a> and they may be abbreviated (<a href="etcetera.html">etcetera</a>). If an embedding is primarily used to express such constraints, it is likely a <a href="schema.html">schema</a>.</li>
+<li>Embedded elements may be secondary to the frame they are embedded in (<a href="dependence.html">dependence</a>).</li>
+</ul>
+</dd>
+<dt>specialized patterns</dt>
+<dd><p>A <a href="container.html">container</a> embeds multiple member elements.</p>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

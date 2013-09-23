@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>graph pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">graph pattern</h1>
+</header>
+<dl>
+<dt>idea</dt>
+<dd><p>Nodes and vertices.</p>
+</dd>
+<dt>context</dt>
+<dd><p>A set of multiple elements and connections between them.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Express connected data elements.</p>
+</dd>
+<dt>implementations</dt>
+<dd><ul>
+<li><a href="flag.html">Flag</a> possible nodes (adjacency matrix).</li>
+<li>Store sets of vertices for each node (<a href="container.html">container</a>).</li>
+<li>Trees can be implemented by hierarchic <a href="embedding.html">embedding</a>.</li>
+</ul>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>Schemas and conceptual models with entities connected by relations.</li>
+<li>Conceptual diagrams with boxes connected by lines.</li>
+<li>Connected tables in relational databases.</li>
+<li>Directory trees in file systems.</li>
+<li>RDF graphs.</li>
+<li>Specific graph types such as trees.</li>
+</ul>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>For most graphs there is no simple <a href="normalization.html">normalization</a>. The graph canonization or isomorphism problem is computationally hard because elements in a graph have no natural order. This contrasts with <a href="sequence.html">sequence</a> as basic method to express data.</li>
+<li>Most practical graphs are more than simple structures build of nodes and vertices. Specialized types and properties of graphs exist, such as directed graphs, multigraphs, hypergraphs, labeled graphs, etc. For instance diagrams likely evolve to generalized hypergraphs with vertices that connect more than two nodes and even other vertices. Additional levels of <a href="encoding.html">encoding</a> may be necessary to get the common form of a graph with simple nodes and vertices.</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><p>Specific graph types such as trees, grids, and lists often indicate alternative patterns such as hierarchies (<a href="embedding.html">embedding</a>) and order (<a href="sequence.html">sequence</a>). Bijective and injective graphs may better express <a href="encoding.html">encoding</a>, <a href="normalization.html">normalization</a> or <a href="dependence.html">dependence</a>.</p>
+</dd>
+<dt>implied patterns</dt>
+<dd><ul>
+<li>Vertices in a graph are secondary elements to nodes (<a href="dependence.html">dependence</a>).</li>
+<li>The set of all nodes and/or vertices can be used as <a href="container.html">container</a>.</li>
+</ul>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

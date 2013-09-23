@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>encoding pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+    q { quotes: "“" "”" "‘" "’"; }
+  </style>
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">encoding pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Abstraction.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>Data that stands for something else.</p>
+</dd>
+<dt>context</dt>
+<dd><p>Any data element.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Hide complexity and irrelevant details.</p>
+</dd>
+<dt>implementations</dt>
+<dd><p>One must define a mapping between each of the elements to be encoded and their particular encoding forms. The definition can make use of a <a href="schema.html">schema</a>.</p>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>Unicode defines which characters exist and how to express them.</li>
+<li>The bit sequence <code>111000101010000010100001</code> in bytes encodes the sequence <code>E2 A0 A1</code> in UTF-8 encodes the Codepoint <code>U+2821</code> in Unicode 3.0 encodes the character <code>BRAILLE PATTERN DOTS-16</code> in Swedish Braille encodes the character <code>Á</code>.</li>
+<li>Markup languages encode characteristics of text elements, for instance <code>&lt;b&gt;...&lt;/b&gt;</code>, or <code>**...**</code> for bold.</li>
+<li>MARCXML encodes MARC21 in XML.</li>
+<li>APIs abstract from internal data expressions (for instance SQL) to public, encoded form (for instance in JSON or XML).</li>
+<li>Virtual file systems abstract from different file system access methods.</li>
+<li>Encoding allows mapping between entities and connections and between objects and documents by reification, objectification, and stringification.</li>
+<li>Different serialization forms of RDF define encodings of RDF graphs.</li>
+<li>When a specification of some data format talks about a relation between syntax and semantic, it usually refers to an encoding.</li>
+</ul>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>An encodings is an arbitrary result of social convention: one could modify it (for instance replace angle brackets by square brackets in all specifications and instances of XML) but actual changes are difficult.</li>
+<li>Encodings can also add redundancy.</li>
+<li>The existence and use of an encoding does not ensure that complexity and details are actually hidden.</li>
+<li>Most encoded data elements are encodings by their part, leading to a chain of encodings (unlimited semiosis).</li>
+<li>Encodings are not always one-to-one or reversible at all.</li>
+<li>Encodings only translate from one form of data to another, but the selection of a particular encoding can also be relevant data.</li>
+<li>Any data structuring language can encode any other language by introducing additional rules or constraints, so the particular encoding system may not add any value.</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><ul>
+<li><a href="atomicity.html">Atomicity</a> does also aim at reducing complexity.</li>
+<li>An encoding can also be used as specification (<a href="schema.html">schema</a>) and as <a href="normalization.html">normalization</a>.</li>
+<li><a href="embedding.html">Embedding</a> is an alternative to encoding if the relation between data elements more depends on its actual context.</li>
+<li>Encoding seems to bridge the semiotic gap between signifier (encoding form) and signified (encoded data element). The common view of encodings as <q>semantic</q>, however, hides the fact that encodings must be accompanied by the <a href="label.html">label</a> pattern to make sense.</li>
+</ul>
+</dd>
+<dt>implied patterns</dt>
+<dd><ul>
+<li>An encoding implies a set of <a href="identifier.html">identifier</a> but the latter does not include the idea of expressing something at another level.</li>
+<li>Given a full encoding, the referent can automatically be determined (<a href="derivation.html">derivation</a>).</li>
+</ul>
+</dd>
+<dt>specialized patterns</dt>
+<dd><p><a href="normalization.html">Normalization</a> implies encoding.</p>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

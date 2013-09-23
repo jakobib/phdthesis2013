@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>flag pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+    q { quotes: "“" "”" "‘" "’"; }
+  </style>
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">flag pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Choice, exclusion.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>The interpretation of a data element is controlled by another element.</p>
+</dd>
+<dt>context</dt>
+<dd><p>At least two data elements, one acting as switch, the other as target.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Flags allow to easily add or enrich interpretations and to resolve ambiguity.</p>
+</dd>
+<dt>implementations</dt>
+<dd><ul>
+<li>One value from a list of possible values (<a href="encoding.html">encoding</a>).</li>
+<li>A default value (<a href="void.html">void</a>) which can be overridden.</li>
+<li>Markup to turn flags on and off, for instance <code>&lt;b&gt;bold&lt;/b&gt;</code>.</li>
+<li>An <a href="identifier.html">identifier</a> in a key-value record structure.</li>
+<li>An <a href="embedding.html">embedding</a> that shows which elements are switches and which elements are targets.</li>
+</ul>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>The bit as basic unit of all digital data is a choice between two possible values. It can be encoded by <code>0</code> and <code>1</code>, by a given value and absence as default.</li>
+<li>Boolean and enumerated data types with type as switch and instance variable as target.</li>
+<li>An exclusive-or constraint in a schema to enforce choice of one possibility.</li>
+<li>A qualified value such as <q>Dublin, Ohio</q>.</li>
+<li>The statement <q>license: CC-BY-SA</q> in contrast to <q>CC-BY-SA</q> only.</li>
+<li>Annotations that modify interpretation, such as uncertainty and temporal flags.</li>
+<li>General rules how to read a data element (<a href="schema.html">schema</a>).</li>
+<li>A namespace is a flag that gives context to local identifiers.</li>
+</ul>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>Possible values of the switch must be clear. If the first element is ambiguous, interpretation of the target element will also be.</li>
+<li>Default values are not always known or different values are assumed.</li>
+<li>Some flags don’t have an independent interpretation, for instance the value <q>miscellaneous</q> in a classification.</li>
+<li>In practice flags are created or extended ad-hoc, for instance as additional annotation or as additional switch value to add more interpretations.</li>
+<li>A flag may switch more then one element and an element may be influenced by a combination of flags. It should be made clear, what elements a flag refers to,</li>
+<li>Some flags allow nesting (for instance a qualifier of a qualifier), others do not make a difference when nested (<code>&lt;b&gt;&lt;b&gt;...&lt;/b&gt;&lt;/b&gt;</code> is simply bold).</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><ul>
+<li>Most flags are based on a <a href="dependence.html">dependence</a> between switch and target element.</li>
+<li>Instead of exclusion one could also disallow specific combinations of elements <a href="prohibition.html">prohibition</a>.</li>
+<li>A <a href="separator.html">separator</a> such as <q><code>:</code></q> can simultaneously indicate a flag.</li>
+<li>The target data element may not be usable without the flag. In this case, a third element is derived from flag and target (<a href="derivation.html">derivation</a>).</li>
+<li>If the switch consists of conditions which must be met to make use of the target element, a <a href="schema.html">schema</a> is more appropriate.</li>
+</ul>
+</dd>
+<dt>implied patterns</dt>
+<dd><p>A flag is a form of <a href="derivation.html">derivation</a> as the target’s interpretation is implied by the switch.</p>
+</dd>
+<dt>specialized patterns</dt>
+<dd><p>A <a href="schema.html">schema</a> defines which choices and exclusions are possible for some data elements. Schemas can further act as flags by telling how to read data.</p>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

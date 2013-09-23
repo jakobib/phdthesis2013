@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>schema pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">schema pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Specification.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>Specify restrictions and extensions.</p>
+</dd>
+<dt>context</dt>
+<dd><p>One data element (the schema) describes a set of other data elements.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Express common structures with requirements and constraints to be applied consistently for creation and consumption of data.</p>
+</dd>
+<dt>implementations</dt>
+<dd><ul>
+<li>The schema is expressed in a formal schema language.</li>
+<li>The schema is expressed in form of human-readable rules.</li>
+<li>The schema is implicitly given in form of examples.</li>
+<li>A validator or another software is implicitly used as schema by checking whether data elements conform to the specification.</li>
+</ul>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>Data definition languages and formal schema languages, such as BNF, XSD, RDFS/OWL, parts of SQL etc.</li>
+<li>A class in Object Orientation or the definition of a key-value structure specifies a data element with properties or fields.</li>
+<li>The sequence <code>YYYY-MM-DD</code> to define the structure of a date.</li>
+<li>Upper/lower bounds or other limits on value types.</li>
+<li>Repeatability markers such as <code>*</code> and <code>+</code>.</li>
+<li>A form with fields to fill out.</li>
+<li>An URI template.</li>
+<li>Guides how to construct file system pathes or queries in a query language.</li>
+<li>Any digital document that aims at defining other data.</li>
+</ul>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>Schemas only tell <em>how</em> data is structured but not <em>why</em>. Some kind of <a href="label.html">label</a> is needed to actually interpret the elements of a schema.</li>
+<li>Many actual definitions in a schema are rather arbitrary. For instance a date could be defined with form <code>YYYY-MM-DD</code> or as <code>DD.MM.YYYY</code>.</li>
+<li>The degree of freedom in a schema can be too lax. For instance the date schema <code>YYYY-MM-DD</code> might not take into account the maximum number of days per month (28-31), leap years, Julian vs. Gregorian dates etc. Another typical example are plain text fields for anything or Unicode fields for strings that must contain letters only.</li>
+<li>The degree of freedom in a schema can be too strict, leading to violations and misuse. For a computer any violations makes the whole data element invalid but in practice errors can be acceptable or recoverable. Common misuse of strict schemas include the ad-hoc introduction of additional rules, such as <a href="garbage.html">garbage</a> values and <a href="separator.html">separator</a> elements.</li>
+<li>Schemas are affected by communication and control standards which eventually are affected by informal standards.</li>
+<li>Applications may select parts of a schema and add rules from multiple schemas. This makes it difficult to find out which schema has actually been used and what exact set of rules is actually meant by a particular schema.</li>
+<li>The trend to express schemas in the same data structuring language that they constrain (for instance schema information tables in SQL, XML schemas in XML, and ontology languages in RDF, etc.) can lead to more complex schemas than necessary.</li>
+<li>Validators hidden in applications are difficult or impossible to analyze.</li>
+<li>Application of schemas on the wrong level of abstraction, for instance conformance to the XML syntax instead of conformance to a specific data format that can be encoded in XML.</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><p>Without any human-readable <a href="label.html">label</a> the schema is meaningless. Schema rules mainly refer to questions of <a href="optionality.html">optionality</a>, <a href="prohibition.html">prohibition</a>, <a href="size.html">size</a>, <a href="garbage.html">garbage</a>, and shapes of <a href="embedding.html">embedding</a>. The schema can also specify which elements to use as an <a href="identifier.html">identifier</a> and what <a href="derivation.html">derivation</a> is to be expected. Rules can further be given as, or can be transformed into <a href="derivation.html">derivation</a> statements.</p>
+</dd>
+<dt>implied patterns</dt>
+<dd><p>The same data element is interpreted differently against different schemas. Schemas also contain possible choices and exclusive constraints. For both reasons the <a href="flag.html">flag</a> pattern is found in virtually any schema.</p>
+</dd>
+<dt>specialized patterns</dt>
+<dd><ul>
+<li><a href="optionality.html">optionality</a> to express optional and mandatory parts. In fact all schemas include some optionality as degrees of freedom.</li>
+<li><a href="prohibition.html">prohibition</a> to express constraints.</li>
+<li><a href="garbage.html">garbage</a> to express irrelevant and predictable parts.</li>
+</ul>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

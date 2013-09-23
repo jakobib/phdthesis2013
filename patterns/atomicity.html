@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>atomicity pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+    q { quotes: "“" "”" "‘" "’"; }
+  </style>
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">atomicity pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Black box, brick, encapsulation.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>Take some data as one element without having to deal with its internal structure.</p>
+</dd>
+<dt>context</dt>
+<dd><p>Any data element.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Reduce complexity to the smallest unit possible.</p>
+</dd>
+<dt>implementations</dt>
+<dd><ul>
+<li>If the <a href="size.html">size</a> of a data element is known, one can skip over its content.</li>
+<li>Define an <a href="encoding.html">encoding</a> to abstract from the actual content of a data element.</li>
+<li>Indicate borders of the element with an <a href="embedding.html">embedding</a>.</li>
+</ul>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>In file systems the file is atomic: it’s content is one arbitrary piece of data.</li>
+<li>In conceptual modeling the entity is atomic.</li>
+<li>Most data description languages have the notion of <q>basic</q> data types.</li>
+<li>An API encapsulates internals of a data element.</li>
+<li>First normal form (1NF) in relational databases.</li>
+<li>The only totally atomic data element is the bit.</li>
+</ul>
+</dd>
+<dt>counter examples</dt>
+<dd><p>A character string delimited by double quotes is not fully atomic. The string must either disallow quotes as content or allow escape sequences (<a href="prohibition.html">prohibition</a>) that force interpretation of the string’s internal structure.</p>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>Internals of data elements are rarely hidden in total. As soon as details of an element such as its member elements (see <a href="container.html">container</a>) can be inspected, the element is not fully atomic anymore.</li>
+<li>One cannot refer to parts of an atomic element.</li>
+<li>Although a non-descriptive <a href="identifier.html">identifier</a> should be atomic, it is common practice to inspect its structure. For instance the actual character string of an URI Reference has no meaning in the RDF model, but it is common to group and interpret these strings for instances based on namespaces.</li>
+<li>Atomicity is broken if levels of abstraction are not fully separated.</li>
+<li>One should be able to replace the content of an atomic element with random data, for instance <q>XXXXX</q>. In practice the content is often limited by <a href="prohibition.html">prohibition</a>, so the element is not fully atomic.</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><ul>
+<li>A <a href="container.html">container</a> is an alternative strategy to wrap data. Its internal structure is typically visible.</li>
+<li>To achieve atomicity, and as alternative to atomicity, <a href="encoding.html">encoding</a> can be used.</li>
+<li>If the hidden content of an atomic element does not matter anyway, the element can also be <a href="garbage.html">garbage</a>.</li>
+<li>Atomic elements may still have properties which can be connected to the atomic elements via <a href="dependence.html">dependence</a>.</li>
+</ul>
+</dd>
+<dt>implied patterns</dt>
+<dd><p>It must be known where an atomic data element starts and where it ends without having to look into its content, so atomic data elements have a known <a href="size.html">size</a>.</p>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

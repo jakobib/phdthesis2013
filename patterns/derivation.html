@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>derivation pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">derivation pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Implication, functional dependency.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>An element is implied by and derived from other elements.</p>
+</dd>
+<dt>context</dt>
+<dd><p>Two data elements, one of them implied by the other.</p>
+</dd>
+<dt>motivation</dt>
+<dd><ul>
+<li>Enforce integrity and conformance to some rules.</li>
+<li>Mark redundancy to better find relevant parts in data.</li>
+<li>Provide different views to the same information.</li>
+</ul>
+</dd>
+<dt>implementations</dt>
+<dd><ul>
+<li>Apply a mathematical model with derivation rules as exact statements.</li>
+<li>Explicitly list derivations, for instance in tables of if-then rules.</li>
+</ul>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>Given a date of birth and the current date, an age is implied.</li>
+<li>As soon as two elements are related to a third, there is an implicit relation between the two (for instance co-citation for two works that cite a common third).</li>
+<li>RDF-entailment regimes and inference rules add new triples to RDF graphs. These new elements can be expressed or used as implicit, virtual values (<a href="void.html">void</a>).</li>
+<li>The concept of derived types and inheritance is based on derivation: properties of a subclass are derived from another class.</li>
+<li>Hash codes can be calculated from all digital documents.</li>
+<li>An empty string is not given as content but implied by its surroundings.</li>
+<li>The length of a non-empty string can be derived from its content.</li>
+<li>If elements are pairwise comparable, a partial order is implied among them. If the elements are further distinct, a <a href="sequence.html">sequence</a> is automatically implied.</li>
+<li>A <a href="sequence.html">sequence</a> implies a position for each element.</li>
+<li>End tags in XML are redundant: <code>&lt;a&gt;...&lt;/</code> can automatically be completed with <code>a&gt;</code>.</li>
+<li>A postal code can be derived from other parts of an address.</li>
+<li>All forms of redundancy originate from possible derivations. If two data elements are redundant then either one of them can be derived from the other or both can be derived from a common third element.</li>
+</ul>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>Data in practice contains errors and inconsistencies. Deriving from these errors can extend negligible anomalies.</li>
+<li>Derivation is not necessarily unique (injective) or revertible (for instance a hash code).</li>
+<li>Chaining inferences can lead to fallacies. For instance each book series could belong to exactly one publisher and each book to exactly one series, so a book implies its series and a series implies a publisher. Both rules do not forbid the inclusion of a book from one publisher as special issue in a series of another, making a chained inference from book to publisher invalid.</li>
+<li>Co-occurrences and correlations look similar to functional dependencies although they generally aren’t.</li>
+<li>General implication rules only cover deductive reasoning.</li>
+<li>The existence of an implication does not necessarily tell how data can actually be derived. If derivation rules act like a black box, it is difficult to make use of them.</li>
+<li>There is a continuum between data extraction (infer what can be derived) and data enrichment (extend data with other data) once one realizes that derivation rules have (and/or are expressed in) their own data.</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><ul>
+<li>A derived element may also be dependent to its switch (<a href="dependence.html">dependence</a>).</li>
+<li>Elements that can be derived do not need to be expressed (<a href="optionality.html">optionality</a>).</li>
+</ul>
+</dd>
+<dt>specialized patterns</dt>
+<dd><ul>
+<li>An <a href="encoding.html">encoding</a> is a special form of derivation that includes a set of implication rules, one for each possible value.</li>
+<li>If an element is not given directly (<a href="void.html">void</a> pattern) it must be implied instead.</li>
+</ul>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

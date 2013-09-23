@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>prohibition pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+    q { quotes: "“" "”" "‘" "’"; }
+  </style>
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">prohibition pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Forbidden element, exception.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>Exclude specific elements.</p>
+</dd>
+<dt>context</dt>
+<dd><p>A data element with <a href="embedding.html">embedding</a> in another element.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Define what is <em>not</em> allowed instead of listing all possibilities.</p>
+</dd>
+<dt>implementations</dt>
+<dd><ul>
+<li>Explicitly list all disallowed elements (creating a <a href="container.html">container</a>).</li>
+<li>Refer to a <a href="schema.html">schema</a> that tells which elements to avoid.</li>
+<li>Use an <a href="encoding.html">encoding</a> that does not include prohibited elements.</li>
+</ul>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>File systems disallow specific characters in file names, such as quotes, brackets, dot, colon, bar, asterisk, and question mark.</li>
+<li>A null-terminated character string must not contain null-bytes.</li>
+<li>Unicode and languages build on top, such as XML and RDF, disallow specific character code points.</li>
+<li>A <a href="separator.html">separator</a> element cannot occur as normal content.</li>
+<li>With Closed World Assumption everything is disallowed unless defined as allowed. With Open World Assumption one needs to explicitly state disallowed elements.</li>
+<li>Formal grammars extended by difference operator or negation in boolean grammars allow to express arbitrary forbidden elements in a <a href="schema.html">schema</a>.</li>
+<li>In mandatory fields (<a href="optionality.html">optionality</a>) empty elements are prohibited.</li>
+<li>Specific <a href="graph.html">graph</a> types disallow some kinds of vertices, such as loops and circles.</li>
+</ul>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>Prohibitions as <q>exceptions from a rule</q> are easy to grasp for human beings but they are more difficult to detect and compute algorithmically. Boolean grammars which support formal expression of exceptions via a negation operator are still more research topic rather than a practical tool for data description.</li>
+<li>Exceptions can have their own exceptions (the world <em>is</em> complex).</li>
+<li>Some prohibitions are not stated explicitly but implied by external constraints (<a href="derivation.html">derivation</a>). For instance numbers in JSON can have arbitrary precision but in practice they are limited to standard floating point and integer representations.</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><ul>
+<li>If the prohibition depends on existence of another element, it is rather an instance of the <a href="flag.html">flag</a> pattern.</li>
+<li><a href="optionality.html">Optionality</a> and mandatory constraints can be used in a <a href="schema.html">schema</a> to express whether an element must be present.</li>
+</ul>
+</dd>
+<dt>implied patterns</dt>
+<dd><p>Every prohibition is either part of a <a href="schema.html">schema</a> or it constitutes a virtual <a href="schema.html">schema</a> consisting of this single prohibition.</p>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

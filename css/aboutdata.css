@@ -64,6 +64,25 @@ img.cover {
     box-shadow:         7px 7px 10px rgba(200, 200, 200, 0.75);
 }
 
+dt {
+    font-weight: bold;
+}
+dd { 
+    margin-left: 2em; 
+}
+dd p {
+    margin-top: 8px;
+}
+dd ul {
+    padding-left: 1em;
+    margin-top: 8px;
+    margin-bottom: 16px;
+}
+ol li ol li {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
 footer {
     border-top: 1px solid #090;
     padding: 10px;

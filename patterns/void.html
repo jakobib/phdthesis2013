@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>void pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">void pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Empty element.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>A data element is given by a gap.</p>
+</dd>
+<dt>context</dt>
+<dd><p>Empty elements may occur everywhere in between other elements.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Some elements should not be expressed because they would virtually occur everywhere or because their expression would be confused with other content.</p>
+</dd>
+<dt>implementations</dt>
+<dd><p>An <a href="embedding.html">embedding</a> or <a href="schema.html">schema</a> can indicate the context in which data can be read from gaps. The <a href="separator.html">separator</a> pattern is typically applied in form of borders around the gap.</p>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>An empty string is not given as such but by an empty <a href="embedding.html">embedding</a> (<code>&quot;&quot;</code>). The same applies to other empty instances of <a href="sequence.html">sequence</a> and <a href="container.html">container</a>.</li>
+<li>Default values are not given explicitly. Even if no default values are defined, one could just omit an element to indicate another value: a missing value is also a value.</li>
+<li>Unit types in data type systems are not visible as data but by referencing them in other structures.</li>
+<li>Assumed rules can lead to implicit <a href="derivation.html">derivation</a> of data that is not directly expressed (for instance affiliation to superclasses and derived RDF statements).</li>
+<li>Given a comparison rule for equality of elements, one automatically gets an unexpressed normalized form of each element.</li>
+</ul>
+</dd>
+<dt>counter examples</dt>
+<dd><p>A gap can also be a sign of <a href="optionality.html">optionality</a> where an element does not need to be expressed.</p>
+</dd>
+<dt>difficulties</dt>
+<dd><p>As empty elements may occur virtually everywhere between other elements, it is difficult to spot empty elements and irrelevant empty elements may wrongly be assumed.</p>
+</dd>
+<dt>related patterns</dt>
+<dd><ul>
+<li><a href="optionality.html">Optionality</a> is an alternative to the void pattern.</li>
+<li>If elements are cropped to a maximum length or form the original, full form is implicitly given (<a href="etcetera.html">etcetera</a>).</li>
+<li>The <a href="garbage.html">garbage</a> pattern is kind of the contrary to the void pattern: void is content without form, garbage is form without content.</li>
+</ul>
+</dd>
+<dt>implied patterns</dt>
+<dd><p>A void element is always <a href="derivation.html">derivation</a> of some other data elements.</p>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

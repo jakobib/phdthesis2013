@@ -3,21 +3,78 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
-  <meta name="author" content="Jakob Voß">
+  <meta name="author" content="Jakob Vo�">
   <title>About Data - Data Patterns</title>
-  <style type="text/css">code{white-space: pre;}</style>
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <link rel="stylesheet" href="css/aboutdata.css">
 </head>
 <body>
-<nav>   <ul>     <li><a href=index.html>thesis</a></li>     <!--li><a href=methods.html>methods</a></li-->     <!--li><a href=paradigms.html>paradigms</a></li-->     <li><a href=patterns.html>patterns</a></li>     <li><a href=publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<nav>   <ul>     <li><a href=index.html>about data</a></li>     <!--li><a href=methods.html>methods</a></li-->     <!--li><a href=paradigms.html>paradigms</a></li-->     <li><a href=patterns.html>patterns</a></li>     <li><a href=publications.html>publications</a></li>   </ul> </nav> <div id=main>
 <header>
 <h1 class="title">Data Patterns</h1>
 </header>
-<p>Chapter 5 of my thesis contains a pattern language of structures in data.</p>
-<p>The source code is contained in a git repository at <a href="https://github.com/jakobib/datapatterns2013">https://github.com/jakobib/datapatterns2013</a>.</p>
-</div> <footer>   <a href=http://aboutdata.org>aboutdata.org</a> : CC-BY-SA Jakob Voß </footer>
+<p>Chapter 5 of my thesis contains a pattern language of structures in data. The 20 patterns can be summarized as following (table 6.1, p. 226):</p>
+<a style="float:right"
+   href="patterns/patterngraph.svg"><img src="patterns/patterngraph.svg" width="200px" /></a>
+<ol type="1">
+<li><strong>basic patterns</strong>
+<ol type="a">
+<li>pure data elements
+<ol type="i">
+<li><a href="patterns/label.html">label</a></li>
+<li><a href="patterns/atomicity.html">atomicity</a></li>
+</ol></li>
+<li>data elements with content
+<ol type="i">
+<li><a href="patterns/size.html">size</a></li>
+<li><a href="patterns/optionality.html">optionality</a></li>
+<li><a href="patterns/prohibition.html">prohibition</a></li>
+</ol></li>
+</ol></li>
+<li><strong>combining patterns</strong>
+<ol type="a">
+<li>combine multiple elements on the same level
+<ol type="i">
+<li><a href="patterns/sequence.html">sequence</a></li>
+<li><a href="patterns/graph.html">graph</a></li>
+</ol></li>
+<li>combine elements by subsumption
+<ol type="i">
+<li><a href="patterns/container.html">container</a></li>
+<li><a href="patterns/dependence.html">dependence</a></li>
+<li><a href="patterns/embedding.html">embedding</a></li>
+</ol></li>
+</ol></li>
+<li><strong>relationing patterns</strong>
+<ol type="a">
+<li>primary
+<ol type="i">
+<li><a href="patterns/identifier.html">identifier</a></li>
+<li><a href="patterns/derivation.html">derivation</a></li>
+</ol></li>
+<li>secondary
+<ol type="i">
+<li><a href="patterns/encoding.html">encoding</a></li>
+<li><a href="patterns/flag.html">flag</a></li>
+</ol></li>
+<li>tertiary
+<ol type="i">
+<li><a href="patterns/normalization.html">normalization</a></li>
+<li><a href="patterns/schema.html">schema</a></li>
+</ol></li>
+</ol></li>
+<li><strong>continuing patterns</strong>
+<ol type="i">
+<li><a href="patterns/separator.html">separator</a></li>
+<li><a href="patterns/etcetera.html">etcetera</a></li>
+<li><a href="patterns/garbage.html">garbage</a></li>
+<li><a href="patterns/void.html">void</a></li>
+</ol></li>
+</ol>
+<p>The markdown source code of the pattern language is contained in a git repository at <a href="https://github.com/jakobib/datapatterns2013"><code class="url">https://github.com/jakobib/datapatterns2013</code></a>.</p>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-23T08:32+0200</footer>
 </body>
 </html>

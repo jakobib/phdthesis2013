@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>container pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+    q { quotes: "“" "”" "‘" "’"; }
+  </style>
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">container pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Collection.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>Combine a number of elements to a larger structure.</p>
+</dd>
+<dt>context</dt>
+<dd><p>A set of multiple data elements.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Combine multiple independent elements on the same level to refer to them as a joint group.</p>
+</dd>
+<dt>implementations</dt>
+<dd><ul>
+<li>Explicitly list all member elements which belong to the container.</li>
+<li>Specify a method to check whether an element belongs to the container.</li>
+</ul>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>A directory of files in a file system.</li>
+<li>An archive containing a set of files.</li>
+<li>A set of records in a database.</li>
+<li>A repeatable entity or relationship in a schema. In fact the concept of repeatability is an instance of the container pattern.</li>
+<li>An entity type in a schema is the set of all of its instances.</li>
+</ul>
+</dd>
+<dt>counter examples</dt>
+<dd><p>A single record with its properties does not constitute a container because properties depend on the record instead of being independent.</p>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>A container may hold a single member element only, making the collection difficult to distinguish from the element as such.</li>
+<li>A container may be empty, making it difficult to list member elements.</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><ul>
+<li>Explicitly listing member elements requires a <a href="sequence.html">sequence</a>.</li>
+<li>A membership function is a form of <a href="derivation.html">derivation</a>.</li>
+<li>Empty containers often involve an implicit element (<a href="void.html">void</a>).</li>
+<li>Collections are used to refer to elements (or to a type of elements) with a human readable <a href="label.html">label</a>.</li>
+<li>Each collection defines the property of <q>belonging to the collection</q>. An alternative pattern to group by same properties is <a href="normalization.html">normalization</a>.</li>
+<li>Collections may be abbreviated (<a href="etcetera.html">etcetera</a> pattern).</li>
+<li>Containers are also used to wrap or abstract from sets of data. This goal can better be achieved by <a href="atomicity.html">atomicity</a>.</li>
+</ul>
+</dd>
+<dt>implied patterns</dt>
+<dd><ul>
+<li>A container is a special kind of <a href="embedding.html">embedding</a> with member elements embedded into the collection as host element.</li>
+<li>Unless abbreviated, containers have a specific number of member elements which implies the <a href="size.html">size</a> pattern.</li>
+</ul>
+</dd>
+<dt>specialized patterns</dt>
+<dd><p>A <a href="sequence.html">sequence</a> and a <a href="graph.html">graph</a> typically consist of collections of elements.</p>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

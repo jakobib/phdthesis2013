@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>separator pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">separator pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Delimiter.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>An element indicates the boundary between two other elements.</p>
+</dd>
+<dt>context</dt>
+<dd><p>A <a href="sequence.html">sequence</a> with at least two elements and a third separator element.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Indicate borders and connections between data elements.</p>
+</dd>
+<dt>implementations</dt>
+<dd><p>Select data elements that must not occur in normal content (<a href="prohibition.html">prohibition</a>) or mark an element as (non)separator by a <a href="flag.html">flag</a>. A <a href="schema.html">schema</a> can tell which separators to use at which places.</p>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>Whitespace characters separate words.</li>
+<li>Brackets and delimiters, such as <code>{</code>, <code>[</code>, <code>(</code>, <code>)</code>, <code>]</code>, <code>}</code> and <code>,</code>, <code>|</code>, <code>;</code>, <code>:</code> etc. are used as separators in JSON, INI, CSV and other data structuring languages. Similar characters are also popular for ad-hoc structuring of values, for instance to create lists and annotations.</li>
+<li>ASCII defines four level separator characters (code 28 to 31).</li>
+<li>Lines in conceptual diagrams are used as borders and connections.</li>
+</ul>
+</dd>
+<dt>counter examples</dt>
+<dd><p>Being a separator is not an inherent property of a data element, so whitespace, brackets and delimiters may also occur as normal content.</p>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>Parts of elements can be misread as separator and vice versa.</li>
+<li>Most elements divided by separators are divided by separators on their parts. Such hierarchic embeddings can be read ambiguously (for instance <code>&quot;( { ) }&quot;</code>).</li>
+<li>It is not obvious whether separators indicate borders and connections between elements on the same level (for instance arrows in a diagram) or whether they also combine elements by subsumption (for instance subfield indicators).</li>
+<li>In sequences it must be clear whether separators occur between, after, or before an element, otherwise one can unintentionally introduce empty elements, for instance by ending a comma-separated list with a comma.</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><ul>
+<li>One can alternatively use data elements of known <a href="size.html">size</a> so no explicit delimiters are needed.</li>
+<li>Separators can simultaneously act as <a href="flag.html">flag</a> to indicate the type of a connection.</li>
+<li>If the actual form of a separator does not matter, the separator element is an example of the <a href="garbage.html">garbage</a> pattern.</li>
+</ul>
+</dd>
+<dt>implied patterns</dt>
+<dd><p>An <a href="embedding.html">embedding</a> gives context to separating elements and makes clear which data elements are actually separated and connected.</p>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

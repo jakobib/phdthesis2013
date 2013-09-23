@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>sequence pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+    q { quotes: "“" "”" "‘" "’"; }
+  </style>
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">sequence pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Array, vector, table, list, order.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>Strictly order multiple elements, one after another.</p>
+</dd>
+<dt>context</dt>
+<dd><p>A <a href="container.html">container</a> of multiple elements.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Define order and positions among data elements.</p>
+</dd>
+<dt>implementations</dt>
+<dd><ul>
+<li>If member elements have a known <a href="size.html">size</a>, they can directly be concatenated. If elements further have the same size, their position can directly be used as <a href="identifier.html">identifier</a>.</li>
+<li>The <a href="separator.html">separator</a> pattern can be used to separate each element from its successor element. To distinguish member elements and separators, this implies the <a href="prohibition.html">prohibition</a> pattern. If separators are allowed to occur directly after each other, this can also imply the <a href="void.html">void</a> pattern.</li>
+<li>One can link an element to its successor with an <a href="identifier.html">identifier</a>. To avoid link structures that result in arbitrary <a href="graph.html">graph</a> patterns, additional constraints must be applied.</li>
+<li>Objects can be sorted implicitly by some specific property of each element.</li>
+</ul>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>A string of ASCII characters.</li>
+<li>A sequence of lines.</li>
+<li>A sequence with separator: <q><code>Kernighan and Ritchie</code></q> with separator <q><code>and</code></q>.</li>
+<li>A sequence of linked steps: <em>extract</em> → <em>transform</em>, <em>transform</em> → <em>load</em>.</li>
+<li>Sequences with multiple dimensions are known as arrays, vectors, tables, and matrices.</li>
+</ul>
+</dd>
+<dt>counter examples</dt>
+<dd><p>Any unordered collection is no sequence. For instance files in a file system and records in a database table have no inherent order.</p>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>Empty sequences (<a href="void.html">void</a> pattern) and sequences of one single element are difficult to spot, like in other <a href="container.html">container</a> patterns.</li>
+<li>Sequences are a natural method to model one-dimensional phenomena, for instance sequences of events in time. As digital storage is structured as sequence of bits, sequences seem to be the natural form of data. Other expressions such as formal diagrams and visual programming languages are often not considered as data also because they are not ordered.</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><ul>
+<li>In the end most data is given as sequence of bits, so many implementations of other patterns use sequences on a lower level.</li>
+<li>The position within a sequence is often used as <a href="identifier.html">identifier</a>.</li>
+<li>Sequences can be implied by order of some connected property (<a href="derivation.html">derivation</a>).</li>
+<li>The sequence pattern includes the idea of ordinal numbers. Other kinds of numbers depend on the <a href="size.html">size</a> pattern.</li>
+</ul>
+</dd>
+<dt>implied patterns</dt>
+<dd><p>Without context, sequences are difficult to distinguish from other <a href="container.html">container</a> patterns.</p>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

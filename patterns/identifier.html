@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>identifier pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+    q { quotes: "“" "”" "‘" "’"; }
+  </style>
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">identifier pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Pointer.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>An element is used to refer to another.</p>
+</dd>
+<dt>context</dt>
+<dd><p>An element as pointer and another element from a set of possible targets.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Identifiers help establishing uniqueness and allow to refer to elements which not are directly available or impractical to express.</p>
+</dd>
+<dt>implementations</dt>
+<dd><p>Identifier systems defines which identifiers exist and what data elements they refer to.</p>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>Keys or field names in key-value structures or records.</li>
+<li>Queries and requests expressed in data, for instance an XPath expression.</li>
+<li>Data elements originally created for identification, such as URIs and link anchors.</li>
+<li>Parts of an <a href="encoding.html">encoding</a>, for instance the byte <code>0x41</code> that encodes the letter <q>A</q> in ASCII.</li>
+<li>Computable hash codes which directly transform the content of an element into an identifier.</li>
+<li>The identity which distinguishes a data element from any other data elements, can only be expressed by an identifier. Every metadata that uniquely refers to this single element is an identifier.</li>
+<li>A geocode, given as WGS 84 coordinate, can identify a place or an address.</li>
+</ul>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>An identifier must only refer to one element. If it refers to multiple elements, it is not clear whether this is an error (for instance collisions of hash codes), or whether all referenced elements are equal, or whether the collection of all referenced elements is actually identified.</li>
+<li>Multiple identifiers may point to the same element, making it difficult to reverse the relation.</li>
+<li>The existence of an identifier does not tell the kind of relation it is used for (e.g. as representation or to indicate a type or membership).</li>
+<li>Identifiers may be meaningless (for instance inode numbers of files or memory addresses), it may be used as <a href="label.html">label</a> or it may be a descriptive identifier with <a href="embedding.html">embedding</a>.</li>
+<li>The practical requirements of an identifier (unambiguity, uniqueness, persistence, readability, scope, actionability) contradict each other.</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><p>An identifier may simultaneously act as <a href="label.html">label</a> or it may have a structure with content that can further be analyzed (<a href="embedding.html">embedding</a>). If positions are used as identifiers, there must be a <a href="sequence.html">sequence</a> to refer to.</p>
+</dd>
+<dt>specialized patterns</dt>
+<dd><p>Every <a href="encoding.html">encoding</a> is based on a set of identifiers.</p>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>

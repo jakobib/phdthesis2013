@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Vo�">
+  <title>garbage pattern</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+    q { quotes: "“" "”" "‘" "’"; }
+  </style>
+  <link rel="stylesheet" href="../css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=../index.html>about data</a></li>     <!--li><a href=../methods.html>methods</a></li-->     <!--li><a href=../paradigms.html>paradigms</a></li-->     <li><a href=../patterns.html>patterns</a></li>     <li><a href=../publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">garbage pattern</h1>
+</header>
+<dl>
+<dt>alias</dt>
+<dd><p>Irrelevant, random, null.</p>
+</dd>
+<dt>idea</dt>
+<dd><p>Some data should better be ignored.</p>
+</dd>
+<dt>context</dt>
+<dd><p>Any data element can act as garbage.</p>
+</dd>
+<dt>motivation</dt>
+<dd><p>Garbage elements can act as placeholder for unknown or irrelevant values, as padding to align with specific sizes, or for obfuscation.</p>
+</dd>
+<dt>implementations</dt>
+<dd><ul>
+<li>Explicitly mark a data element as garbage by some <a href="flag.html">flag</a>.</li>
+<li>Use a special data element that acts as <a href="identifier.html">identifier</a> to garbage, such as the <q>lorem ipsum</q> placeholder text.</li>
+</ul>
+</dd>
+<dt>examples</dt>
+<dd><ul>
+<li>Additional whitespace if it is used only to support readability without adding any informational content.</li>
+<li>Special sample values such as <q>foo</q>, <q>bar</q>, <q>lorem impsum</q>.</li>
+<li>Special values such as <code>/</code>, <code>n/a</code>, <code>-</code>, <code>xxx</code>, <code>9999</code> to actually indicate no value.</li>
+<li>NULL values in databases and data structuring languages.</li>
+<li>Position of unordered elements serialized in an sequence.</li>
+<li>Temporary identifiers such as blank node identifiers in RDF.</li>
+</ul>
+</dd>
+<dt>counter examples</dt>
+<dd><p>The empty string and the numerical value zero can be used as garbage elements but they are not more natural as garbage than other values.</p>
+</dd>
+<dt>difficulties</dt>
+<dd><ul>
+<li>Without additional context it is hard to tell whether data is garbage or whether it only happens to look like irrelevant data.</li>
+<li>Even garbage indicates something: at least the fact that the garbage data element is missing, inapplicable, or should be ignored for some other reason. The specific reason, however, is rarely indicated by garbage elements. Proposals to differentiate kinds of null values contradict the original idea of garbage elements to be ignorable.</li>
+<li>Garbage elements can be introduced against the original purpose of a <a href="schema.html">schema</a> to allow <a href="optionality.html">optionality</a> where no support of optionality was intended. For instance obviously wrong names and email addresses are found if these fields are mandatory.</li>
+</ul>
+</dd>
+<dt>related patterns</dt>
+<dd><ul>
+<li>While garbage is explicit data that has no content, instances of the <a href="void.html">void</a> pattern have content without explicit data.</li>
+<li>Data that cannot be interpreted as referring to other data may also be a <a href="label.html">label</a> instead of garbage. Eventually all labels are meaningless to a computer.</li>
+<li>Irrelevant data has no internal structure, so <a href="atomicity.html">atomicity</a> is often implied. Atomicity is also an alternative pattern if it turns out that the data is not fully irrelevant.</li>
+<li>Garbage is often used as <a href="separator.html">separator</a> which does not need to have a value of its own.</li>
+</ul>
+</dd>
+<dt>implied patterns</dt>
+<dd><p>A <a href="schema.html">schema</a> should define the context in which a data element is garbage or not.</p>
+</dd>
+</dl>
+</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo�   <br/>
+2013-09-22T14:06+0200</footer>
+</body>
+</html>
