@@ -1,4 +1,4 @@
-ARGS=-V "author-meta=Jakob Voß"\
+ARGS=-V "author-meta=Jakob Voss"\
 	 -V "title-prefix=About Data"\
 	 -V "include-before=$(shell cat templates/header.html)"\
 	 -V "include-after=$(shell cat templates/footer.html)"\
@@ -21,7 +21,7 @@ patterns:
 		PATTERN=`basename $$MD .md`; \
 		pandoc $$MD -t html5 --smart \
 	  		--css ../css/aboutdata.css \
-			-V "author-meta=Jakob Voß" \
+			-V "author-meta=Jakob Voss" \
 			-V "title=$$PATTERN pattern" \
 			-V "pagetitle=$$PATTERN pattern" \
 			-V "include-before=$(shell cat templates/header.html | perl -pe 's{href=\"}{href=\"../}')" \

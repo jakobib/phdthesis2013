@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html$if(lang)$ lang="$lang$"$endif$>
 <head>
   <meta charset="utf-8">
