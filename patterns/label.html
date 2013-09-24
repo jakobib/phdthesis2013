@@ -5,12 +5,10 @@
   <meta name="generator" content="pandoc">
   <meta name="author" content="Jakob Voss">
   <title>label pattern</title>
+  <style type="text/css">code{white-space: pre;}</style>
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
-  <style type="text/css">
-    q { quotes: "“" "”" "‘" "’"; }
-  </style>
   <link rel="stylesheet" href="../css/aboutdata.css">
 </head>
 <body>
@@ -48,7 +46,7 @@
 </ul>
 </dd>
 <dt>counter examples</dt>
-<dd><p>Labels have no internal structure. For instance the character sequence <q>Dublin, Ohio</q>, which refers to a city in the US, is not a pure label but it consists of two labels (<q>Dublin</q> and <q>Ohio</q>), one acting as qualifier for the other (<a href="flag.html">flag</a> pattern). Another counter example is a list of field names such as <q>address1, address2…</q>, that together refer lists of repeatable objects. Each of these field names is not a label but it consists of a label (<q>address</q>) and a <a href="sequence.html">sequence</a> indicator. To test whether a data element is a label, think about whether replacing all of its occurrences with the same random value would make a difference.</p>
+<dd><p>Labels have no internal structure. For instance the character sequence “Dublin, Ohio”, which refers to a city in the US, is not a pure label but it consists of two labels (“Dublin” and “Ohio”), one acting as qualifier for the other (<a href="flag.html">flag</a> pattern). Another counter example is a list of field names such as “address1, address2…”, that together refer lists of repeatable objects. Each of these field names is not a label but it consists of a label (“address”) and a <a href="sequence.html">sequence</a> indicator. To test whether a data element is a label, think about whether replacing all of its occurrences with the same random value would make a difference.</p>
 </dd>
 <dt>difficulties</dt>
 <dd><p>Labels are textual signs primarily interpreted by human readers. The label refers to something outside of the domain of data so one cannot find out its referent by looking at the data only but one must analyze its usage in practice. Labels may be both synonymous (multiple labels with same referent) and homonymous (one label used with different referents in different contexts). Labels are often created ad-hoc just because an identifier is needed. A well-considered choice of a label can improve readability of data a lot.</p>
@@ -62,7 +60,10 @@
 </ul>
 </dd>
 </dl>
-</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo&#xDF;   <br/>
-2013-09-22T14:06+0200</footer>
+</div>
+<footer>
+  <a href="http://aboutdata.org/">aboutdata.org</a> : CC-BY-SA Jakob Vo&#xDF;
+  <br/>
+2013-09-24T20:48+0200</footer>
 </body>
 </html>

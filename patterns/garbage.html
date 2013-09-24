@@ -5,12 +5,10 @@
   <meta name="generator" content="pandoc">
   <meta name="author" content="Jakob Voss">
   <title>garbage pattern</title>
+  <style type="text/css">code{white-space: pre;}</style>
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
-  <style type="text/css">
-    q { quotes: "“" "”" "‘" "’"; }
-  </style>
   <link rel="stylesheet" href="../css/aboutdata.css">
 </head>
 <body>
@@ -34,13 +32,13 @@
 <dt>implementations</dt>
 <dd><ul>
 <li>Explicitly mark a data element as garbage by some <a href="flag.html">flag</a>.</li>
-<li>Use a special data element that acts as <a href="identifier.html">identifier</a> to garbage, such as the <q>lorem ipsum</q> placeholder text.</li>
+<li>Use a special data element that acts as <a href="identifier.html">identifier</a> to garbage, such as the “lorem ipsum” placeholder text.</li>
 </ul>
 </dd>
 <dt>examples</dt>
 <dd><ul>
 <li>Additional whitespace if it is used only to support readability without adding any informational content.</li>
-<li>Special sample values such as <q>foo</q>, <q>bar</q>, <q>lorem impsum</q>.</li>
+<li>Special sample values such as “foo”, “bar”, “lorem impsum”.</li>
 <li>Special values such as <code>/</code>, <code>n/a</code>, <code>-</code>, <code>xxx</code>, <code>9999</code> to actually indicate no value.</li>
 <li>NULL values in databases and data structuring languages.</li>
 <li>Position of unordered elements serialized in an sequence.</li>
@@ -69,7 +67,10 @@
 <dd><p>A <a href="schema.html">schema</a> should define the context in which a data element is garbage or not.</p>
 </dd>
 </dl>
-</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo&#xDF;   <br/>
-2013-09-22T14:06+0200</footer>
+</div>
+<footer>
+  <a href="http://aboutdata.org/">aboutdata.org</a> : CC-BY-SA Jakob Vo&#xDF;
+  <br/>
+2013-09-24T20:48+0200</footer>
 </body>
 </html>

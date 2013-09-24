@@ -5,12 +5,10 @@
   <meta name="generator" content="pandoc">
   <meta name="author" content="Jakob Voss">
   <title>atomicity pattern</title>
+  <style type="text/css">code{white-space: pre;}</style>
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
-  <style type="text/css">
-    q { quotes: "“" "”" "‘" "’"; }
-  </style>
   <link rel="stylesheet" href="../css/aboutdata.css">
 </head>
 <body>
@@ -42,7 +40,7 @@
 <dd><ul>
 <li>In file systems the file is atomic: it’s content is one arbitrary piece of data.</li>
 <li>In conceptual modeling the entity is atomic.</li>
-<li>Most data description languages have the notion of <q>basic</q> data types.</li>
+<li>Most data description languages have the notion of “basic” data types.</li>
 <li>An API encapsulates internals of a data element.</li>
 <li>First normal form (1NF) in relational databases.</li>
 <li>The only totally atomic data element is the bit.</li>
@@ -57,7 +55,7 @@
 <li>One cannot refer to parts of an atomic element.</li>
 <li>Although a non-descriptive <a href="identifier.html">identifier</a> should be atomic, it is common practice to inspect its structure. For instance the actual character string of an URI Reference has no meaning in the RDF model, but it is common to group and interpret these strings for instances based on namespaces.</li>
 <li>Atomicity is broken if levels of abstraction are not fully separated.</li>
-<li>One should be able to replace the content of an atomic element with random data, for instance <q>XXXXX</q>. In practice the content is often limited by <a href="prohibition.html">prohibition</a>, so the element is not fully atomic.</li>
+<li>One should be able to replace the content of an atomic element with random data, for instance “XXXXX”. In practice the content is often limited by <a href="prohibition.html">prohibition</a>, so the element is not fully atomic.</li>
 </ul>
 </dd>
 <dt>related patterns</dt>
@@ -72,7 +70,10 @@
 <dd><p>It must be known where an atomic data element starts and where it ends without having to look into its content, so atomic data elements have a known <a href="size.html">size</a>.</p>
 </dd>
 </dl>
-</div> <footer>   <a href=http://aboutdata.org/>aboutdata.org</a> : CC-BY-SA Jakob Vo&#xDF;   <br/>
-2013-09-22T14:06+0200</footer>
+</div>
+<footer>
+  <a href="http://aboutdata.org/">aboutdata.org</a> : CC-BY-SA Jakob Vo&#xDF;
+  <br/>
+2013-09-24T20:48+0200</footer>
 </body>
 </html>
