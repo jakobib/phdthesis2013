@@ -32,5 +32,5 @@ and selected distributors.
 # Sources
 
 * The full source code of my thesis is included in a git repository at
-  <https://github.org/jakobib/phdthesis2013>.
+  <https://github.com/jakobib/phdthesis2013>.
 
