@@ -46,4 +46,4 @@ Chapter 5 of my thesis contains a pattern language of structures in data. The
     i.  [void](patterns/void.html)
 
 The markdown source code of the pattern language is contained in a git
-repository at <https://github.com/jakobib/datapatterns2013>.
+repository at <https://github.org/jakobib/datapatterns2013>.
