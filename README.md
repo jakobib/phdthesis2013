@@ -3,7 +3,7 @@
 This git repository contains the source code of my PhD thesis *Describing Data
 Patterns*, submitted January 2013 at Humboldt University Berlin. The latest
 version of the repository including errata can be found at
-<https://github.org/jakobib/phdthesis2013>.
+<https://github.com/jakobib/phdthesis2013>.
 
 The pattern language of data structuring (chapter 5) is contained in another
 git repository that is included as git submodule from
@@ -35,24 +35,30 @@ revision from the git repository:
 
 * A versions published as book at print-on-demand publisher CreateSpace with
   **ISBN 1-4909-3186-4**. Paper format is 6.69 inch x 9.61 inch. Copies can be
-  ordered for $12.80, 10.24€, £10.24 or less via
+  ordered for $12.80, 10.24€, £10.24, ￥1.985 or less via
 
-    * <https://www.createspace.com/4351505>
-    * [http://amazon.com](http://amzn.com/1490931864),
-      [http://amazon.co.uk](http://amazon.co.uk/dp/1490931864/), 
-      [http://amazon.de](http://www.amazon.de/dp/1490931864/) etc.
-    * [Barnes & Noble](http://www.barnesandnoble.com/) and library distributors 
-      such as [Ingram](http://www.ingramcontent.com/), 
+    * [CreateSpace](https://www.createspace.com/4351505)
+    * [Amazon.com](http://amzn.com/1490931864),
+      [Amazon.co.uk](http://amazon.co.uk/dp/1490931864/), 
+      [Amazon.de](http://www.amazon.de/dp/1490931864/) 
+      [Amazon.co.jp](http://www.amazon.co.jp/dp/1490931864) and other countries
+    * [Barnes&Noble](http://www.barnesandnoble.com/w/describing-data-patterns-jakob-voss/1116359218?ean=9781490931869)
+      and library distributors such as [Ingram](http://www.ingramcontent.com/), 
       [NACSCORP](http://www.nacscorp.com/), and 
       [Baker & Taylor](http://www.btol.com/).
-    * Additional certified CreateSpace resellers
+    * Additional certified CreateSpace resellers, e.g.
+      [Lightning](https://www.lightningsource.com/)
 
   This version is tagged as `pod-20130805`.
 
-* The PDF version submitted for deposit at Humboldt University document server
-  at <http://edoc.hu-berlin.de/dissertationen/voss-jakob-2013-05-31/>.
-  Paper format is A4 with same pagination as
+* The PDF version archived
+  [at Humboldt University document server](http://edoc.hu-berlin.de/dissertationen/voss-jakob-2013-05-31/) 
+  and [at German National Library](http://d-nb.info/1041284497).
+  Paper format is A4 in black and white with same pagination as
   the print-on-demand version. This version is tagged as `deposit-20130807`.
+
+* The same A4 PDF but with color, available
+  [via ResearchGate](https://www.researchgate.net/publication/255711288_Describing_Data_Patterns._A_general_deconstruction_of_metadata_standards).
 
 * The version originally submitted for review in January 2013. The document is
   printed in A4 paper format and tagged as `submision-20130107`.
