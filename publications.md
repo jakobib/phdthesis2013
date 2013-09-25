@@ -8,14 +8,18 @@ PhD thesis, Humboldt-University Berlin, 2013.
 * Archived PDF [at Humboldt University document server](http://edoc.hu-berlin.de/dissertationen/voss-jakob-2013-05-31/) 
   and [at German National Library](http://d-nb.info/1041284497) (A4, b/w).
 * [Same PDF with color](https://www.researchgate.net/publication/255711288_Describing_Data_Patterns._A_general_deconstruction_of_metadata_standards) at ResearchGate
-* More handy print-on-demand copies with **ISBN
-1-4909-3186-4** can be ordered for less then $12.80, 10.24€, or £10.24 at
-[CreateSpace](https://www.createspace.com/4351505), 
-[Amazon.com](http://amzn.com/1490931864),
-[Amazon.co.uk](http://amazon.co.uk/dp/1490931864/),
-[Amazon.de](http://amazon.de/dp/1490931864/), 
-and selected distributors.
-
+* More handy print-on-demand copies with **ISBN 1-4909-3186-4** can be ordered for at most $12.80 / 10.24€ / £10.24 / ￥1.985
+    * [CreateSpace](https://www.createspace.com/4351505)
+    * [Amazon.com](http://amzn.com/1490931864)
+    * [Amazon.co.uk](http://amazon.co.uk/dp/1490931864/),
+      [Amazon.de](http://amazon.de/dp/1490931864/),
+      [Amazon.co.jp](http://www.amazon.co.jp/dp/1490931864) and other countries
+    * [Barnes&Noble](http://www.barnesandnoble.com/w/describing-data-patterns-jakob-voss/1116359218?ean=9781490931869)
+    * [Baker&Taylor](http://www.btol.com/), 
+      [Ingram](http://www.ingramcontent.com/),
+      [NACSCORP](http://www.nacscorp.com/) and
+      [Lightning](https://www.lightningsource.com/) (not verified yet)
+ 
 # Presentations and preliminary results
 
 * Jakob Voß: *Revealing digital documents. Concealed structures in data.* 
