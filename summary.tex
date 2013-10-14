@@ -1,0 +1,124 @@
+% Summary for submission at
+% http://ischools.org/the-iconference/program/dissertation-award/
+
+% The summary paper should be up to 20 double-spaced pages with 
+% 12 point Times New Roman font and at least one-inch margins
+\documentclass[
+  12pt,twoside,BCOR=10mm
+]{scrbook}
+
+\usepackage{fontspec}
+\setmainfont[Ligatures=TeX]{Times New Roman}
+\setkomafont{disposition}{\bfseries}
+\usepackage{setspace}
+\doublespacing
+
+\include{metadata}
+\newcommand{\personindexcite}[1]{}
+\include{bib}
+
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    pdfborder={0 0 0},
+    colorlinks=true,
+    linkcolor=purple, urlcolor=violet, citecolor=olive,
+    pdfauthor={Jakob Voß},
+    pdfcreator={Jakob Voß},
+    pdftitle={Describing data patterns. A general deconstruction of metadata standards},
+    pdfsubject={Common features across all methods of data structuring and description},
+    pdfkeywords={data, data description, data modeling, metadata, pattern language},
+    pdflang={en},
+}
+
+\bibliography{bibliography}
+
+\begin{document}
+%\shorthandoff{"} % disable special meaning of "
+
+% The Title Page should contain the title of the dissertation, author name,
+% email, phone number, address, current institution, advisor name and contact
+% information, degree granting institution, and dissertation completion date.
+
+\makeatletter
+\begin{titlepage}
+\begin{center}
+\vfill
+%
+{\bfseries
+  {\huge\strut\ignorespaces\@title}\\
+  {\Large\strut\ignorespaces\@subtitle}
+}
+%
+\vskip 1.5\baselineskip
+%
+\large
+{\textsc{Dissertation Summary}}\\
+in support of the degree of\\
+Doctor philosophiae (Dr. phil.)\\
+%
+\vskip 1.5\baselineskip
+%
+by \@author\\
+Digital Library Department of the Common Library Network (Gemeinsamer Bibliotheksverbund, GBV)\\
+Platz der Göttinger Sieben 1, 37085 Göttingen, Germany\\
+voss@gbv.de / +49-551-39-10242
+%
+\vskip 1.5\baselineskip
+%
+defended at May 31\textsuperscript{st} and
+published at August 7\textsuperscript{th} 2013\\
+%
+%\vskip 1\baselineskip
+%
+at the Faculty of Philosophy I\\
+Humboldt-University Berlin\\
+Berlin School of Library and Information Science\par
+\vskip 1\baselineskip
+Primary Advisor: Prof. Dr. Stefan Gradman 
+\end{center}
+\end{titlepage}
+\makeatother
+
+% The first page of the Body should include title, an abstract for up to 200
+% words, and a list of keywords.
+
+\section*{Abstract}
+\input{abstract.txt}% TODO: up to 200 words
+
+\section*{Keywords}
+\input{keywords.txt}
+
+\clearpage
+
+\section*{Introduction}
+{
+
+\itshape
+The Body of the summary paper should provide a comprehensive summary of the
+dissertation, introducing, for instance, the topic, the research context and
+questions, the theoretical or contextual framework, the methodology and
+methods, and the findings. The summary paper should be written for blind
+review; hence, all identifying information should be removed from the body of
+the paper and, as necessary, the references.
+
+\begin{itemize}
+\item Significance of the research problem to today’s challenges and opportunities
+\item Scholarly contribution to the literature in any information related disciplines
+\item Application and rigor of the appropriate research methods
+\item Clarity and organization of the presentation.
+\end{itemize}
+
+}
+
+%\section{Findings}
+
+
+\cite{BallsunStanton2012}
+
+\clearpage
+\onehalfspacing
+\section*{References}
+\printbibliography[heading=none]
+
+\end{document}

@@ -22,4 +22,10 @@ phdvoss-deposit.pdf: phdvoss.pdf
 	./scripts/pdfcrop.sh $< # this fails to keep bookmarks and metadata
 	@pdftk cropped-phdvoss.pdf update_info dump.info output $@ allow AllFeatures
 
+summay: summary.pdf
+summary.pdf: summary.tex
+	@xelatex summary
+	@biber summary
+	@xelatex summary
+
 .PHONY: clean patterns

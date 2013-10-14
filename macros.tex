@@ -303,57 +303,7 @@ normal font) or directly referenced by name (page numbers in \textbf{bold}) font
 \newfloat{example}{htp}{example}
 \floatname{example}{Example}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Bibliography and citation style
-\usepackage[
-  style=authoryear-comp,
-  sorting=nyvt,hyperref=true,
-  indexing=cite,
-  url=true,
-  isbn=false,
-  doi=false,
-  backend=biber
-]{biblatex}
-
-%\DeclareFieldFormat*{url}{}
-\DeclareFieldFormat*{url}{\url{#1}}
-\DeclareFieldFormat[book]{url}{}
-%\DeclareFieldFormat[misc]{url}{\url{#1}}
-%\DeclareFieldFormat[standard]{url}{\url{#1}}
-%\DeclareFieldFormat[report]{url}{\url{#1}}
-%\DeclareFieldFormat[misc]{url}{\url{#1}}
-%\DeclareFieldFormat[misc]{article}{\url{#1}}
-\AtEveryBibitem{% remove url if pages field
-	\iffieldundef{pages}{%
-	}{%
-		\clearfield{url}
-	}%
-}
-
-% show note in parens
-\DeclareFieldFormat[misc]{note}{\mkbibparens{#1}}
-
-
-% let cite behave like \parencite
-\let\cite\parencite
-
-\DeclareCiteCommand{\citeyear} 
-  {\boolfalse{citetracker}% 
-   \boolfalse{pagetracker}% 
-   \usebibmacro{prenote}} 
-  {\printtext[bibhyperref]{\printfield{year}}} 
-  {\multicitedelim} 
-  {\usebibmacro{postnote}} 
-
-\setlength{\bibitemsep}{1pt}% TODO
-
-
-\usepackage{xifthen}
-
-\DeclareIndexNameFormat{default}{%
-  \usebibmacro{index:name}{\personindexcite}{#1}{#3}{#5}{#7}}
-
-\DeclareIndexFieldFormat{indextitle}{}% do not index titles
+\include{bib}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
