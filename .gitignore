@@ -40,3 +40,8 @@ Session.vim
 *.vrb
 *.xdy
 *.tdo
+
+# Temporary files
+*.tmp
+*.bak
+

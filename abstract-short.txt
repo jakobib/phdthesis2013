@@ -1,0 +1,17 @@
+Many methods, technologies, standards, and languages exist to structure and
+describe data. The aim of this thesis is to find common features among these
+methods to determine how data is actually structured and described. Existing
+studies are limited to 'numeric' notions of data or they presume unquestioned
+concepts such as 'records' or 'schemas'. In this thesis data is analysed as
+signs, communicated in form of digital documents, to semiotically deconstruct
+such concepts. Properties of methods of data structuring and description of all
+kinds (encodings, identifiers, formats, schemas, models...) were collected and
+experienced critically by a phenomenological research method. The analysis
+resulted in a) six prototypes to categorize data methods by their primary
+purpose, b) five basic paradigms that deeply shape how data is structured and
+described in practice, and c) a pattern language of data structuring. The
+identified patterns, each described with its benefits, consequences, pitfalls,
+and relations to other patterns, show problems and solutions which occur over
+and over again, independent from particular technologies.  The results can help
+to better understand data and its actual forms, both for consumption and
+creation of data. 
