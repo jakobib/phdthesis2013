@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jakob Voss">
+  <title>About Data - Categorization of Data Structuring Methods</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="css/aboutdata.css">
+</head>
+<body>
+<nav>   <ul>     <li><a href=index.html>about data</a></li>     <li><a href=methods.html>methods</a></li>     <!--li><a href=paradigms.html>paradigms</a></li-->     <li><a href=patterns.html>patterns</a></li>     <li><a href=publications.html>publications</a></li>   </ul> </nav> <div id=main>
+<header>
+<h1 class="title">Categorization of Data Structuring Methods</h1>
+</header>
+<p>Many methods, technologies, standards, and languages exist to structure and describe data. The aim of PhD my thesis was to find common features in these methods to determine how data is actually structured and described. One result of the analysis is a <strong>categorization of data structuring methods</strong> (included as section 4.1).</p>
+<h1 id="how-the-methods-have-been-categorized">How the methods have been categorized</h1>
+<p>The categorization is introduced with a quote:</p>
+<blockquote>
+<p>Notoriamente no hay clasificación del universo que no sea arbitraria y conjetural. La razón es muy simple: no sabemos qué cosa es el universo. — Jorge Luis Borges (1952)</p>
+</blockquote>
+<p>Given the number and variety of data structuring methods one can categorize them by history and origin, by type of application, by complexity, and by many other criteria. This approach, however, can result in rather arbitrary classifications, because a single facet has to be chosen and because most facets are not selective for all instances. Another approach, that better fits to how people cognitively perceive and classify things, is grouping based on prototypes which act as cognitive reference points (Lakoff 1987; Rosch1983). Following this approach, categories of data structuring methods are not defined by selected features, but data structuring methods are clustered by similarity, until prototypical methods emerge. A can act as good example of a certain category, while other instances belonging to this category are less central. For instance in western society, a chair is a central prototype of furniture, although other furniture may share little properties with chairs.</p>
+<h1 id="the-categorization">The categorization</h1>
+<p>The final prototype categorization of data structuring methods (originally given in table 4.1 of the thesis) lists each category with its <em>main purpose</em> and some examples:</p>
+<dl>
+<dt>encodings</dt>
+<dd>primarily <em>express data</em> (Unicode, Base64,…)
+</dd>
+<dt>storage systems</dt>
+<dd>primarily <em>store data</em> (NTFS, RDBMS, …)
+</dd>
+<dt>identifier and query languages</dt>
+<dd>primarily <em>refer to data</em> (URI, XPath, …)
+</dd>
+<dt>structuring and markup languages</dt>
+<dd>primarily <em>structure data</em> (XML, CSV, RDF, …)
+</dd>
+<dt>schema languages</dt>
+<dd>primarily <em>constrain data</em> (BNF, XSD, OWL…)
+</dd>
+<dt>conceptual models</dt>
+<dd>primarily <em>describe data</em> (Mind Maps, ERM, …)
+</dd>
+</dl>
+<p>The main purpose was chosen as dividing facet because is is independent from particular use cases and applications. In short, a main purpose tells what a particular method mainly does with data. For instance the main purpose of storage systems like databases and file systems is storage. The data structuring method’s main purpose can act as guideline to find the nearest prototype from the categorization. Still this dividing facet should not be confused with a strict classifier as known from more formal approaches of categorization. Instances from each category can also serve multiple purposes, just like one can use a chair not only as furniture for sitting but also to stand on it when changing a light bulb or giving a speech. To give an example, the OWL schema language is based on ERM, so it can also be used for conceptual modeling, but it’s main purpose is putting formal constrains and rules on RDF data.</p>
+<h1 id="a-broad-view-on-data">A broad view on data</h1>
+<p>The categorization of data structuring methods gives a very broad view on data. On the other end of granularity of description there is the <a href="patterns.html">pattern language of structures in data</a>.</p>
+</div>
+<footer>
+  <a href="http://aboutdata.org/">aboutdata.org</a> : CC-BY-SA Jakob Vo&#xDF;
+  <br/>
+2014-02-02T20:48+0100</footer>
+</body>
+</html>

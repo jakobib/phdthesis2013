@@ -7,7 +7,11 @@ data that describes other data.
 
 The full story, however, is a bit more complex. I wrote "something about data".
 This [little website](https://github.com/jakobib/phdthesis2013/tree/gh-pages)
-is about this *something*.
+is about this *something*. The excerpt consists of:
+
+* a [categorization of data structuring methods](methods.html)
+* a [pattern language of structures in data](patterns.html)
+* details about the [publication of my PhD](publications.html)
 
 Feedback is highly appreciated -- just cite me, create 
 [a GitHub issue](https://github.com/jakobib/phdthesis2013/issues) 

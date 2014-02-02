@@ -14,12 +14,16 @@ PhD thesis, Humboldt-University Berlin, 2013.
     * [Amazon.co.uk](http://amazon.co.uk/dp/1490931864/),
       [Amazon.de](http://amazon.de/dp/1490931864/),
       [Amazon.co.jp](http://www.amazon.co.jp/dp/1490931864) and other countries
-    * [Barnes&Noble](http://www.barnesandnoble.com/w/describing-data-patterns-jakob-voss/1116359218?ean=9781490931869)
-    * [Baker&Taylor](http://www.btol.com/), 
+    * [Barnes & Noble](http://www.barnesandnoble.com/w/describing-data-patterns-jakob-voss/1116359218?ean=9781490931869)
+    * [Baker & Taylor](http://www.btol.com/), 
       [Ingram](http://www.ingramcontent.com/),
       [NACSCORP](http://www.nacscorp.com/) and
       [Lightning](https://www.lightningsource.com/) (not verified yet)
  
+Reviews and similar books may be found via social cataloging 
+([Goodreads](http://www.goodreads.com/author/show/7219532.Jakob_Voss),
+[LibraryThing](http://www.librarything.com/work/14305996) etc.)
+
 # Presentations and preliminary results
 
 * Jakob Voß: *Revealing digital documents. Concealed structures in data.* 
